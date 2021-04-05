@@ -15,10 +15,18 @@ bool ush_read_char(struct ush_object *self)
 
         self->desc->input_buffer[self->input_position++] = ch;
 
-        if (ch != '\n')
-                return false;
+        char echo[3];
+        echo[0] = ch;
+        if (ch == '\r') {
+                echo[1] = '\n';
+                echo[2] = '\0';
+        } else {
+                echo[1] = '\0';
+        }
+
+        ush_state_t next = (ch == '\r') ? USH_STATE_PARSE_PREPARE : USH_STATE_READ_CHAR;
+        ush_write_text(self, echo, next);
         
-        ush_parse_start(self);
         return true;
 }
 

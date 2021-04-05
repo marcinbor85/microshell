@@ -42,6 +42,10 @@ bool ush_service(struct ush_object *self)
         case USH_STATE_READ_CHAR:
                 busy = ush_read_char(self);
                 break;
+        case USH_STATE_PARSE_PREPARE:
+                ush_parse_start(self);
+                busy = true;
+                break;
         case USH_STATE_PARSE_SEARCH_ARG:
         case USH_STATE_PARSE_QUOTE_ARG:
         case USG_STATE_PARSE_STANDARD_ARG:

@@ -6,11 +6,16 @@
 
 #include "ush.h"
 
+static FILE *g_io;
+
 static int write_char(struct ush_object *self, char ch)
 {
         (void)self;
+        char c;
 
-        putc(ch, stdout);
+        c = fputc(ch, g_io);
+        if (c != ch)
+                return 0;
         return 1;
 }
 
@@ -18,7 +23,7 @@ static int read_char(struct ush_object *self, char *ch)
 {
         (void)self;
      
-        *ch = getc(stdin);
+        *ch = fgetc(g_io);
         return 1;
 }
 
@@ -44,6 +49,13 @@ int main(int argc, char *argv[])
 {
         (void)argc;
         (void)argv;
+
+        g_io = fopen(argv[1], "a+");
+        if (g_io == NULL) {
+                fprintf(stderr, "cannot open device");
+                return -1;
+        }
+        
 
         ush_init(&g_ush, &g_ush_desc);
 

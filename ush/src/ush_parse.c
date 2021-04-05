@@ -33,7 +33,7 @@ void ush_parse_finish(struct ush_object *self)
         memset(buf, 0, sizeof(buf));
         for (i = 0; i < argc; i++) {
                 strcat(buf, argv[i]);
-                strcat(buf, "\n");
+                strcat(buf, "\r\n");
         }
         ush_write_text(self, buf, USH_STATE_RESET);
 
@@ -46,7 +46,7 @@ void ush_parse_char(struct ush_object *self)
 
         char ch = self->desc->input_buffer[self->input_position++];
 
-        if (ch == '\n') {
+        if (ch == '\n' || ch == '\r') {
                 self->desc->output_buffer[self->output_position++] = '\0';
                 ush_parse_finish(self);
                 return;
