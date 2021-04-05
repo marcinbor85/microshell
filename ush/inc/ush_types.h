@@ -10,24 +10,30 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
-struct ush_object;
+#include "ush_config.h"
 
-typedef int (*ush_io_iface_read_char)(struct ush_object *self, char *ch);
-typedef int (*ush_io_iface_write_char)(struct ush_object *self, char ch);
-
-struct ush_io_interface {
-        ush_io_iface_read_char read;
-        ush_io_iface_write_char write;
-};
+#include "ush_iface_types.h"
+#include "ush_read_types.h"
+#include "ush_parse_types.h"
+#include "ush_write_types.h"
 
 struct ush_descriptor {
-        struct ush_io_interface const *iface;
-        char *cmd_buffer;
-        size_t cmd_buffer_size;
+        struct ush_iface const *iface;
+        char *input_buffer;
+        size_t input_buffer_size;
+        char *output_buffer;
+        size_t output_buffer_size;
+        char *hostname;
 };
 
 struct ush_object {
         struct ush_descriptor const *desc;
+
+        struct ush_read_fsm read;
+        struct ush_parse_fsm parse;
+        struct ush_write_fsm write;
+
+        char current_dir[USH_CONFIG_CURRENT_DIR_MAX_SIZE];
 };
 
 #ifdef __cplusplus

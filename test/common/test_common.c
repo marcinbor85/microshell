@@ -19,24 +19,27 @@ static int write_char(struct ush_object *self, char ch)
 static int read_char(struct ush_object *self, char *ch)
 {
         (void)self;
-        
+
         if (g_read_buffer_index >= g_read_buffer_pos)
                 return 0;
         *ch = g_read_buffer[g_read_buffer_index++];
         return 1;
 }
 
-static const struct ush_io_interface g_ush_iface = {
+static const struct ush_iface g_ush_iface = {
         .read = read_char,
         .write = write_char,
 };
 
-static char g_cmd_buffer[TEST_COMMON_CMD_BUFFER_SIZE];
+static char g_input_buffer[TEST_COMMON_INPUT_BUFFER_SIZE];
+static char g_output_buffer[TEST_COMMON_OUTPUT_BUFFER_SIZE];
 
 static const struct ush_descriptor g_ush_desc = {
         .iface = &g_ush_iface,
-        .cmd_buffer = g_cmd_buffer,
-        .cmd_buffer_size = sizeof(g_cmd_buffer),
+        .input_buffer = g_input_buffer,
+        .input_buffer_size = sizeof(g_input_buffer),
+        .output_buffer = g_output_buffer,
+        .output_buffer_size = sizeof(g_output_buffer),
 };
 
 struct ush_object g_ush;

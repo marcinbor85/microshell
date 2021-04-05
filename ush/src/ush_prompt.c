@@ -1,0 +1,21 @@
+#include "ush_internal.h"
+#include "ush_config.h"
+
+#include <string.h>
+
+void ush_prompt_write(struct ush_object *self, char *buf, size_t buf_size)
+{
+        USH_ASSERT(self != NULL);
+        USH_ASSERT(buf != NULL);
+        USH_ASSERT(buf_size > 0);
+        
+        snprintf(buf, buf_size, "[%s %s]$ ", self->desc->hostname, self->current_dir);
+}
+
+void ush_prompt_update(struct ush_object *self)
+{
+        char prompt[USH_CONFIG_PROMPT_MAX_SIZE];
+
+        ush_prompt_write(self, prompt, sizeof(prompt));
+        ush_write_text(self, prompt);
+}

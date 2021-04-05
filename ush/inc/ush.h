@@ -10,6 +10,7 @@ extern "C" {
 
 void ush_init(struct ush_object *self, const struct ush_descriptor *desc);
 bool ush_service(struct ush_object *self);
+void ush_reset(struct ush_object *self);
 
 #ifdef __cplusplus
 }
