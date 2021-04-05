@@ -17,5 +17,5 @@ void ush_prompt_update(struct ush_object *self)
         char prompt[USH_CONFIG_PROMPT_MAX_SIZE];
 
         ush_prompt_write(self, prompt, sizeof(prompt));
-        ush_write_text(self, prompt);
+        ush_write_text(self, prompt, USH_STATE_READ_PREPARE);
 }

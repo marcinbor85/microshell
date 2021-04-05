@@ -30,10 +30,31 @@ bool ush_service(struct ush_object *self)
 
         bool busy = false;
 
-        busy |= ush_read_service(self);
-        busy |= ush_parse_service(self);
-        busy |= ush_write_service(self);
-        
+        switch (self->state) {
+        case USH_STATE_RESET:
+                ush_prompt_update(self);
+                busy = true;
+                break;
+        case USH_STATE_READ_PREPARE:
+                ush_read_start(self);
+                busy = true;
+                break;
+        case USH_STATE_READ_CHAR:
+                busy = ush_read_char(self);
+                break;
+        case USH_STATE_PARSE_SEARCH_ARG:
+        case USH_STATE_PARSE_QUOTE_ARG:
+        case USG_STATE_PARSE_STANDARD_ARG:
+        case USH_STATE_PARSE_SEARCH_STOP:
+                ush_parse_char(self);
+                busy = true;
+                break;
+        case USH_STATE_WRITE_CHAR:
+                ush_write_char(self);
+                busy = true;
+                break;
+        }
+
         return busy;
 }
 
@@ -41,9 +62,5 @@ void ush_reset(struct ush_object *self)
 {
         USH_ASSERT(self != NULL);
 
-        ush_read_start(self);
-        ush_parse_reset(self);
-        ush_write_reset(self);
-
-        ush_prompt_update(self);
+        self->state = USH_STATE_RESET;
 }

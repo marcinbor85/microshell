@@ -12,10 +12,26 @@ extern "C" {
 
 #include "ush_config.h"
 
-#include "ush_iface_types.h"
-#include "ush_read_types.h"
-#include "ush_parse_types.h"
-#include "ush_write_types.h"
+typedef enum {
+        USH_STATE_RESET,
+        USH_STATE_READ_PREPARE,
+        USH_STATE_READ_CHAR,
+        USH_STATE_PARSE_SEARCH_ARG,
+        USH_STATE_PARSE_QUOTE_ARG,
+        USG_STATE_PARSE_STANDARD_ARG,
+        USH_STATE_PARSE_SEARCH_STOP,
+        USH_STATE_WRITE_CHAR,
+} ush_state_t;
+
+struct ush_object;
+
+typedef int (*ush_iface_read_char)(struct ush_object *self, char *ch);
+typedef int (*ush_iface_write_char)(struct ush_object *self, char ch);
+
+struct ush_iface {
+        ush_iface_read_char read;
+        ush_iface_write_char write;
+};
 
 struct ush_descriptor {
         struct ush_iface const *iface;
@@ -29,9 +45,14 @@ struct ush_descriptor {
 struct ush_object {
         struct ush_descriptor const *desc;
 
-        struct ush_read_fsm read;
-        struct ush_parse_fsm parse;
-        struct ush_write_fsm write;
+        ush_state_t state;
+        ush_state_t next_write_state;
+
+        size_t output_size;
+        size_t input_position;
+        size_t output_position;
+        size_t argc;
+        bool escape;
 
         char current_dir[USH_CONFIG_CURRENT_DIR_MAX_SIZE];
 };
