@@ -33,7 +33,7 @@ void ush_parse_finish(struct ush_object *self)
         memset(buf, 0, sizeof(buf));
         for (i = 0; i < argc; i++) {
                 strcat(buf, argv[i]);
-                strcat(buf, " ");
+                strcat(buf, "\n");
         }
         ush_write_text(self, buf, USH_STATE_RESET);
 
@@ -82,8 +82,7 @@ void ush_parse_char(struct ush_object *self)
 
                 switch (ch) {
                 case '\"':
-                        self->desc->output_buffer[self->output_position++] = '\0';
-                        self->state = USH_STATE_PARSE_SEARCH_ARG;
+                        self->state = USG_STATE_PARSE_STANDARD_ARG;
                         break;
                 case '\\':
                         self->escape = true;
@@ -104,6 +103,9 @@ void ush_parse_char(struct ush_object *self)
                 case ' ':
                         self->desc->output_buffer[self->output_position++] = '\0';
                         self->state = USH_STATE_PARSE_SEARCH_ARG;
+                        break;
+                case '\"':
+                        self->state = USH_STATE_PARSE_QUOTE_ARG;
                         break;
                 case '\\':
                         self->escape = true;
