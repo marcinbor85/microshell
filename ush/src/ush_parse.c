@@ -123,3 +123,27 @@ void ush_parse_char(struct ush_object *self)
                 break;
         }
 }
+
+bool ush_parse_service(struct ush_object *self)
+{
+        USH_ASSERT(self != NULL);
+
+        bool processed = true;
+
+        switch (self->state) {
+        case USH_STATE_PARSE_PREPARE:
+                ush_parse_start(self);
+                break;
+        case USH_STATE_PARSE_SEARCH_ARG:
+        case USH_STATE_PARSE_QUOTE_ARG:
+        case USG_STATE_PARSE_STANDARD_ARG:
+        case USH_STATE_PARSE_SEARCH_STOP:
+                ush_parse_char(self);
+                break;
+        default:
+                processed = false;
+                break;
+        }
+
+        return processed;
+}

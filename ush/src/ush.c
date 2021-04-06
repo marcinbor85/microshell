@@ -31,54 +31,20 @@ bool ush_service(struct ush_object *self)
 
         bool busy = false;
 
-        switch (self->state) {
-        case USH_STATE_RESET:
-                self->state = USH_STATE_PROMPT_PREFIX;
-                busy = true;
-                break;
-        case USH_STATE_PROMPT_PREFIX:
-                ush_write_pointer(self, USH_SHELL_FONT_STYLE_BOLD USH_SHELL_FONT_COLOR_MAGENTA "[", USH_STATE_PROMPT_HOST);
-                break;
-        case USH_STATE_PROMPT_HOST:
-                ush_write_pointer(self, self->desc->hostname, USH_STATE_PROMPT_SPACE);
-                break;
-        case USH_STATE_PROMPT_SPACE:
-                ush_write_pointer(self, " ", USH_STATE_PROMPT_PATH);
-                break;
-        case USH_STATE_PROMPT_PATH:
-                ush_write_pointer(self, self->current_dir, USH_STATE_PROMPT_SUFFIX);
-                break;
-        case USH_STATE_PROMPT_SUFFIX:
-                ush_write_pointer(self, "]$ " USH_SHELL_FONT_STYLE_RESET, USH_STATE_READ_PREPARE);
-                break;
-        case USH_STATE_READ_PREPARE:
-                ush_read_start(self);
-                busy = true;
-                break;
-        case USH_STATE_READ_CHAR:
-                busy = ush_read_char(self);
-                break;
-        case USH_STATE_PARSE_PREPARE:
-                ush_parse_start(self);
-                busy = true;
-                break;
-        case USH_STATE_PARSE_SEARCH_ARG:
-        case USH_STATE_PARSE_QUOTE_ARG:
-        case USG_STATE_PARSE_STANDARD_ARG:
-        case USH_STATE_PARSE_SEARCH_STOP:
-                ush_parse_char(self);
-                busy = true;
-                break;
-        case USH_STATE_WRITE_CHAR:
-                ush_write_char(self);
-                busy = true;
-                break;
-        default:
-                USH_ASSERT(false);
-                break;
-        }
-
-        return busy;
+        if (ush_reset_service(self) != false)
+                return true;        
+        if (ush_prompt_service(self) != false)
+                return true;        
+        if (ush_read_service(self, &busy) != false)
+                return busy;        
+        if (ush_parse_service(self) != false)
+                return true;        
+        if (ush_write_service(self) != false)
+                return true;
+        
+        USH_ASSERT(false);
+        
+        return false;
 }
 
 void ush_reset(struct ush_object *self)

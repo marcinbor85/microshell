@@ -50,3 +50,22 @@ void ush_write_char(struct ush_object *self)
         
         self->write_pos++;
 }
+
+
+bool ush_write_service(struct ush_object *self)
+{
+        USH_ASSERT(self != NULL);
+
+        bool processed = true;
+
+        switch (self->state) {
+        case USH_STATE_WRITE_CHAR:
+                ush_write_char(self);
+                break;
+        default:
+                processed = false;
+                break;
+        }
+
+        return processed;
+}
