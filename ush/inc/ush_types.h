@@ -35,6 +35,11 @@ typedef enum {
         USH_STATE__TOTAL_NUM,
 } ush_state_t;
 
+typedef enum {
+        USH_MESSAGE_ERROR_UNKNOWN_COMMAND,
+        USH_MESSAGE__TOTAL_NUM,
+} ush_message_t;
+
 struct ush_cmd_object;
 struct ush_object;
 

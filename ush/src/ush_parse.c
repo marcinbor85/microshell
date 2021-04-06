@@ -48,7 +48,8 @@ void ush_parse_finish(struct ush_object *self)
                                         }
                                 }
                         } else {
-                                ush_write_pointer(self, "unknown command\r\n", USH_STATE_RESET);
+                                buf = (char*)ush_message_get(self, USH_MESSAGE_ERROR_UNKNOWN_COMMAND);
+                                ush_write_pointer(self, buf, USH_STATE_RESET);
                                 return;
                         }
                 }
