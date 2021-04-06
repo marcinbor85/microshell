@@ -4,6 +4,11 @@
 
 #include <string.h>
 
+void ush_prompt_start(struct ush_object *self)
+{
+        self->state = USH_STATE_PROMPT_PREFIX;
+}
+
 bool ush_prompt_service(struct ush_object *self)
 {
         USH_ASSERT(self != NULL);

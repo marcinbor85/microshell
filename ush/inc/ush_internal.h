@@ -7,8 +7,8 @@ extern "C" {
 
 #include "ush_types.h"
 
-bool ush_read_char(struct ush_object *self);
 void ush_read_start(struct ush_object *self);
+bool ush_read_char(struct ush_object *self);
 void ush_read_echo_service(struct ush_object *self, char ch);
 bool ush_read_service(struct ush_object *self, bool *read);
 
@@ -21,7 +21,10 @@ void ush_write_pointer(struct ush_object *self, char *text, ush_state_t write_ne
 void ush_write_char(struct ush_object *self);
 bool ush_write_service(struct ush_object *self);
 
+void ush_reset_start(struct ush_object *self);
 bool ush_reset_service(struct ush_object *self);
+
+void ush_prompt_start(struct ush_object *self);
 bool ush_prompt_service(struct ush_object *self);
 
 #ifdef __cplusplus

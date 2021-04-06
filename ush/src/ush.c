@@ -51,5 +51,5 @@ void ush_reset(struct ush_object *self)
 {
         USH_ASSERT(self != NULL);
 
-        self->state = USH_STATE_RESET;
+        ush_reset_start(self);
 }
