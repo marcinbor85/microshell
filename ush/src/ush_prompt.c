@@ -17,7 +17,7 @@ bool ush_prompt_service(struct ush_object *self)
 
         switch (self->state) {
         case USH_STATE_PROMPT_PREFIX:
-                ush_write_pointer(self, USH_SHELL_FONT_STYLE_BOLD USH_SHELL_FONT_COLOR_MAGENTA "[", USH_STATE_PROMPT_HOST);
+                ush_write_pointer(self, USH_SHELL_FONT_COLOR_MAGENTA "[", USH_STATE_PROMPT_HOST);
                 break;
         case USH_STATE_PROMPT_HOST:
                 ush_write_pointer(self, self->desc->hostname, USH_STATE_PROMPT_SPACE);

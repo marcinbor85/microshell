@@ -31,11 +31,27 @@ typedef enum {
         USH_STATE_PARSE_SEARCH_STOP,
 
         USH_STATE_WRITE_CHAR,
-        
+
         USH_STATE__TOTAL_NUM,
 } ush_state_t;
 
+struct ush_cmd_object;
 struct ush_object;
+
+typedef char* (*ush_cmd_callback)(struct ush_object *self, struct ush_cmd_object *cmd, int argc, char *argv[]);
+
+struct ush_cmd_descriptor {
+        char *name;
+        char *path;
+        char *description;
+
+        ush_cmd_callback cmd_callback;
+};
+
+struct ush_cmd_object {
+        struct ush_cmd_descriptor const *desc;
+        struct ush_cmd_object *next;
+};
 
 typedef int (*ush_io_interface_read_char)(struct ush_object *self, char *ch);
 typedef int (*ush_io_interface_write_char)(struct ush_object *self, char ch);
@@ -72,6 +88,8 @@ struct ush_object {
         size_t out_pos;
         size_t args_count;
         bool escape_flag;
+
+        struct ush_cmd_object *cmd_first;
 
         char current_dir[USH_CONFIG_CURRENT_DIR_MAX_SIZE];
 };

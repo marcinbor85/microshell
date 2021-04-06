@@ -23,23 +23,36 @@ void ush_parse_finish(struct ush_object *self)
         char *argv[self->args_count];
         int argc = self->args_count;
         char *ptr = self->desc->input_buffer;
+        char* buf;
 
         for (i = 0; i < argc; i++) {
                 argv[i] = ptr;
                 ptr += strlen(argv[i]) + 1;
         }
 
-        if (self->desc->cmd_callback == NULL) {
-                self->state = USH_STATE_RESET;
-                return;
+        if (self->desc->cmd_callback != NULL) {
+                buf = self->desc->cmd_callback(self, argc, argv);
+                if (buf != NULL) {
+                        ush_write_pointer(self, buf, USH_STATE_RESET);
+                        return;
+                }
+        } else {
+                if (argc > 0) {
+                        struct ush_cmd_object *cmd = ush_cmd_find_by_name(self, argv[0]);
+                        if (cmd != NULL) {
+                                if (cmd->desc->cmd_callback != NULL) {
+                                        buf = cmd->desc->cmd_callback(self, cmd, argc, argv);
+                                        if (buf != NULL) {
+                                                ush_write_pointer(self, buf, USH_STATE_RESET);
+                                                return;
+                                        }
+                                }
+                        } else {
+                                ush_write_pointer(self, "unknown command\r\n", USH_STATE_RESET);
+                                return;
+                        }
+                }
         }
-
-        char* buf = self->desc->cmd_callback(self, argc, argv);
-        if (buf != NULL) {
-                ush_write_pointer(self, buf, USH_STATE_RESET);
-                return;
-        }
-
         self->state = USH_STATE_RESET;
 }
 
