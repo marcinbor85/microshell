@@ -14,46 +14,64 @@ extern "C" {
 
 typedef enum {
         USH_STATE_RESET,
+
+        USH_STATE_PROMPT_PREFIX,
+        USH_STATE_PROMPT_HOST,
+        USH_STATE_PROMPT_SPACE,
+        USH_STATE_PROMPT_PATH,
+        USH_STATE_PROMPT_SUFFIX,
+
         USH_STATE_READ_PREPARE,
         USH_STATE_READ_CHAR,
+
         USH_STATE_PARSE_PREPARE,
         USH_STATE_PARSE_SEARCH_ARG,
         USH_STATE_PARSE_QUOTE_ARG,
         USG_STATE_PARSE_STANDARD_ARG,
         USH_STATE_PARSE_SEARCH_STOP,
+
         USH_STATE_WRITE_CHAR,
+        
+        USH_STATE__TOTAL_NUM,
 } ush_state_t;
 
 struct ush_object;
 
-typedef int (*ush_iface_read_char)(struct ush_object *self, char *ch);
-typedef int (*ush_iface_write_char)(struct ush_object *self, char ch);
+typedef int (*ush_io_interface_read_char)(struct ush_object *self, char *ch);
+typedef int (*ush_io_interface_write_char)(struct ush_object *self, char ch);
 
-struct ush_iface {
-        ush_iface_read_char read;
-        ush_iface_write_char write;
+struct ush_io_interface {
+        ush_io_interface_read_char read;
+        ush_io_interface_write_char write;
 };
 
+typedef char* (*ush_generic_cmd_callback)(struct ush_object *self, int argc, char *argv[]);
+
 struct ush_descriptor {
-        struct ush_iface const *iface;
+        struct ush_io_interface const *io;
         char *input_buffer;
         size_t input_buffer_size;
         char *output_buffer;
         size_t output_buffer_size;
         char *hostname;
+
+        ush_generic_cmd_callback cmd_callback;
 };
 
 struct ush_object {
         struct ush_descriptor const *desc;
 
         ush_state_t state;
-        ush_state_t next_write_state;
+        ush_state_t write_next_state;
 
-        size_t output_size;
-        size_t input_position;
-        size_t output_position;
-        size_t argc;
-        bool escape;
+        char *write_buf;
+        size_t write_size;
+        size_t write_pos;
+
+        size_t in_pos;
+        size_t out_pos;
+        size_t args_count;
+        bool escape_flag;
 
         char current_dir[USH_CONFIG_CURRENT_DIR_MAX_SIZE];
 };

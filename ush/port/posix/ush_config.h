@@ -10,7 +10,6 @@ extern "C" {
 #include <stdlib.h>
 
 #define USH_CONFIG_CURRENT_DIR_MAX_SIZE     64UL
-#define USH_CONFIG_PROMPT_MAX_SIZE          128UL
 
 #define USH_ASSERT(cond) { if (!(cond)) { fprintf(stderr, "ASSERT: %s:%d\n", __FILE__, __LINE__); exit(-1); } }
 

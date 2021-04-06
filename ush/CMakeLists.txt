@@ -4,7 +4,6 @@ file(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_read.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_parse.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_prompt.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_write.c
 )
 
