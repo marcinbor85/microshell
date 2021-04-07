@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "ush.h"
+#include "ush_shell.h"
 
 static FILE *g_io;
 
@@ -73,7 +74,7 @@ static char* g_cmd_help_callback(struct ush_object *self, struct ush_cmd_descrip
         struct ush_path_object *curr = self->path_first;
 
         while (curr != NULL) {
-                if (curr->path != NULL) {
+                if (curr->mount_point != NULL) {
                         curr = curr->next;
                         continue;
                 }
@@ -81,12 +82,12 @@ static char* g_cmd_help_callback(struct ush_object *self, struct ush_cmd_descrip
                 for (size_t i = 0; i < curr->cmd_list_size; i++) {
                         struct ush_cmd_descriptor const *cmd = &curr->cmd_list[i];
                         strcat(buf, cmd->name);
-                        strcat(buf, "\t");
+                        strcat(buf, "\t- ");
                         strcat(buf, cmd->description);
                         strcat(buf, "\r\n");
                 }
-                
-                break;
+
+                curr = curr->next;
         }
         
         return buf;
@@ -102,24 +103,32 @@ static char* g_cmd_ls_callback(struct ush_object *self, struct ush_cmd_descripto
         static char buf[512];
         memset(buf, 0, sizeof(buf));
 
+        char current_dir[512];
+        ush_path_get_current_dir(self, current_dir, sizeof(current_dir));
+
         struct ush_path_object *curr = self->path_first;
 
         while (curr != NULL) {
-                if ((curr->path == NULL) || (strcmp(curr->path, self->current_dir) != 0)) {
+                if ((curr == self->current_path) || (curr->mount_point == NULL) || (strcmp(curr->mount_point, current_dir) != 0)) {
                         curr = curr->next;
                         continue;
                 }
 
-                for (size_t i = 0; i < curr->cmd_list_size; i++) {
-                        struct ush_cmd_descriptor const *cmd = &curr->cmd_list[i];
-                        strcat(buf, cmd->name);
-                        strcat(buf, "\t");
-                        strcat(buf, cmd->description);
-                        strcat(buf, "\r\n");
-                }
-                
-                break;
+                strcat(buf, USH_SHELL_FONT_COLOR_GREEN);
+                strcat(buf, curr->name);
+                strcat(buf, USH_SHELL_FONT_STYLE_RESET "\r\n");
+
+                curr = curr->next;
         }
+
+        for (size_t i = 0; i < self->current_path->cmd_list_size; i++) {
+                struct ush_cmd_descriptor const *cmd = &self->current_path->cmd_list[i];
+                strcat(buf, cmd->name);
+                strcat(buf, "\t- ");
+                strcat(buf, cmd->description);
+                strcat(buf, "\r\n");
+        }
+        
         
         return buf;
 }
@@ -130,11 +139,13 @@ static char* g_cmd_cd_callback(struct ush_object *self, struct ush_cmd_descripto
         (void)argv;
         (void)cmd;
 
-        if (argc != 2) {
+        if (argc != 2)
                 return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_WRONG_ARGUMENTS);
-        }
 
-        strcpy(self->current_dir, argv[1]);
+        bool success = ush_path_set_current_dir(self, argv[1]);
+        if (success == false)
+                return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_DIRECTORY_NOT_FOUND);
+
         return NULL;
 }
 
@@ -145,7 +156,8 @@ static char* g_cmd_pwd_callback(struct ush_object *self, struct ush_cmd_descript
         (void)cmd;
 
         static char buf[512];
-        snprintf(buf, sizeof(buf), "%s\r\n", self->current_dir);
+        ush_path_get_current_dir(self, buf, sizeof(buf));
+        strcat(buf, "\r\n");
         return buf;
 }
 
@@ -200,6 +212,36 @@ static const struct ush_cmd_descriptor g_path_root_desc[] = {
 
 static struct ush_path_object g_path_root;
 
+static const struct ush_cmd_descriptor g_path_dev_desc[] = {
+        {
+                .name = "gpio_write",
+                .description = "write to gpio",
+                .cmd_callback = g_print_name_callback,
+        },
+        {
+                .name = "gpio_read",
+                .description = "read from gpio",
+                .cmd_callback = g_print_name_callback,
+        }
+};
+
+static struct ush_path_object g_path_dev;
+
+static const struct ush_cmd_descriptor g_path_dev_bus_desc[] = {
+        {
+                .name = "spi",
+                .description = "show spi",
+                .cmd_callback = g_print_name_callback,
+        },
+        {
+                .name = "i2c",
+                .description = "show i2c",
+                .cmd_callback = g_print_name_callback,
+        }
+};
+
+static struct ush_path_object g_path_dev_bus;
+
 int main(int argc, char *argv[])
 {
         (void)argc;
@@ -213,8 +255,12 @@ int main(int argc, char *argv[])
         
         ush_init(&g_ush, &g_ush_desc);
 
-        ush_path_register(&g_ush, NULL, &g_path_global, g_path_global_desc, sizeof(g_path_global_desc) / sizeof(g_path_global_desc[0]));
-        ush_path_register(&g_ush, "/", &g_path_root, g_path_root_desc, sizeof(g_path_root_desc) / sizeof(g_path_root_desc[0]));
+        ush_path_mount(&g_ush, NULL, NULL, &g_path_global, g_path_global_desc, sizeof(g_path_global_desc) / sizeof(g_path_global_desc[0]));
+        ush_path_mount(&g_ush, "/", "", &g_path_root, g_path_root_desc, sizeof(g_path_root_desc) / sizeof(g_path_root_desc[0]));
+        ush_path_mount(&g_ush, "/", "dev", &g_path_dev, g_path_dev_desc, sizeof(g_path_dev_desc) / sizeof(g_path_dev_desc[0]));
+        ush_path_mount(&g_ush, "/dev", "bus", &g_path_dev_bus, g_path_dev_bus_desc, sizeof(g_path_dev_bus_desc) / sizeof(g_path_dev_bus_desc[0]));
+
+        ush_path_set_current_dir(&g_ush, "/");
 
         while (1) {
                 ush_service(&g_ush);

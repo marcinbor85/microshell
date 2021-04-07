@@ -38,6 +38,7 @@ typedef enum {
 typedef enum {
         USH_MESSAGE_ERROR_UNKNOWN_COMMAND,
         USH_MESSAGE_ERROR_WRONG_ARGUMENTS,
+        USH_MESSAGE_ERROR_DIRECTORY_NOT_FOUND,
         USH_MESSAGE__TOTAL_NUM,
 } ush_message_t;
 
@@ -56,7 +57,8 @@ struct ush_cmd_descriptor {
 struct ush_path_object {
         struct ush_cmd_descriptor const *cmd_list;
         size_t cmd_list_size;
-        char const *path;
+        char const *mount_point;
+        char const *name;
         
         struct ush_path_object *next;
 };
@@ -96,8 +98,7 @@ struct ush_object {
         bool escape_flag;
 
         struct ush_path_object *path_first;
-
-        char current_dir[USH_CONFIG_CURRENT_DIR_MAX_SIZE];
+        struct ush_path_object *current_path;
 };
 
 #ifdef __cplusplus

@@ -14,6 +14,8 @@ const char* ush_message_get_string(struct ush_object *self, ush_message_t msg)
                 return "error: unknown command\r\n";
         case USH_MESSAGE_ERROR_WRONG_ARGUMENTS:
                 return "error: wrong arguments\r\n";
+        case USH_MESSAGE_ERROR_DIRECTORY_NOT_FOUND:
+                return "error: directory not found\r\n";
         default:
                 return "unknown message\r\n";
         }

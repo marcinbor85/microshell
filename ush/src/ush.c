@@ -19,10 +19,7 @@ void ush_init(struct ush_object *self, const struct ush_descriptor *desc)
         USH_ASSERT(desc->hostname != NULL);
 
         self->desc = desc;
-
         self->path_first = NULL;
-
-        snprintf(self->current_dir, sizeof(self->current_dir), "/");
 
         ush_reset(self);
 }

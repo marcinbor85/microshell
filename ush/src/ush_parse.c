@@ -38,7 +38,7 @@ void ush_parse_finish(struct ush_object *self)
                 }
         } else {
                 if (argc > 0) {
-                        struct ush_cmd_descriptor const *cmd = ush_cmd_find_by_name_in_current_dir(self, argv[0]);
+                        struct ush_cmd_descriptor const *cmd = ush_cmd_find_by_name(self, argv[0]);
                         if (cmd != NULL) {
                                 if (cmd->cmd_callback != NULL) {
                                         buf = cmd->cmd_callback(self, cmd, argc, argv);
