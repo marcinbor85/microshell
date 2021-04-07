@@ -5,14 +5,19 @@ void ush_read_echo_service(struct ush_object *self, char ch)
 {
         char echo_buf[4] = {0};
 
-        echo_buf[0] = ch;
         switch (ch) {
         case '\r':
+                echo_buf[0] = ch;
                 echo_buf[1] = '\n';
                 break;
         case '\x08':
+        case '\x7F':
+                echo_buf[0] = '\x08';
                 echo_buf[1] = ' ';
-                echo_buf[2] = ch;
+                echo_buf[2] = '\x08';
+                break;
+        default:
+                echo_buf[0] = ch;
                 break;
         }
 
@@ -30,7 +35,7 @@ bool ush_read_char(struct ush_object *self)
         if (self->desc->io->read(self, &ch) == 0)
                 return false;
         
-        // printf("%02x\n", ch);
+        printf("%02x\n", ch);
         switch (ch) {
         case '\x08':
         case '\x7F':
