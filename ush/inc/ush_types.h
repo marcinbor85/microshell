@@ -95,6 +95,7 @@ struct ush_object {
         size_t write_size;
         size_t write_pos;
 
+        int ansi_escape_state;
         size_t in_pos;
         size_t out_pos;
         size_t args_count;
