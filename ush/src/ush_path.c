@@ -7,6 +7,12 @@ void ush_path_mount(struct ush_object *self, const char *mount_point, const char
 {
         USH_ASSERT(self != NULL);
         USH_ASSERT(path_obj != NULL);
+        USH_ASSERT(cmd_list != NULL);
+        USH_ASSERT(cmd_list_size > 0);
+
+        for (size_t i = 0; i < cmd_list_size; i++) {
+                USH_ASSERT(cmd_list[i].name != NULL);
+        }
 
         path_obj->cmd_list = cmd_list;
         path_obj->cmd_list_size = cmd_list_size;

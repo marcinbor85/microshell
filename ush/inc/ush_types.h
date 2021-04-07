@@ -39,6 +39,8 @@ typedef enum {
         USH_MESSAGE_ERROR_UNKNOWN_COMMAND,
         USH_MESSAGE_ERROR_WRONG_ARGUMENTS,
         USH_MESSAGE_ERROR_DIRECTORY_NOT_FOUND,
+        USH_MESSAGE_ERROR_COMMAND_NOT_FOUND,
+        USH_MESSAGE_ERROR_NO_HELP_AVAILABLE,
         USH_MESSAGE__TOTAL_NUM,
 } ush_message_t;
 
@@ -48,8 +50,9 @@ struct ush_cmd_descriptor;
 typedef char* (*ush_cmd_callback)(struct ush_object *self, struct ush_cmd_descriptor const *cmd, int argc, char *argv[]);
 
 struct ush_cmd_descriptor {
-        char *name;
-        char *description;
+        char const *name;
+        char const *description;
+        char const *help;
 
         ush_cmd_callback cmd_callback;
 };
