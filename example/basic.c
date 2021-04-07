@@ -61,7 +61,7 @@ static const struct ush_descriptor g_ush_desc = {
 };
 static struct ush_object g_ush;
 
-static char* g_cmd_help_callback(struct ush_object *self, struct ush_cmd_object *cmd, int argc, char *argv[])
+static char* g_cmd_help_callback(struct ush_object *self, struct ush_cmd_descriptor const *cmd, int argc, char *argv[])
 {
         (void)argc;
         (void)argv;
@@ -70,118 +70,135 @@ static char* g_cmd_help_callback(struct ush_object *self, struct ush_cmd_object 
         static char buf[512];
         memset(buf, 0, sizeof(buf));
 
-        struct ush_cmd_object *curr = self->cmd_first;
+        struct ush_path_object *curr = self->path_first;
 
         while (curr != NULL) {
-                strcat(buf, curr->desc->name);
-                strcat(buf, "\t");
-                strcat(buf, curr->desc->description);
-                strcat(buf, "\r\n");
-                curr = curr->next;
-        }
-        
-        return buf;
-}
+                if (curr->path != NULL) {
+                        curr = curr->next;
+                        continue;
+                }
 
-
-static char* g_cmd_list_callback(struct ush_object *self, struct ush_cmd_object *cmd, int argc, char *argv[])
-{
-        (void)argc;
-        (void)argv;
-        (void)cmd;
-
-        static char buf[512];
-        memset(buf, 0, sizeof(buf));
-
-        struct ush_cmd_object *curr = self->cmd_first;
-
-        while (curr != NULL) {
-                if (strcmp(curr->desc->path, self->current_dir) == 0) {
-                        strcat(buf, curr->desc->name);
+                for (size_t i = 0; i < curr->cmd_list_size; i++) {
+                        struct ush_cmd_descriptor const *cmd = &curr->cmd_list[i];
+                        strcat(buf, cmd->name);
                         strcat(buf, "\t");
-                        strcat(buf, curr->desc->description);
+                        strcat(buf, cmd->description);
                         strcat(buf, "\r\n");
                 }
                 
-                curr = curr->next;
+                break;
         }
         
         return buf;
 }
 
-static char* g_cmd_cd_callback(struct ush_object *self, struct ush_cmd_object *cmd, int argc, char *argv[])
+
+static char* g_cmd_ls_callback(struct ush_object *self, struct ush_cmd_descriptor const *cmd, int argc, char *argv[])
+{
+        (void)argc;
+        (void)argv;
+        (void)cmd;
+
+        static char buf[512];
+        memset(buf, 0, sizeof(buf));
+
+        struct ush_path_object *curr = self->path_first;
+
+        while (curr != NULL) {
+                if ((curr->path == NULL) || (strcmp(curr->path, self->current_dir) != 0)) {
+                        curr = curr->next;
+                        continue;
+                }
+
+                for (size_t i = 0; i < curr->cmd_list_size; i++) {
+                        struct ush_cmd_descriptor const *cmd = &curr->cmd_list[i];
+                        strcat(buf, cmd->name);
+                        strcat(buf, "\t");
+                        strcat(buf, cmd->description);
+                        strcat(buf, "\r\n");
+                }
+                
+                break;
+        }
+        
+        return buf;
+}
+
+static char* g_cmd_cd_callback(struct ush_object *self, struct ush_cmd_descriptor const *cmd, int argc, char *argv[])
 {
         (void)argc;
         (void)argv;
         (void)cmd;
 
         if (argc != 2) {
-                return "error\r\n";
+                return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_WRONG_ARGUMENTS);
         }
 
         strcpy(self->current_dir, argv[1]);
         return NULL;
 }
 
-static char* g_print_name_callback(struct ush_object *self, struct ush_cmd_object *cmd, int argc, char *argv[])
+static char* g_cmd_pwd_callback(struct ush_object *self, struct ush_cmd_descriptor const *cmd, int argc, char *argv[])
+{
+        (void)argc;
+        (void)argv;
+        (void)cmd;
+
+        static char buf[512];
+        snprintf(buf, sizeof(buf), "%s\r\n", self->current_dir);
+        return buf;
+}
+
+static char* g_print_name_callback(struct ush_object *self, struct ush_cmd_descriptor const *cmd, int argc, char *argv[])
 {
         (void)self;
         (void)argc;
         (void)argv;
 
         static char buf[512];
-        memset(buf, 0, sizeof(buf));
-
-        strcat(buf, cmd->desc->name);
-        strcat(buf, "\r\n");
-
+        snprintf(buf, sizeof(buf), "%s\r\n", cmd->name);
         return buf;
 }
 
-static const struct ush_cmd_descriptor g_cmd_help_desc = {
-        .path = "",
-        .name = "help",
-        .description = "print available commands",
-        .cmd_callback = g_cmd_help_callback,
+static const struct ush_cmd_descriptor g_path_global_desc[] = {
+        {
+                .name = "help",
+                .description = "print available commands",
+                .cmd_callback = g_cmd_help_callback,
+        },
+        {
+                .name = "ls",
+                .description = "print current directory content",
+                .cmd_callback = g_cmd_ls_callback,
+        },
+        {
+                .name = "cd",
+                .description = "change current directory",
+                .cmd_callback = g_cmd_cd_callback,
+        },
+        {
+                .name = "pwd",
+                .description = "print current directory",
+                .cmd_callback = g_cmd_pwd_callback,
+        }
 };
 
-static struct ush_cmd_object g_cmd_help;
+static struct ush_path_object g_path_global;
 
-static const struct ush_cmd_descriptor g_cmd_list_desc = {
-        .path = "",
-        .name = "list",
-        .description = "print commands in current directory",
-        .cmd_callback = g_cmd_list_callback,
+static const struct ush_cmd_descriptor g_path_root_desc[] = {
+        {
+                .name = "start",
+                .description = "start device",
+                .cmd_callback = g_print_name_callback,
+        },
+        {
+                .name = "stop",
+                .description = "stop device",
+                .cmd_callback = g_print_name_callback,
+        }
 };
 
-static struct ush_cmd_object g_cmd_list;
-
-static const struct ush_cmd_descriptor g_cmd_cd_desc = {
-        .path = "",
-        .name = "cd",
-        .description = "change current directory",
-        .cmd_callback = g_cmd_cd_callback,
-};
-
-static struct ush_cmd_object g_cmd_cd;
-
-static const struct ush_cmd_descriptor g_cmd_root_start_desc = {
-        .path = "/",
-        .name = "start",
-        .description = "start device",
-        .cmd_callback = g_print_name_callback,
-};
-
-static struct ush_cmd_object g_cmd_root_start;
-
-static const struct ush_cmd_descriptor g_cmd_root_stop_desc = {
-        .path = "/",
-        .name = "stop",
-        .description = "stop device",
-        .cmd_callback = g_print_name_callback,
-};
-
-static struct ush_cmd_object g_cmd_root_stop;
+static struct ush_path_object g_path_root;
 
 int main(int argc, char *argv[])
 {
@@ -196,11 +213,8 @@ int main(int argc, char *argv[])
         
         ush_init(&g_ush, &g_ush_desc);
 
-        ush_cmd_register(&g_ush, &g_cmd_help, &g_cmd_help_desc);
-        ush_cmd_register(&g_ush, &g_cmd_list, &g_cmd_list_desc);
-        ush_cmd_register(&g_ush, &g_cmd_cd, &g_cmd_cd_desc);
-        ush_cmd_register(&g_ush, &g_cmd_root_start, &g_cmd_root_start_desc);
-        ush_cmd_register(&g_ush, &g_cmd_root_stop, &g_cmd_root_stop_desc);
+        ush_path_register(&g_ush, NULL, &g_path_global, g_path_global_desc, sizeof(g_path_global_desc) / sizeof(g_path_global_desc[0]));
+        ush_path_register(&g_ush, "/", &g_path_root, g_path_root_desc, sizeof(g_path_root_desc) / sizeof(g_path_root_desc[0]));
 
         while (1) {
                 ush_service(&g_ush);

@@ -27,7 +27,7 @@ typedef enum {
         USH_STATE_PARSE_PREPARE,
         USH_STATE_PARSE_SEARCH_ARG,
         USH_STATE_PARSE_QUOTE_ARG,
-        USG_STATE_PARSE_STANDARD_ARG,
+        USH_STATE_PARSE_STANDARD_ARG,
         USH_STATE_PARSE_SEARCH_STOP,
 
         USH_STATE_WRITE_CHAR,
@@ -37,25 +37,28 @@ typedef enum {
 
 typedef enum {
         USH_MESSAGE_ERROR_UNKNOWN_COMMAND,
+        USH_MESSAGE_ERROR_WRONG_ARGUMENTS,
         USH_MESSAGE__TOTAL_NUM,
 } ush_message_t;
 
-struct ush_cmd_object;
 struct ush_object;
+struct ush_cmd_descriptor;
 
-typedef char* (*ush_cmd_callback)(struct ush_object *self, struct ush_cmd_object *cmd, int argc, char *argv[]);
+typedef char* (*ush_cmd_callback)(struct ush_object *self, struct ush_cmd_descriptor const *cmd, int argc, char *argv[]);
 
 struct ush_cmd_descriptor {
         char *name;
-        char *path;
         char *description;
 
         ush_cmd_callback cmd_callback;
 };
 
-struct ush_cmd_object {
-        struct ush_cmd_descriptor const *desc;
-        struct ush_cmd_object *next;
+struct ush_path_object {
+        struct ush_cmd_descriptor const *cmd_list;
+        size_t cmd_list_size;
+        char const *path;
+        
+        struct ush_path_object *next;
 };
 
 typedef int (*ush_io_interface_read_char)(struct ush_object *self, char *ch);
@@ -66,8 +69,6 @@ struct ush_io_interface {
         ush_io_interface_write_char write;
 };
 
-typedef char* (*ush_generic_cmd_callback)(struct ush_object *self, int argc, char *argv[]);
-
 struct ush_descriptor {
         struct ush_io_interface const *io;
         char *input_buffer;
@@ -76,7 +77,7 @@ struct ush_descriptor {
         size_t output_buffer_size;
         char *hostname;
 
-        ush_generic_cmd_callback cmd_callback;
+        ush_cmd_callback cmd_callback;
 };
 
 struct ush_object {
@@ -94,7 +95,7 @@ struct ush_object {
         size_t args_count;
         bool escape_flag;
 
-        struct ush_cmd_object *cmd_first;
+        struct ush_path_object *path_first;
 
         char current_dir[USH_CONFIG_CURRENT_DIR_MAX_SIZE];
 };

@@ -31,24 +31,24 @@ void ush_parse_finish(struct ush_object *self)
         }
 
         if (self->desc->cmd_callback != NULL) {
-                buf = self->desc->cmd_callback(self, argc, argv);
+                buf = self->desc->cmd_callback(self, NULL, argc, argv);
                 if (buf != NULL) {
                         ush_write_pointer(self, buf, USH_STATE_RESET);
                         return;
                 }
         } else {
                 if (argc > 0) {
-                        struct ush_cmd_object *cmd = ush_cmd_find_by_name(self, argv[0]);
+                        struct ush_cmd_descriptor const *cmd = ush_cmd_find_by_name_in_current_dir(self, argv[0]);
                         if (cmd != NULL) {
-                                if (cmd->desc->cmd_callback != NULL) {
-                                        buf = cmd->desc->cmd_callback(self, cmd, argc, argv);
+                                if (cmd->cmd_callback != NULL) {
+                                        buf = cmd->cmd_callback(self, cmd, argc, argv);
                                         if (buf != NULL) {
                                                 ush_write_pointer(self, buf, USH_STATE_RESET);
                                                 return;
                                         }
                                 }
                         } else {
-                                buf = (char*)ush_message_get(self, USH_MESSAGE_ERROR_UNKNOWN_COMMAND);
+                                buf = (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_UNKNOWN_COMMAND);
                                 ush_write_pointer(self, buf, USH_STATE_RESET);
                                 return;
                         }
@@ -81,12 +81,12 @@ void ush_parse_char(struct ush_object *self)
                 case '\\':
                         self->escape_flag = true;
                         self->args_count++;
-                        self->state = USG_STATE_PARSE_STANDARD_ARG;
+                        self->state = USH_STATE_PARSE_STANDARD_ARG;
                         break;
                 default:
                         self->desc->input_buffer[self->out_pos++] = ch;
                         self->args_count++;
-                        self->state = USG_STATE_PARSE_STANDARD_ARG;
+                        self->state = USH_STATE_PARSE_STANDARD_ARG;
                         break;
                 }
                 break;
@@ -99,7 +99,7 @@ void ush_parse_char(struct ush_object *self)
 
                 switch (ch) {
                 case '\"':
-                        self->state = USG_STATE_PARSE_STANDARD_ARG;
+                        self->state = USH_STATE_PARSE_STANDARD_ARG;
                         break;
                 case '\\':
                         self->escape_flag = true;
@@ -109,7 +109,7 @@ void ush_parse_char(struct ush_object *self)
                         break;
                 }
                 break;
-        case USG_STATE_PARSE_STANDARD_ARG:
+        case USH_STATE_PARSE_STANDARD_ARG:
                 if (self->escape_flag != false) {
                         self->desc->input_buffer[self->out_pos++] = ch;
                         self->escape_flag = false;
@@ -150,7 +150,7 @@ bool ush_parse_service(struct ush_object *self)
                 break;
         case USH_STATE_PARSE_SEARCH_ARG:
         case USH_STATE_PARSE_QUOTE_ARG:
-        case USG_STATE_PARSE_STANDARD_ARG:
+        case USH_STATE_PARSE_STANDARD_ARG:
         case USH_STATE_PARSE_SEARCH_STOP:
                 ush_parse_char(self);
                 break;

@@ -27,10 +27,6 @@ bool ush_reset_service(struct ush_object *self);
 void ush_prompt_start(struct ush_object *self);
 bool ush_prompt_service(struct ush_object *self);
 
-struct ush_cmd_object* ush_cmd_find_by_name(struct ush_object *self, char *name);
-
-const char* ush_message_get(struct ush_object *self, ush_message_t msg);
-
 #ifdef __cplusplus
 }
 #endif
