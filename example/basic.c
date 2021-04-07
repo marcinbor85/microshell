@@ -114,6 +114,9 @@ static char* g_cmd_ls_callback(struct ush_object *self, struct ush_cmd_descripto
         (void)argv;
         (void)cmd;
 
+        if (argc != 1)
+                return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_WRONG_ARGUMENTS);
+
         static char buf[512];
         memset(buf, 0, sizeof(buf));
 
@@ -168,6 +171,9 @@ static char* g_cmd_pwd_callback(struct ush_object *self, struct ush_cmd_descript
         (void)argc;
         (void)argv;
         (void)cmd;
+
+        if (argc != 1)
+                return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_WRONG_ARGUMENTS);
 
         static char buf[512];
         ush_path_get_current_dir(self, buf, sizeof(buf));
