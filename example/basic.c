@@ -47,7 +47,9 @@ static int write_char(struct ush_object *self, char ch)
                         return 0;
                 return 1;
         } else {
-                putchar(ch);
+                c = putchar(ch);
+                if (c != ch)
+                        return 0;
                 return 1;
         }
 }
