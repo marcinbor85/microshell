@@ -15,18 +15,28 @@ static int write_char(struct ush_object *self, char ch)
         (void)self;
         char c;
 
-        c = fputc(ch, g_io);
-        if (c != ch)
-                return 0;
-        return 1;
+        if (g_io != NULL) {
+                c = fputc(ch, g_io);
+                if (c != ch)
+                        return 0;
+                return 1;
+        } else {
+                putchar(ch);
+                return 1;
+        }
 }
 
 static int read_char(struct ush_object *self, char *ch)
 {
         (void)self;
      
-        *ch = fgetc(g_io);
-        return 1;
+        if (g_io != NULL) {
+                *ch = fgetc(g_io);
+                return 1;
+        } else {
+                *ch = getchar();
+                return 1;
+        }
 }
 
 static const struct ush_io_interface g_ush_io_interface = {
@@ -334,9 +344,16 @@ int main(int argc, char *argv[])
         (void)argc;
         (void)argv;
 
-        g_io = fopen(argv[1], "a+");
-        if (g_io == NULL) {
-                fprintf(stderr, "cannot open device\n");
+        if (argc == 1) {
+                g_io = NULL;
+        } else if (argc == 2) {
+                g_io = fopen(argv[1], "a+");
+                if (g_io == NULL) {
+                        fprintf(stderr, "cannot open device\n");
+                        return -1;
+                }
+        } else {
+                fprintf(stderr, "wrong arguments\n");
                 return -1;
         }
         
