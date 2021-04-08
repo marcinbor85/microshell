@@ -37,6 +37,11 @@ bool ush_read_char(struct ush_object *self)
         
         printf("%02x\n", ch);
         switch (ch) {
+        case '\x03':
+                /* ctrl+c */
+                ush_write_copy(self, "\r\n", USH_STATE_RESET);
+                echo = false;
+                break;
         case '\x08':
         case '\x7F':
                 /* backspace */
