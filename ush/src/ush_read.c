@@ -21,7 +21,7 @@ void ush_read_echo_service(struct ush_object *self, char ch)
                 break;
         }
 
-        ush_state_t next = (ch == '\r') ? USH_STATE_PARSE_PREPARE : USH_STATE_READ_CHAR;
+        ush_state_t next = (ch == '\r' || ch == '\n') ? USH_STATE_PARSE_PREPARE : USH_STATE_READ_CHAR;
         ush_write_copy(self, echo_buf, next);
 }
 
