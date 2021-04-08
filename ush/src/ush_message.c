@@ -20,6 +20,8 @@ const char* ush_message_get_string(struct ush_object *self, ush_message_t msg)
                 return "error: command not found\r\n";
         case USH_MESSAGE_ERROR_NO_HELP_AVAILABLE:
                 return "error: no help available\r\n";
+        case USH_MESSAGE_ERROR_CANNOT_EXECUTE:
+                return "error: cannot execute\r\n";
         default:
                 return "unknown message\r\n";
         }

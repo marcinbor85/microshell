@@ -46,6 +46,10 @@ void ush_parse_finish(struct ush_object *self)
                                                 ush_write_pointer(self, buf, USH_STATE_RESET);
                                                 return;
                                         }
+                                } else {
+                                        buf = (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_CANNOT_EXECUTE);
+                                        ush_write_pointer(self, buf, USH_STATE_RESET);
+                                        return;
                                 }
                         } else {
                                 buf = (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_UNKNOWN_COMMAND);

@@ -125,6 +125,12 @@ static char* g_file_ls_callback(struct ush_object *self, struct ush_file_descrip
 
         struct ush_path_object *curr = self->path_first;
 
+        if (self->current_path->name[0] != '\0') {
+                strcat(buf, USH_SHELL_FONT_COLOR_GREEN);
+                strcat(buf, "..");
+                strcat(buf, USH_SHELL_FONT_STYLE_RESET "\r\n");
+        }
+
         /* first - directories only in current path */
         while (curr != NULL) {
                 if ((curr == self->current_path) || (curr->mount_point == NULL) || (strcmp(curr->mount_point, current_dir) != 0)) {
@@ -257,7 +263,6 @@ static const struct ush_file_descriptor g_path_etc_desc[] = {
         {
                 .name = "config",
                 .description = "configuration",
-                .exec = g_print_name_callback,
         },
 };
 
