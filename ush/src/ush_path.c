@@ -20,8 +20,6 @@ void ush_path_mount(struct ush_object *self, const char *mount_point, const char
         path_obj->name = name;
         path_obj->next = self->path_first;
         self->path_first = path_obj;
-
-        path_obj->parent = ush_path_by_mount_point(self, mount_point);
 }
 
 void ush_path_unmount(struct ush_object *self, struct ush_path_object *path_obj)
@@ -123,6 +121,8 @@ void ush_path_get_collapse(struct ush_object *self, char *in_path, char *path, s
                 if (strcmp(nodes[i], "..") == 0) {
                         if (count > 0)
                                 count--;
+                        continue;
+                } else if (strcmp(nodes[i], ".") == 0) {
                         continue;
                 }
                 nodes_out[count++] = nodes[i];

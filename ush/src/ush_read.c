@@ -35,7 +35,6 @@ bool ush_read_char(struct ush_object *self)
         if (self->desc->io->read(self, &ch) == 0)
                 return false;
         
-        printf("%02x\n", ch);
         switch (ch) {
         case '\x03':
                 /* ctrl+c */
