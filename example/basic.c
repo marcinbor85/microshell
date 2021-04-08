@@ -125,6 +125,7 @@ static char* g_cmd_ls_callback(struct ush_object *self, struct ush_cmd_descripto
 
         struct ush_path_object *curr = self->path_first;
 
+        /* first - directories only in current path */
         while (curr != NULL) {
                 if ((curr == self->current_path) || (curr->mount_point == NULL) || (strcmp(curr->mount_point, current_dir) != 0)) {
                         curr = curr->next;
@@ -138,6 +139,7 @@ static char* g_cmd_ls_callback(struct ush_object *self, struct ush_cmd_descripto
                 curr = curr->next;
         }
 
+        /* next - files in current path */
         for (size_t i = 0; i < self->current_path->cmd_list_size; i++) {
                 struct ush_cmd_descriptor const *cmd = &self->current_path->cmd_list[i];
                 strcat(buf, cmd->name);
@@ -251,6 +253,16 @@ static const struct ush_cmd_descriptor g_path_dev_desc[] = {
 
 static struct ush_path_object g_path_dev;
 
+static const struct ush_cmd_descriptor g_path_etc_desc[] = {
+        {
+                .name = "config",
+                .description = "configuration",
+                .cmd_callback = g_print_name_callback,
+        },
+};
+
+static struct ush_path_object g_path_etc;
+
 static const struct ush_cmd_descriptor g_path_dev_bus_desc[] = {
         {
                 .name = "spi",
@@ -276,6 +288,21 @@ static const struct ush_cmd_descriptor g_path_dev_mem_desc[] = {
 
 static struct ush_path_object g_path_dev_mem;
 
+static const struct ush_cmd_descriptor g_path_dev_mem_ext_desc[] = {
+        {
+                .name = "flash",
+                .description = "show flash memory",
+                .cmd_callback = g_print_name_callback,
+        },
+        {
+                .name = "disk",
+                .description = "show disk memory",
+                .cmd_callback = g_print_name_callback,
+        }
+};
+
+static struct ush_path_object g_path_dev_mem_ext;
+
 int main(int argc, char *argv[])
 {
         (void)argc;
@@ -292,9 +319,11 @@ int main(int argc, char *argv[])
         ush_path_mount(&g_ush, NULL, NULL, &g_path_global, g_path_global_desc, sizeof(g_path_global_desc) / sizeof(g_path_global_desc[0]));
         ush_path_mount(&g_ush, "/", "", &g_path_root, g_path_root_desc, sizeof(g_path_root_desc) / sizeof(g_path_root_desc[0]));
         ush_path_mount(&g_ush, "/", "dev", &g_path_dev, g_path_dev_desc, sizeof(g_path_dev_desc) / sizeof(g_path_dev_desc[0]));
+        ush_path_mount(&g_ush, "/", "etc", &g_path_etc, g_path_etc_desc, sizeof(g_path_etc_desc) / sizeof(g_path_etc_desc[0]));
         ush_path_mount(&g_ush, "/dev", "bus", &g_path_dev_bus, g_path_dev_bus_desc, sizeof(g_path_dev_bus_desc) / sizeof(g_path_dev_bus_desc[0]));
         ush_path_mount(&g_ush, "/dev", "mem", &g_path_dev_mem, g_path_dev_mem_desc, sizeof(g_path_dev_mem_desc) / sizeof(g_path_dev_mem_desc[0]));
-
+        ush_path_mount(&g_ush, "/dev/mem", "external", &g_path_dev_mem_ext, g_path_dev_mem_ext_desc, sizeof(g_path_dev_mem_ext_desc) / sizeof(g_path_dev_mem_ext_desc[0]));
+        
         ush_path_set_current_dir(&g_ush, "/");
 
         while (1) {

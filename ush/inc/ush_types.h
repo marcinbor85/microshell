@@ -62,6 +62,7 @@ struct ush_path_object {
         size_t cmd_list_size;
         char const *mount_point;
         char const *name;
+        struct ush_path_object *parent;
         
         struct ush_path_object *next;
 };

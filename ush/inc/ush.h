@@ -17,6 +17,10 @@ void ush_path_unmount(struct ush_object *self, struct ush_path_object *path_obj)
 bool ush_path_set_current_dir(struct ush_object *self, const char *path);
 void ush_path_get_current_dir(struct ush_object *self, char *path, size_t max_len);
 void ush_path_get_full_path(struct ush_object *self, struct ush_path_object *path_obj, char *full_path, size_t max_len);
+void ush_path_get_absolute_path(struct ush_object *self, const char *in_path, char *abs_path, size_t max_len);
+struct ush_path_object * ush_path_by_mount_point(struct ush_object *self, const char *mount_point);
+size_t ush_path_get_levels_count(struct ush_object *self, const char *path);
+void ush_path_get_collapse(struct ush_object *self, char *in_path, char *path, size_t max_len);
 
 void ush_cmd_get_full_path(struct ush_object *self, struct ush_path_object *path_obj, const char *name, char *path, size_t max_len);
 struct ush_cmd_descriptor const* ush_cmd_find_by_name(struct ush_object *self, const char *name);
