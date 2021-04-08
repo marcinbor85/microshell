@@ -3,19 +3,19 @@
 
 #include <string.h>
 
-void ush_path_mount(struct ush_object *self, const char *mount_point, const char *name, struct ush_path_object *path_obj, const struct ush_cmd_descriptor *cmd_list, size_t cmd_list_size)
+void ush_path_mount(struct ush_object *self, const char *mount_point, const char *name, struct ush_path_object *path_obj, const struct ush_file_descriptor *file_list, size_t file_list_size)
 {
         USH_ASSERT(self != NULL);
         USH_ASSERT(path_obj != NULL);
-        USH_ASSERT(cmd_list != NULL);
-        USH_ASSERT(cmd_list_size > 0);
+        USH_ASSERT(file_list != NULL);
+        USH_ASSERT(file_list_size > 0);
 
-        for (size_t i = 0; i < cmd_list_size; i++) {
-                USH_ASSERT(cmd_list[i].name != NULL);
+        for (size_t i = 0; i < file_list_size; i++) {
+                USH_ASSERT(file_list[i].name != NULL);
         }
 
-        path_obj->cmd_list = cmd_list;
-        path_obj->cmd_list_size = cmd_list_size;
+        path_obj->file_list = file_list;
+        path_obj->file_list_size = file_list_size;
         path_obj->mount_point = mount_point;
         path_obj->name = name;
         path_obj->next = self->path_first;

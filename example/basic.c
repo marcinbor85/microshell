@@ -34,7 +34,7 @@ static const struct ush_io_interface g_ush_io_interface = {
         .write = write_char,
 };
 
-// static char* cmd_callback(struct ush_object *self, int argc, char *argv[])
+// static char* exec(struct ush_object *self, int argc, char *argv[])
 // {
 //         (void)self;
         
@@ -58,15 +58,15 @@ static const struct ush_descriptor g_ush_desc = {
         .output_buffer = g_output_buffer,
         .output_buffer_size = sizeof(g_output_buffer),
         .hostname = "host",
-        // .cmd_callback = cmd_callback,
+        // .exec = exec,
 };
 static struct ush_object g_ush;
 
-static char* g_cmd_help_callback(struct ush_object *self, struct ush_cmd_descriptor const *cmd, int argc, char *argv[])
+static char* g_file_help_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
         (void)argc;
         (void)argv;
-        (void)cmd;
+        (void)file;
 
         static char buf[512];
         memset(buf, 0, sizeof(buf));
@@ -80,19 +80,19 @@ static char* g_cmd_help_callback(struct ush_object *self, struct ush_cmd_descrip
                                 continue;
                         }
 
-                        for (size_t i = 0; i < curr->cmd_list_size; i++) {
-                                struct ush_cmd_descriptor const *cmd = &curr->cmd_list[i];
-                                strcat(buf, cmd->name);
+                        for (size_t i = 0; i < curr->file_list_size; i++) {
+                                struct ush_file_descriptor const *file = &curr->file_list[i];
+                                strcat(buf, file->name);
                                 strcat(buf, "\t");
-                                if (cmd->description != NULL)
-                                        strcat(buf, cmd->description);
+                                if (file->description != NULL)
+                                        strcat(buf, file->description);
                                 strcat(buf, "\r\n");
                         }
 
                         curr = curr->next;
                 }
         } else if (argc == 2) {
-                struct ush_cmd_descriptor const *help_cmd = ush_cmd_find_by_name(self, argv[1]);
+                struct ush_file_descriptor const *help_cmd = ush_file_find_by_name(self, argv[1]);
                 if (help_cmd == NULL) 
                         return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_COMMAND_NOT_FOUND);
 
@@ -108,11 +108,11 @@ static char* g_cmd_help_callback(struct ush_object *self, struct ush_cmd_descrip
 }
 
 
-static char* g_cmd_ls_callback(struct ush_object *self, struct ush_cmd_descriptor const *cmd, int argc, char *argv[])
+static char* g_file_ls_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
         (void)argc;
         (void)argv;
-        (void)cmd;
+        (void)file;
 
         if (argc != 1)
                 return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_WRONG_ARGUMENTS);
@@ -140,23 +140,23 @@ static char* g_cmd_ls_callback(struct ush_object *self, struct ush_cmd_descripto
         }
 
         /* next - files in current path */
-        for (size_t i = 0; i < self->current_path->cmd_list_size; i++) {
-                struct ush_cmd_descriptor const *cmd = &self->current_path->cmd_list[i];
-                strcat(buf, cmd->name);
+        for (size_t i = 0; i < self->current_path->file_list_size; i++) {
+                struct ush_file_descriptor const *file = &self->current_path->file_list[i];
+                strcat(buf, file->name);
                 strcat(buf, "\t");
-                if (cmd->description != NULL)
-                        strcat(buf, cmd->description);
+                if (file->description != NULL)
+                        strcat(buf, file->description);
                 strcat(buf, "\r\n");
         }
         
         return buf;
 }
 
-static char* g_cmd_cd_callback(struct ush_object *self, struct ush_cmd_descriptor const *cmd, int argc, char *argv[])
+static char* g_file_cd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
         (void)argc;
         (void)argv;
-        (void)cmd;
+        (void)file;
 
         if (argc != 2)
                 return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_WRONG_ARGUMENTS);
@@ -168,11 +168,11 @@ static char* g_cmd_cd_callback(struct ush_object *self, struct ush_cmd_descripto
         return NULL;
 }
 
-static char* g_cmd_pwd_callback(struct ush_object *self, struct ush_cmd_descriptor const *cmd, int argc, char *argv[])
+static char* g_file_pwd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
         (void)argc;
         (void)argv;
-        (void)cmd;
+        (void)file;
 
         if (argc != 1)
                 return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_WRONG_ARGUMENTS);
@@ -183,121 +183,121 @@ static char* g_cmd_pwd_callback(struct ush_object *self, struct ush_cmd_descript
         return buf;
 }
 
-static char* g_print_name_callback(struct ush_object *self, struct ush_cmd_descriptor const *cmd, int argc, char *argv[])
+static char* g_print_name_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
         (void)self;
         (void)argc;
         (void)argv;
 
         static char buf[512];
-        snprintf(buf, sizeof(buf), "%s\r\n", cmd->name);
+        snprintf(buf, sizeof(buf), "%s\r\n", file->name);
         return buf;
 }
 
-static const struct ush_cmd_descriptor g_path_global_desc[] = {
+static const struct ush_file_descriptor g_path_global_desc[] = {
         {
                 .name = "help",
                 .description = "print available commands",
                 .help = "help: help [cmd]\r\n\tShow help information for file or command.\r\n",
-                .cmd_callback = g_cmd_help_callback,
+                .exec = g_file_help_callback,
         },
         {
                 .name = "ls",
                 .description = "print current directory content",
                 .help = "ls: ls\r\n\tPrint current directory content.\r\n",
-                .cmd_callback = g_cmd_ls_callback,
+                .exec = g_file_ls_callback,
         },
         {
                 .name = "cd",
                 .description = "change current directory",
                 .help = "cd: cd [path]\r\n\tChange current working directory.\r\n",
-                .cmd_callback = g_cmd_cd_callback,
+                .exec = g_file_cd_callback,
         },
         {
                 .name = "pwd",
                 .description = "print current directory",
                 .help = "pwd: pwd\r\n\tPrint current working directory path.\r\n",
-                .cmd_callback = g_cmd_pwd_callback,
+                .exec = g_file_pwd_callback,
         }
 };
 
 static struct ush_path_object g_path_global;
 
-static const struct ush_cmd_descriptor g_path_root_desc[] = {
+static const struct ush_file_descriptor g_path_root_desc[] = {
         {
                 .name = "start",
                 .description = "start device",
-                .cmd_callback = g_print_name_callback,
+                .exec = g_print_name_callback,
         },
         {
                 .name = "stop",
                 .description = "stop device",
-                .cmd_callback = g_print_name_callback,
+                .exec = g_print_name_callback,
         }
 };
 
 static struct ush_path_object g_path_root;
 
-static const struct ush_cmd_descriptor g_path_dev_desc[] = {
+static const struct ush_file_descriptor g_path_dev_desc[] = {
         {
                 .name = "gpio_write",
                 .description = "write to gpio",
-                .cmd_callback = g_print_name_callback,
+                .exec = g_print_name_callback,
         },
         {
                 .name = "gpio_read",
                 .description = "read from gpio",
-                .cmd_callback = g_print_name_callback,
+                .exec = g_print_name_callback,
         }
 };
 
 static struct ush_path_object g_path_dev;
 
-static const struct ush_cmd_descriptor g_path_etc_desc[] = {
+static const struct ush_file_descriptor g_path_etc_desc[] = {
         {
                 .name = "config",
                 .description = "configuration",
-                .cmd_callback = g_print_name_callback,
+                .exec = g_print_name_callback,
         },
 };
 
 static struct ush_path_object g_path_etc;
 
-static const struct ush_cmd_descriptor g_path_dev_bus_desc[] = {
+static const struct ush_file_descriptor g_path_dev_bus_desc[] = {
         {
                 .name = "spi",
                 .description = "show spi",
-                .cmd_callback = g_print_name_callback,
+                .exec = g_print_name_callback,
         },
         {
                 .name = "i2c",
                 .description = "show i2c",
-                .cmd_callback = g_print_name_callback,
+                .exec = g_print_name_callback,
         }
 };
 
 static struct ush_path_object g_path_dev_bus;
 
-static const struct ush_cmd_descriptor g_path_dev_mem_desc[] = {
+static const struct ush_file_descriptor g_path_dev_mem_desc[] = {
         {
                 .name = "ram",
                 .description = "show ram memory",
-                .cmd_callback = g_print_name_callback,
+                .exec = g_print_name_callback,
         }
 };
 
 static struct ush_path_object g_path_dev_mem;
 
-static const struct ush_cmd_descriptor g_path_dev_mem_ext_desc[] = {
+static const struct ush_file_descriptor g_path_dev_mem_ext_desc[] = {
         {
                 .name = "flash",
                 .description = "show flash memory",
-                .cmd_callback = g_print_name_callback,
+                .exec = g_print_name_callback,
         },
         {
                 .name = "disk",
                 .description = "show disk memory",
-                .cmd_callback = g_print_name_callback,
+                .exec = g_print_name_callback,
         }
 };
 

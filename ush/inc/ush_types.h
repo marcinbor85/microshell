@@ -45,21 +45,21 @@ typedef enum {
 } ush_message_t;
 
 struct ush_object;
-struct ush_cmd_descriptor;
+struct ush_file_descriptor;
 
-typedef char* (*ush_cmd_callback)(struct ush_object *self, struct ush_cmd_descriptor const *cmd, int argc, char *argv[]);
+typedef char* (*ush_file_execute_callback)(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
 
-struct ush_cmd_descriptor {
+struct ush_file_descriptor {
         char const *name;
         char const *description;
         char const *help;
 
-        ush_cmd_callback cmd_callback;
+        ush_file_execute_callback exec;
 };
 
 struct ush_path_object {
-        struct ush_cmd_descriptor const *cmd_list;
-        size_t cmd_list_size;
+        struct ush_file_descriptor const *file_list;
+        size_t file_list_size;
         char const *mount_point;
         char const *name;
         struct ush_path_object *parent;
@@ -83,7 +83,7 @@ struct ush_descriptor {
         size_t output_buffer_size;
         char *hostname;
 
-        ush_cmd_callback cmd_callback;
+        ush_file_execute_callback exec;
 };
 
 struct ush_object {

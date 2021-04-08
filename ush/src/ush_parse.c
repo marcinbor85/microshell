@@ -30,18 +30,18 @@ void ush_parse_finish(struct ush_object *self)
                 ptr += strlen(argv[i]) + 1;
         }
 
-        if (self->desc->cmd_callback != NULL) {
-                buf = self->desc->cmd_callback(self, NULL, argc, argv);
+        if (self->desc->exec != NULL) {
+                buf = self->desc->exec(self, NULL, argc, argv);
                 if (buf != NULL) {
                         ush_write_pointer(self, buf, USH_STATE_RESET);
                         return;
                 }
         } else {
                 if (argc > 0) {
-                        struct ush_cmd_descriptor const *cmd = ush_cmd_find_by_name(self, argv[0]);
-                        if (cmd != NULL) {
-                                if (cmd->cmd_callback != NULL) {
-                                        buf = cmd->cmd_callback(self, cmd, argc, argv);
+                        struct ush_file_descriptor const *file = ush_file_find_by_name(self, argv[0]);
+                        if (file != NULL) {
+                                if (file->exec != NULL) {
+                                        buf = file->exec(self, file, argc, argv);
                                         if (buf != NULL) {
                                                 ush_write_pointer(self, buf, USH_STATE_RESET);
                                                 return;
