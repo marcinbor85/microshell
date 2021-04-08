@@ -8,65 +8,30 @@
 #include "ush.h"
 #include "ush_shell.h"
 
-static FILE *g_io;
+static FILE *g_io_read;
+static FILE *g_io_write;
 
-int kbhit(void)
-{
-        struct termios oldt, newt;
-        int ch;
-        int oldf;
-
-        tcgetattr(STDIN_FILENO, &oldt);
-        newt = oldt;
-        newt.c_lflag &= ~(ICANON | ECHO);
-        tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-        oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-        fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
-
-        ch = getchar();
-
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-        fcntl(STDIN_FILENO, F_SETFL, oldf);
-
-        if(ch != EOF) {
-                ungetc(ch, stdin);
-                return 1;
-        }
-
-        return 0;
-}
-
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <termios.h>
-
-/* Use this variable to remember original terminal attributes. */
-
-struct termios saved_attributes;
+struct termios g_saved_attributes;
 
 void reset_input_mode(void)
 {
-        tcsetattr(STDIN_FILENO, TCSANOW, &saved_attributes);
+        tcsetattr(STDIN_FILENO, TCSANOW, &g_saved_attributes);
 }
 
 void set_input_mode(void)
 {
         struct termios tattr;
 
-        /* Make sure stdin is a terminal. */
         if (!isatty (STDIN_FILENO)) {
-                fprintf (stderr, "Not a terminal.\n");
-                exit (EXIT_FAILURE);
+                fprintf(stderr, "Not a terminal.\n");
+                exit(EXIT_FAILURE);
         }
 
-        /* Save the terminal attributes so we can restore them later. */
-        tcgetattr (STDIN_FILENO, &saved_attributes);
-        atexit (reset_input_mode);
+        tcgetattr(STDIN_FILENO, &g_saved_attributes);
+        atexit(reset_input_mode);
 
-        /* Set the funny terminal modes. */
         tcgetattr (STDIN_FILENO, &tattr);
-        tattr.c_lflag &= ~(ICANON|ECHO); /* Clear ICANON and ECHO. */
+        tattr.c_lflag &= ~(ICANON|ECHO);
         tattr.c_cc[VMIN] = 1;
         tattr.c_cc[VTIME] = 0;
         tcsetattr (STDIN_FILENO, TCSAFLUSH, &tattr);
@@ -75,32 +40,19 @@ void set_input_mode(void)
 static int write_char(struct ush_object *self, char ch)
 {
         (void)self;
-        char c;
 
-        if (g_io != NULL) {
-                c = fputc(ch, g_io);
-                if (c != ch)
-                        return 0;
-                return 1;
-        } else {
-                c = putchar(ch);
-                if (c != ch)
-                        return 0;
-                return 1;
-        }
+        char c = fputc(ch, g_io_write);
+        if (c != ch)
+                return 0;
+        return 1;
 }
 
 static int read_char(struct ush_object *self, char *ch)
 {
         (void)self;
      
-        if (g_io != NULL) {
-                *ch = fgetc(g_io);
-                return 1;
-        } else {
-                *ch = getchar();
-                return 1;
-        }
+        *ch = fgetc(g_io_read);
+        return 1;
 }
 
 static const struct ush_io_interface g_ush_io_interface = {
@@ -409,14 +361,16 @@ int main(int argc, char *argv[])
         (void)argv;
 
         if (argc == 1) {
-                g_io = NULL;
+                g_io_read = stdin;
+                g_io_write = stdout;
                 set_input_mode();
         } else if (argc == 2) {
-                g_io = fopen(argv[1], "a+");
-                if (g_io == NULL) {
+                g_io_read = fopen(argv[1], "a+");
+                if (g_io_read == NULL) {
                         fprintf(stderr, "cannot open device\n");
                         return -1;
                 }
+                g_io_write = g_io_read;
         } else {
                 fprintf(stderr, "wrong arguments\n");
                 return -1;
