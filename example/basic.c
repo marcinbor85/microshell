@@ -36,6 +36,42 @@ int kbhit(void)
         return 0;
 }
 
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <termios.h>
+
+/* Use this variable to remember original terminal attributes. */
+
+struct termios saved_attributes;
+
+void reset_input_mode(void)
+{
+        tcsetattr(STDIN_FILENO, TCSANOW, &saved_attributes);
+}
+
+void set_input_mode(void)
+{
+        struct termios tattr;
+
+        /* Make sure stdin is a terminal. */
+        if (!isatty (STDIN_FILENO)) {
+                fprintf (stderr, "Not a terminal.\n");
+                exit (EXIT_FAILURE);
+        }
+
+        /* Save the terminal attributes so we can restore them later. */
+        tcgetattr (STDIN_FILENO, &saved_attributes);
+        atexit (reset_input_mode);
+
+        /* Set the funny terminal modes. */
+        tcgetattr (STDIN_FILENO, &tattr);
+        tattr.c_lflag &= ~(ICANON|ECHO); /* Clear ICANON and ECHO. */
+        tattr.c_cc[VMIN] = 1;
+        tattr.c_cc[VTIME] = 0;
+        tcsetattr (STDIN_FILENO, TCSAFLUSH, &tattr);
+}
+
 static int write_char(struct ush_object *self, char ch)
 {
         (void)self;
@@ -62,11 +98,8 @@ static int read_char(struct ush_object *self, char *ch)
                 *ch = fgetc(g_io);
                 return 1;
         } else {
-                if (kbhit() != 0) {
-                        *ch = getchar();
-                        return 1;
-                }
-                return 0;
+                *ch = getchar();
+                return 1;
         }
 }
 
@@ -377,6 +410,7 @@ int main(int argc, char *argv[])
 
         if (argc == 1) {
                 g_io = NULL;
+                set_input_mode();
         } else if (argc == 2) {
                 g_io = fopen(argv[1], "a+");
                 if (g_io == NULL) {
@@ -403,5 +437,6 @@ int main(int argc, char *argv[])
         while (1) {
                 ush_service(&g_ush);
         }
+        reset_input_mode();
         return 0;
 }
