@@ -65,3 +65,8 @@ void ush_print(struct ush_object *self, char *buf)
 {
         ush_write_pointer(self, buf, USH_STATE_RESET);
 }
+
+void ush_print_no_newline(struct ush_object *self, char *buf)
+{
+        ush_write_pointer(self, buf, USH_STATE_RESET_PROMPT);
+}

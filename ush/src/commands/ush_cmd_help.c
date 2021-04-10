@@ -4,8 +4,6 @@
 
 void ush_buildin_cmd_help_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
-        (void)argc;
-        (void)argv;
         (void)file;
 
         static char buf[512];
@@ -13,14 +11,13 @@ void ush_buildin_cmd_help_callback(struct ush_object *self, struct ush_file_desc
 
         if (argc == 1) {
                 struct ush_node_object *curr = self->commands;
-
                 while (curr != NULL) {
                         for (size_t i = 0; i < curr->file_list_size; i++) {
-                                struct ush_file_descriptor const *file = &curr->file_list[i];
-                                strcat(buf, file->name);
-                                if (file->description != NULL) {
+                                struct ush_file_descriptor const *f = &curr->file_list[i];
+                                strcat(buf, f->name);
+                                if (f->description != NULL) {
                                         strcat(buf, "\t- ");
-                                        strcat(buf, file->description);
+                                        strcat(buf, f->description);
                                 }
                                 strcat(buf, "\r\n");
                         }
@@ -45,5 +42,5 @@ void ush_buildin_cmd_help_callback(struct ush_object *self, struct ush_file_desc
                 return;
         }
 
-        ush_print(self, buf);
+        ush_print_no_newline(self, buf);
 }

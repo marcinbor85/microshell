@@ -2,8 +2,6 @@
 
 void ush_buildin_cmd_cd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
-        (void)argc;
-        (void)argv;
         (void)file;
 
         if (argc != 2) {

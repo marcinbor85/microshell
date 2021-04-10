@@ -19,6 +19,7 @@ bool ush_service(struct ush_object *self);
 void ush_reset(struct ush_object *self);
 
 void ush_print_status(struct ush_object *self, ush_status_t status);
+void ush_print_no_newline(struct ush_object *self, char *buf);
 void ush_print(struct ush_object *self, char *buf);
 
 #ifdef __cplusplus

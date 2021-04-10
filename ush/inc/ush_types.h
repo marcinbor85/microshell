@@ -67,6 +67,7 @@ struct ush_node_object {
         size_t file_list_size;
         char const *path;
 
+        struct ush_node_object *parent;
         struct ush_node_object *childs;
         struct ush_node_object *next;
 };

@@ -89,12 +89,14 @@ ush_status_t ush_node_mount(struct ush_object *self, const char *path, struct us
         if (node_parent != NULL) {
                 node->next = node_parent->childs;
                 node_parent->childs = node;
+                node->parent = node_parent;
                 return USH_STATUS_OK;
         }
 
         if (strcmp(path, "/") == 0) {
                 node->next = NULL;
                 self->root = node;
+                node->parent = NULL;
                 return USH_STATUS_OK;
         }
 
