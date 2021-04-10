@@ -6,7 +6,6 @@
 #include <string.h>
 
 #include "ush.h"
-#include "ush_shell.h"
 
 static FILE *g_io_read;
 static FILE *g_io_write;

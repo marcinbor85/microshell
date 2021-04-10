@@ -1,6 +1,7 @@
 #include "ush_internal.h"
 #include "ush_config.h"
-#include "ush.h"
+#include "ush_file.h"
+#include "ush_message.h"
 
 #include <string.h>
 
