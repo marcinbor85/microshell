@@ -1,10 +1,12 @@
-#include "ush_types.h"
-#include "ush.h"
+#include "ush_utils.h"
+#include "ush_config.h"
 
 #include <string.h>
 
 void ush_utils_join_path(const char *in_path, const char *name, char *out_path)
 {
+        USH_ASSERT(in_path != NULL);
+
         strcpy(out_path, in_path);
         
         if (strcmp(out_path, "/") == 0) {

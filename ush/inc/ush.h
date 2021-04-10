@@ -23,13 +23,6 @@ struct ush_file_descriptor const* ush_file_find_by_name(struct ush_object *self,
 
 const char* ush_message_get_string(struct ush_object *self, ush_message_t msg);
 
-size_t ush_utils_get_path_levels_count(const char *path);
-void ush_utils_get_collapse_path(char *in_path, char *out_path);
-void ush_utils_path_upper(char *path);
-void ush_utils_path_last(const char *in_path, char* *out_path);
-void ush_utils_get_path_level(size_t level, const char *in_path, char *out_path);
-void ush_utils_join_path(const char *in_path, const char *name, char *out_path);
-
 #ifdef __cplusplus
 }
 #endif

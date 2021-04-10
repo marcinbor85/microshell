@@ -1,6 +1,7 @@
-#include "ush_internal.h"
-#include "ush_shell.h"
 #include "ush.h"
+#include "ush_shell.h"
+#include "ush_utils.h"
+#include "ush_internal.h"
 
 #include <string.h>
 
