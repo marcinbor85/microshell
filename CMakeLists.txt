@@ -11,7 +11,7 @@ set( USH_PORT posix )
 
 enable_testing( )
 
-add_compile_options( -Werror -Wall -Wextra -pedantic )
+add_compile_options( -Werror -Wall -Wextra -pedantic -g -O0)
 
 add_subdirectory( ${PROJECT_SOURCE_DIR}/test )
 add_subdirectory( ${PROJECT_SOURCE_DIR}/example )

@@ -8,8 +8,9 @@ file(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_prompt.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_reset.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_file.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_path.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_node.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_message.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_utils.c
 )
 
 add_library(

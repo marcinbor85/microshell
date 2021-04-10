@@ -25,13 +25,12 @@ bool ush_prompt_service(struct ush_object *self)
         case USH_STATE_PROMPT_SPACE:
                 ush_write_pointer(self, " ", USH_STATE_PROMPT_PATH);
                 break;
-        case USH_STATE_PROMPT_PATH:
-                if (strcmp(self->current_path->name, "") == 0) {
-                        ush_write_pointer(self, (char*)self->current_path->mount_point, USH_STATE_PROMPT_SUFFIX);
-                } else {
-                        ush_write_pointer(self, (char*)self->current_path->name, USH_STATE_PROMPT_SUFFIX);
-                }
+        case USH_STATE_PROMPT_PATH: {
+                char *path = NULL;
+                ush_utils_path_last(self->current_node->path, &path);
+                ush_write_pointer(self, (char*)path, USH_STATE_PROMPT_SUFFIX);
                 break;
+        }
         case USH_STATE_PROMPT_SUFFIX:
                 ush_write_pointer(self, "]$ " USH_SHELL_FONT_STYLE_RESET, USH_STATE_READ_PREPARE);
                 break;

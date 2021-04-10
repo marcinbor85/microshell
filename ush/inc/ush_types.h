@@ -58,13 +58,13 @@ struct ush_file_descriptor {
         ush_file_execute_callback exec;
 };
 
-struct ush_path_object {
+struct ush_node_object {
         struct ush_file_descriptor const *file_list;
         size_t file_list_size;
-        char const *mount_point;
-        char const *name;
-        
-        struct ush_path_object *next;
+        char const *path;
+
+        struct ush_node_object *childs;
+        struct ush_node_object *next;
 };
 
 typedef int (*ush_io_interface_read_char)(struct ush_object *self, char *ch);
@@ -102,8 +102,9 @@ struct ush_object {
         size_t args_count;
         bool escape_flag;
 
-        struct ush_path_object *path_first;
-        struct ush_path_object *current_path;
+        struct ush_node_object *commands;
+        struct ush_node_object *root;
+        struct ush_node_object *current_node;
 };
 
 #ifdef __cplusplus
