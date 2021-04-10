@@ -24,7 +24,7 @@ struct ush_node_object* ush_node_get_by_path(struct ush_object *self, const char
         USH_ASSERT(self != NULL);
         USH_ASSERT(path != NULL);
 
-        char level_path[USH_CONFIG_CURRENT_DIR_MAX_SIZE];
+        char level_path[USH_CONFIG_PATH_MAX_LENGTH];
         
         size_t levels = ush_utils_get_path_levels_count(path);
 
@@ -137,44 +137,38 @@ bool ush_node_unmount(struct ush_object *self, const char *path)
 
 
 
-void ush_path_get_absolute_path(struct ush_object *self, const char *in_path, char *out_path, size_t max_len)
+void ush_node_get_absolute_path(struct ush_object *self, const char *in_path, char *out_path)
 {
         USH_ASSERT(self != NULL);
         USH_ASSERT(in_path != NULL);
         USH_ASSERT(out_path != NULL);
-        USH_ASSERT(max_len > 0);
 
-        char curr_path[USH_CONFIG_CURRENT_DIR_MAX_SIZE*2];
-        char abs_path[USH_CONFIG_CURRENT_DIR_MAX_SIZE*3];
+        char abs_path[USH_CONFIG_PATH_MAX_LENGTH];
 
         if (in_path[0] == '/') {
-                strncpy(abs_path, in_path, sizeof(abs_path));
-                abs_path[sizeof(abs_path) - 1] = '\0';
+                strcpy(abs_path, in_path);
         } else {
-                strncpy(curr_path, self->current_node->path, sizeof(curr_path));
-                curr_path[sizeof(curr_path) - 1] = '\0';
-                if (strcmp(curr_path, "/") == 0) {
-                        snprintf(abs_path, sizeof(abs_path), "/%s", in_path);
-                } else {
-                        snprintf(abs_path, sizeof(abs_path), "%s/%s", curr_path, in_path);
-                }
+                strcpy(abs_path, self->current_node->path);
+                if (strcmp(self->current_node->path, "/") != 0)
+                        strcat(abs_path, "/");
+                strcat(abs_path, in_path);
         }
 
         size_t abs_path_len = strlen(abs_path);
         if ((abs_path_len > 1) && (abs_path[abs_path_len - 1] == '/'))
                 abs_path[abs_path_len - 1] = '\0';
 
-        ush_utils_get_collapse_path(abs_path, out_path, max_len);
+        ush_utils_get_collapse_path(abs_path, out_path);
 }
 
-bool ush_path_set_current_dir(struct ush_object *self, const char *path)
+bool ush_node_set_current_dir(struct ush_object *self, const char *path)
 {
         USH_ASSERT(self != NULL);
         USH_ASSERT(path != NULL);
 
-        char abs_path[USH_CONFIG_CURRENT_DIR_MAX_SIZE * 2];
+        char abs_path[USH_CONFIG_PATH_MAX_LENGTH];
 
-        ush_path_get_absolute_path(self, path, abs_path, sizeof(abs_path));
+        ush_node_get_absolute_path(self, path, abs_path);
 
         bool success = false;
 

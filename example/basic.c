@@ -212,7 +212,7 @@ static char* g_file_cd_callback(struct ush_object *self, struct ush_file_descrip
         if (argc != 2)
                 return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_WRONG_ARGUMENTS);
 
-        bool success = ush_path_set_current_dir(self, argv[1]);
+        bool success = ush_node_set_current_dir(self, argv[1]);
         if (success == false)
                 return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_DIRECTORY_NOT_FOUND);
 
@@ -388,7 +388,7 @@ int main(int argc, char *argv[])
         ush_node_mount(&g_ush, "/dev/mem", &g_path_dev_mem, g_path_dev_mem_desc, sizeof(g_path_dev_mem_desc) / sizeof(g_path_dev_mem_desc[0]));
         ush_node_mount(&g_ush, "/dev/mem/external", &g_path_dev_mem_ext, g_path_dev_mem_ext_desc, sizeof(g_path_dev_mem_ext_desc) / sizeof(g_path_dev_mem_ext_desc[0]));
         
-        ush_path_set_current_dir(&g_ush, "/");
+        ush_node_set_current_dir(&g_ush, "/");
 
         while (1) {
                 ush_service(&g_ush);

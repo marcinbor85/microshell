@@ -3,14 +3,24 @@
 
 #include <string.h>
 
-void ush_utils_get_collapse_path(char *in_path, char *out_path, size_t max_len)
+void ush_utils_join_path(const char *in_path, const char *name, char *out_path)
+{
+        strcpy(out_path, in_path);
+        
+        if (strcmp(out_path, "/") == 0) {
+                strcat(out_path, name);
+        } else {
+                strcat(out_path, "/");
+                strcat(out_path, name);
+        }
+}
+
+void ush_utils_get_collapse_path(char *in_path, char *out_path)
 {
         USH_ASSERT(in_path != NULL);
         USH_ASSERT(out_path != NULL);
-        USH_ASSERT(max_len > 0);
 
-        strncpy(out_path, in_path, max_len);
-        out_path[max_len - 1] = '\0';
+        strcpy(out_path, in_path);
 
         if (strcmp(in_path, "/") == 0)
                 return;
@@ -56,13 +66,13 @@ void ush_utils_get_collapse_path(char *in_path, char *out_path, size_t max_len)
 
         out_path[0] = '\0';
         if (count == 0) {
-                strncat(out_path, "/", max_len - strlen(out_path));
+                strcat(out_path, "/");
                 return;
         }
 
         for (size_t i = 0; i < count; i++) {
-                strncat(out_path, "/", max_len - strlen(out_path));
-                strncat(out_path, nodes_out[i], max_len - strlen(out_path));
+                strcat(out_path, "/");
+                strcat(out_path, nodes_out[i]);
         }
 }
 
