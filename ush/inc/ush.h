@@ -12,6 +12,7 @@ extern "C" {
 #include "ush_file.h"
 #include "ush_node.h"
 #include "ush_utils.h"
+#include "ush_commands.h"
 
 void ush_init(struct ush_object *self, const struct ush_descriptor *desc);
 bool ush_service(struct ush_object *self);

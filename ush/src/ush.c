@@ -21,6 +21,8 @@ void ush_init(struct ush_object *self, const struct ush_descriptor *desc)
         self->desc = desc;
         self->root = NULL;
 
+        ush_commands_add(self, &self->buildin_commands, g_ush_buildin_commands, g_ush_buildin_commands_num);
+
         ush_reset(self);
 }
 

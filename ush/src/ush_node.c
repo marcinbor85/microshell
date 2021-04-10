@@ -69,6 +69,7 @@ ush_status_t ush_node_mount(struct ush_object *self, const char *path, struct us
 {
         USH_ASSERT(self != NULL);
         USH_ASSERT(node != NULL);
+        USH_ASSERT(path != NULL);
         USH_ASSERT(file_list != NULL);
         USH_ASSERT(file_list_size > 0);
 
@@ -80,12 +81,6 @@ ush_status_t ush_node_mount(struct ush_object *self, const char *path, struct us
         node->file_list_size = file_list_size;
         node->path = path;
 
-        if (path == NULL) {
-                node->next = self->commands;
-                self->commands = node;
-                return USH_STATUS_OK;
-        }
-        
         struct ush_node_object *node_exists = ush_node_get_by_path(self, path);
         if (node_exists != NULL)
                 return USH_STATUS_ERROR_NODE_ALREADY_MOUNTED;

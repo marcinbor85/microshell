@@ -109,6 +109,8 @@ struct ush_object {
         struct ush_node_object *commands;
         struct ush_node_object *root;
         struct ush_node_object *current_node;
+
+        struct ush_node_object buildin_commands;
 };
 
 #ifdef __cplusplus

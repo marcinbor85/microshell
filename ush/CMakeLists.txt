@@ -10,6 +10,12 @@ file(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_file.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_node.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_utils.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_commands.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/commands/ush_cmd.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/commands/ush_cmd_cd.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/commands/ush_cmd_help.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/commands/ush_cmd_ls.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/commands/ush_cmd_pwd.c
 )
 
 add_library(
