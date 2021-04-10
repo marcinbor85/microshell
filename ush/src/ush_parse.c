@@ -31,24 +31,24 @@ void ush_parse_finish(struct ush_object *self)
                 ptr += strlen(argv[i]) + 1;
         }
 
-        if (self->desc->exec != NULL) {
+        if (argc == 0)
+                return;
+        
+        if (self->desc->exec != NULL)
                 self->desc->exec(self, NULL, argc, argv);
-        } else {
-                if (argc > 0) {
-                        struct ush_file_descriptor const *file = ush_file_find_by_name(self, argv[0]);
-                        if (file != NULL) {
-                                if (file->exec != NULL) {
-                                        file->exec(self, file, argc, argv);
-                                } else {
-                                        ush_print_status(self, USH_STATUS_ERROR_COMMAND_NOT_EXECUTABLE);
-                                        return;
-                                }
-                        } else {
-                                ush_print_status(self, USH_STATUS_ERROR_COMMAND_SYNTAX_ERROR);
-                                return;
-                        }
-                }
-        }        
+
+        struct ush_file_descriptor const *file = ush_file_find_by_name(self, argv[0]);
+        if (file == NULL) {
+                ush_print_status(self, USH_STATUS_ERROR_COMMAND_SYNTAX_ERROR);
+                return;
+        }
+
+        if (file->exec == NULL) {
+                ush_print_status(self, USH_STATUS_ERROR_COMMAND_NOT_EXECUTABLE);
+                return;
+        }
+        
+        file->exec(self, file, argc, argv);
 }
 
 void ush_parse_char(struct ush_object *self)
