@@ -1,7 +1,8 @@
 #include "ush_internal.h"
 #include "ush_config.h"
 #include "ush_file.h"
-#include "ush_message.h"
+#include "ush_utils.h"
+#include "ush.h"
 
 #include <string.h>
 
@@ -24,7 +25,6 @@ void ush_parse_finish(struct ush_object *self)
         char *argv[self->args_count];
         int argc = self->args_count;
         char *ptr = self->desc->input_buffer;
-        char* buf;
 
         for (i = 0; i < argc; i++) {
                 argv[i] = ptr;
@@ -32,34 +32,23 @@ void ush_parse_finish(struct ush_object *self)
         }
 
         if (self->desc->exec != NULL) {
-                buf = self->desc->exec(self, NULL, argc, argv);
-                if (buf != NULL) {
-                        ush_write_pointer(self, buf, USH_STATE_RESET);
-                        return;
-                }
+                self->desc->exec(self, NULL, argc, argv);
         } else {
                 if (argc > 0) {
                         struct ush_file_descriptor const *file = ush_file_find_by_name(self, argv[0]);
                         if (file != NULL) {
                                 if (file->exec != NULL) {
-                                        buf = file->exec(self, file, argc, argv);
-                                        if (buf != NULL) {
-                                                ush_write_pointer(self, buf, USH_STATE_RESET);
-                                                return;
-                                        }
+                                        file->exec(self, file, argc, argv);
                                 } else {
-                                        buf = (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_CANNOT_EXECUTE);
-                                        ush_write_pointer(self, buf, USH_STATE_RESET);
+                                        ush_print_status(self, USH_STATUS_ERROR_COMMAND_NOT_EXECUTABLE);
                                         return;
                                 }
                         } else {
-                                buf = (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_UNKNOWN_COMMAND);
-                                ush_write_pointer(self, buf, USH_STATE_RESET);
+                                ush_print_status(self, USH_STATUS_ERROR_COMMAND_SYNTAX_ERROR);
                                 return;
                         }
                 }
-        }
-        self->state = USH_STATE_RESET;
+        }        
 }
 
 void ush_parse_char(struct ush_object *self)
@@ -70,6 +59,7 @@ void ush_parse_char(struct ush_object *self)
 
         if (ch == '\n' || ch == '\r') {
                 self->desc->input_buffer[self->out_pos++] = '\0';
+                self->state = USH_STATE_RESET_PROMPT;
                 ush_parse_finish(self);
                 return;
         }

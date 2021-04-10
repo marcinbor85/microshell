@@ -52,3 +52,14 @@ void ush_reset(struct ush_object *self)
 
         ush_reset_start(self);
 }
+
+void ush_print_status(struct ush_object *self, ush_status_t status)
+{
+        char *ret = (char*)ush_utils_get_status_string(status);
+        ush_write_pointer(self, ret, USH_STATE_RESET);
+}
+
+void ush_print(struct ush_object *self, char *buf)
+{
+        ush_write_pointer(self, buf, USH_STATE_RESET);
+}

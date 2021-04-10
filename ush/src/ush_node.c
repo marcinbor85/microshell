@@ -65,7 +65,7 @@ struct ush_node_object* ush_node_get_by_path(struct ush_object *self, const char
         return NULL;
 }
 
-bool ush_node_mount(struct ush_object *self, const char *path, struct ush_node_object *node, const struct ush_file_descriptor *file_list, size_t file_list_size)
+ush_status_t ush_node_mount(struct ush_object *self, const char *path, struct ush_node_object *node, const struct ush_file_descriptor *file_list, size_t file_list_size)
 {
         USH_ASSERT(self != NULL);
         USH_ASSERT(node != NULL);
@@ -83,59 +83,62 @@ bool ush_node_mount(struct ush_object *self, const char *path, struct ush_node_o
         if (path == NULL) {
                 node->next = self->commands;
                 self->commands = node;
-                return true;
+                return USH_STATUS_OK;
         }
         
-        /* TODO: add protection from multiple same paths */
+        struct ush_node_object *node_exists = ush_node_get_by_path(self, path);
+        if (node_exists != NULL)
+                return USH_STATUS_ERROR_NODE_ALREADY_MOUNTED;
 
         struct ush_node_object *node_parent = ush_node_get_parent_by_path(self, path);
         if (node_parent != NULL) {
                 node->next = node_parent->childs;
                 node_parent->childs = node;
-                return true;
+                return USH_STATUS_OK;
         }
 
         if (strcmp(path, "/") == 0) {
                 node->next = NULL;
                 self->root = node;
-                return true;
+                return USH_STATUS_OK;
         }
 
-        return false;
+        return USH_STATUS_ERROR_NODE_WITHOUT_PARENT;
 }
 
-bool ush_node_unmount(struct ush_object *self, const char *path)
+ush_status_t ush_node_unmount(struct ush_object *self, const char *path)
 {
-        (void)self;
-        (void)path;
-        /* TODO: add unmount by path implementation */
+        USH_ASSERT(self != NULL);
+        USH_ASSERT(path != NULL);
 
-        // USH_ASSERT(self != NULL);
-        // USH_ASSERT(node != NULL);
+        struct ush_node_object *parent_node = ush_node_get_parent_by_path(self, path);
+        struct ush_node_object *node = ush_node_get_by_path(self, path);
 
-        // struct ush_node_object *prev = NULL;
-        // struct ush_node_object *curr = self->root;
+        if ((node == NULL) || (parent_node == NULL))
+                return USH_STATUS_ERROR_NODE_NOT_EXISTS;
+        
+        if (node->childs != NULL)
+                return USH_STATUS_ERROR_NODE_WITH_CHILDS;
 
-        // while (curr != NULL) {
-        //         if (curr != node) {
-        //                 prev = curr;
-        //                 curr = curr->next;
-        //                 continue;
-        //         }
-        //         if (prev == NULL) {
-        //                 self->root = node->next;
-        //         } else {
-        //                 prev->next = node->next;
-        //         }
-        //         break;                
-        // }
+        struct ush_node_object *prev = NULL;
+        struct ush_node_object *curr = parent_node->childs;
 
-        return false;
+        while (curr != NULL) {
+                if (curr != node) {
+                        prev = curr;
+                        curr = curr->next;
+                        continue;
+                }
+                if (prev == NULL) {
+                        parent_node->childs = node->next;
+                } else {
+                        prev->next = node->next;
+                }
+                return USH_STATUS_OK;           
+        }
+
+        return USH_STATUS_ERROR_NODE_NOT_EXISTS;
 }
-
-
-
-
 
 void ush_node_get_absolute_path(struct ush_object *self, const char *in_path, char *out_path)
 {
@@ -161,7 +164,7 @@ void ush_node_get_absolute_path(struct ush_object *self, const char *in_path, ch
         ush_utils_get_collapse_path(abs_path, out_path);
 }
 
-bool ush_node_set_current_dir(struct ush_object *self, const char *path)
+ush_status_t ush_node_set_current_dir(struct ush_object *self, const char *path)
 {
         USH_ASSERT(self != NULL);
         USH_ASSERT(path != NULL);
@@ -170,16 +173,14 @@ bool ush_node_set_current_dir(struct ush_object *self, const char *path)
 
         ush_node_get_absolute_path(self, path, abs_path);
 
-        bool success = false;
-
         if (path[0] == '\0')
-                return false;
+                return USH_STATUS_ERROR_NODE_NOT_EXISTS;
 
         struct ush_node_object *node = ush_node_get_by_path(self, abs_path);
         if (node != NULL) {
                 self->current_node = node;
-                success = true;
+                return USH_STATUS_OK;
         }
 
-        return success;
+        return USH_STATUS_ERROR_NODE_NOT_EXISTS;
 }

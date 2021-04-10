@@ -22,7 +22,7 @@ void set_input_mode(void)
         struct termios tattr;
 
         if (!isatty (STDIN_FILENO)) {
-                fprintf(stderr, "Not a terminal.\n");
+                fprintf(stderr, "not a terminal\n");
                 exit(EXIT_FAILURE);
         }
 
@@ -59,7 +59,7 @@ static const struct ush_io_interface g_ush_io_interface = {
         .write = write_char,
 };
 
-// static char* exec(struct ush_object *self, int argc, char *argv[])
+// static void exec(struct ush_object *self, int argc, char *argv[])
 // {
 //         (void)self;
         
@@ -70,7 +70,7 @@ static const struct ush_io_interface g_ush_io_interface = {
 //                 strcat(buf, argv[i]);
 //                 strcat(buf, "\r\n");
 //         }
-//         return buf;
+//         ush_write_pointer(self, buf, USH_STATE_RESET);
 // }
 
 static char g_input_buffer[256];
@@ -87,7 +87,7 @@ static const struct ush_descriptor g_ush_desc = {
 };
 static struct ush_object g_ush;
 
-static char* g_file_help_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
+static void g_file_help_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
         (void)argc;
         (void)argv;
@@ -97,14 +97,9 @@ static char* g_file_help_callback(struct ush_object *self, struct ush_file_descr
         memset(buf, 0, sizeof(buf));
 
         if (argc == 1) {
-                struct ush_node_object *curr = self->root;
+                struct ush_node_object *curr = self->commands;
 
                 while (curr != NULL) {
-                        if (curr->path != NULL) {
-                                curr = curr->next;
-                                continue;
-                        }
-
                         for (size_t i = 0; i < curr->file_list_size; i++) {
                                 struct ush_file_descriptor const *file = &curr->file_list[i];
                                 strcat(buf, file->name);
@@ -119,32 +114,39 @@ static char* g_file_help_callback(struct ush_object *self, struct ush_file_descr
                 }
         } else if (argc == 2) {
                 struct ush_file_descriptor const *help_cmd = ush_file_find_by_name(self, argv[1]);
-                if (help_cmd == NULL) 
-                        return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_COMMAND_NOT_FOUND);
+                if (help_cmd == NULL) {
+                        ush_print_status(self, USH_STATUS_ERROR_COMMAND_WRONG_ARGUMENTS);
+                        return;
+                }
 
-                if (help_cmd->help == NULL)
-                        return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_NO_HELP_AVAILABLE);
+                if (help_cmd->help == NULL) {
+                        ush_print_status(self, USH_STATUS_ERROR_COMMAND_WITHOUT_HELP);
+                        return;
+                }
 
                 strcat(buf, help_cmd->help);
         } else {
-                return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_WRONG_ARGUMENTS);
+                ush_print_status(self, USH_STATUS_ERROR_COMMAND_WRONG_ARGUMENTS);
+                return;
         }
 
-        return buf;
+        ush_print(self, buf);
 }
 
-
-static char* g_file_ls_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
+static void g_file_ls_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
+        (void)self;
         (void)argc;
         (void)argv;
         (void)file;
 
-        if (argc > 2)
-                return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_WRONG_ARGUMENTS);
-        
-        static char buf[512];
-        memset(buf, 0, sizeof(buf));
+        if (argc > 2) {
+                ush_print_status(self, USH_STATUS_ERROR_COMMAND_WRONG_ARGUMENTS);
+                return;
+        }
+
+        // static char buf[512];
+        // memset(buf, 0, sizeof(buf));
 
         // char path_dir[512];
         // struct ush_node_object *path_obj;
@@ -198,52 +200,47 @@ static char* g_file_ls_callback(struct ush_object *self, struct ush_file_descrip
         //         }
         //         strcat(buf, "\r\n");
         // }
-        
-        return buf;
 }
 
-static char* g_file_cd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
+static void g_file_cd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
         (void)argc;
         (void)argv;
         (void)file;
 
-        if (argc != 2)
-                return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_WRONG_ARGUMENTS);
+        if (argc != 2) {
+                ush_print_status(self, USH_STATUS_ERROR_COMMAND_WRONG_ARGUMENTS);
+                return;
+        }
 
-        bool success = ush_node_set_current_dir(self, argv[1]);
-        if (success == false)
-                return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_DIRECTORY_NOT_FOUND);
-
-        return NULL;
+        ush_status_t status = ush_node_set_current_dir(self, argv[1]);
+        if (status != USH_STATUS_OK) {
+                ush_print_status(self, status);
+                return;
+        }
 }
 
-static char* g_file_pwd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
+static void g_file_pwd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
         (void)argc;
         (void)argv;
         (void)file;
 
-        if (argc != 1)
-                return (char*)ush_message_get_string(self, USH_MESSAGE_ERROR_WRONG_ARGUMENTS);
+        if (argc != 1) {
+                ush_print_status(self, USH_STATUS_ERROR_COMMAND_WRONG_ARGUMENTS);
+                return;
+        }
 
-        static char buf[512];
-        buf[0] = '\0';
-        strcat(buf, self->current_node->path);
-        strcat(buf, "\r\n");
-
-        return buf;
+        ush_print(self, (char*)self->current_node->path);
 }
 
-static char* g_print_name_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
+static void g_print_name_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
         (void)self;
         (void)argc;
         (void)argv;
 
-        static char buf[512];
-        snprintf(buf, sizeof(buf), "%s\r\n", file->name);
-        return buf;
+        ush_print(self, (char*)file->name);
 }
 
 static const struct ush_file_descriptor g_path_global_desc[] = {
@@ -276,6 +273,16 @@ static const struct ush_file_descriptor g_path_global_desc[] = {
 };
 
 static struct ush_node_object g_path_global;
+
+static const struct ush_file_descriptor g_path_global_desc2[] = {
+        {
+                .name = "test",
+                .description = "test command",
+                .exec = g_print_name_callback,
+        }
+};
+
+static struct ush_node_object g_path_global2;
 
 static const struct ush_file_descriptor g_path_root_desc[] = {
         {
@@ -369,17 +376,18 @@ int main(int argc, char *argv[])
                 g_io_read = fopen(argv[1], "a+");
                 if (g_io_read == NULL) {
                         fprintf(stderr, "cannot open device\n");
-                        return -1;
+                        exit(EXIT_FAILURE);
                 }
                 g_io_write = g_io_read;
         } else {
                 fprintf(stderr, "wrong arguments\n");
-                return -1;
+                exit(EXIT_FAILURE);
         }
         
         ush_init(&g_ush, &g_ush_desc);
 
         ush_node_mount(&g_ush, NULL, &g_path_global, g_path_global_desc, sizeof(g_path_global_desc) / sizeof(g_path_global_desc[0]));
+        ush_node_mount(&g_ush, NULL, &g_path_global2, g_path_global_desc2, sizeof(g_path_global_desc2) / sizeof(g_path_global_desc2[0]));
         ush_node_mount(&g_ush, "/", &g_path_root, g_path_root_desc, sizeof(g_path_root_desc) / sizeof(g_path_root_desc[0]));
         ush_node_mount(&g_ush, "/dev", &g_path_dev, g_path_dev_desc, sizeof(g_path_dev_desc) / sizeof(g_path_dev_desc[0]));
         ush_node_mount(&g_ush, "/etc", &g_path_etc, g_path_etc_desc, sizeof(g_path_etc_desc) / sizeof(g_path_etc_desc[0]));
@@ -387,6 +395,8 @@ int main(int argc, char *argv[])
         ush_node_mount(&g_ush, "/dev/mem", &g_path_dev_mem, g_path_dev_mem_desc, sizeof(g_path_dev_mem_desc) / sizeof(g_path_dev_mem_desc[0]));
         ush_node_mount(&g_ush, "/dev/mem/external", &g_path_dev_mem_ext, g_path_dev_mem_ext_desc, sizeof(g_path_dev_mem_ext_desc) / sizeof(g_path_dev_mem_ext_desc[0]));
         
+        ush_node_unmount(&g_ush, "/");
+
         ush_node_set_current_dir(&g_ush, "/");
 
         while (1) {

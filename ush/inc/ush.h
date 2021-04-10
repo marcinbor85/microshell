@@ -12,11 +12,13 @@ extern "C" {
 #include "ush_file.h"
 #include "ush_node.h"
 #include "ush_utils.h"
-#include "ush_message.h"
 
 void ush_init(struct ush_object *self, const struct ush_descriptor *desc);
 bool ush_service(struct ush_object *self);
 void ush_reset(struct ush_object *self);
+
+void ush_print_status(struct ush_object *self, ush_status_t status);
+void ush_print(struct ush_object *self, char *buf);
 
 #ifdef __cplusplus
 }

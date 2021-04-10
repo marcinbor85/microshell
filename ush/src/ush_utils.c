@@ -1,5 +1,6 @@
 #include "ush_utils.h"
 #include "ush_config.h"
+#include "ush_types.h"
 
 #include <string.h>
 
@@ -162,4 +163,34 @@ void ush_utils_path_last(const char *in_path, char* *out_path)
                 *out_path = (char*)&in_path[i + 1];
                 break;
         }
+}
+
+const char* ush_utils_get_status_string(ush_status_t status)
+{
+        USH_ASSERT(status < USH_STATUS__TOTAL_NUM);
+
+        switch (status) {
+        case USH_STATUS_OK:
+                return "ok";
+        case USH_STATUS_ERROR_NODE_NOT_EXISTS:
+                return "error: directory not exist";
+        case USH_STATUS_ERROR_NODE_WITH_CHILDS:
+                return "error: nested directories exist";
+        case USH_STATUS_ERROR_NODE_WITHOUT_PARENT:
+                return "error: cannot find parent node";
+        case USH_STATUS_ERROR_NODE_ALREADY_MOUNTED:
+                return "error: directory already mounted";
+        case USH_STATUS_ERROR_COMMAND_SYNTAX_ERROR:
+                return "error: syntax error";
+        case USH_STATUS_ERROR_COMMAND_WRONG_ARGUMENTS:
+                return "error: wrong arguments";
+        case USH_STATUS_ERROR_COMMAND_NOT_EXECUTABLE:
+                return "error: command not executable";
+        case USH_STATUS_ERROR_COMMAND_WITHOUT_HELP:
+                return "error: no help available";
+        default:
+                USH_ASSERT(false);
+        }
+
+        return "error";
 }

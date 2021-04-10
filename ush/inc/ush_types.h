@@ -13,7 +13,21 @@ extern "C" {
 #include "ush_config.h"
 
 typedef enum {
+        USH_STATUS_OK,
+        USH_STATUS_ERROR_NODE_NOT_EXISTS,
+        USH_STATUS_ERROR_NODE_WITH_CHILDS,
+        USH_STATUS_ERROR_NODE_WITHOUT_PARENT,
+        USH_STATUS_ERROR_NODE_ALREADY_MOUNTED,
+        USH_STATUS_ERROR_COMMAND_SYNTAX_ERROR,
+        USH_STATUS_ERROR_COMMAND_WRONG_ARGUMENTS,
+        USH_STATUS_ERROR_COMMAND_NOT_EXECUTABLE,
+        USH_STATUS_ERROR_COMMAND_WITHOUT_HELP,
+        USH_STATUS__TOTAL_NUM,
+} ush_status_t;
+
+typedef enum {
         USH_STATE_RESET,
+        USH_STATE_RESET_PROMPT,
 
         USH_STATE_PROMPT_PREFIX,
         USH_STATE_PROMPT_HOST,
@@ -35,20 +49,10 @@ typedef enum {
         USH_STATE__TOTAL_NUM,
 } ush_state_t;
 
-typedef enum {
-        USH_MESSAGE_ERROR_UNKNOWN_COMMAND,
-        USH_MESSAGE_ERROR_WRONG_ARGUMENTS,
-        USH_MESSAGE_ERROR_DIRECTORY_NOT_FOUND,
-        USH_MESSAGE_ERROR_COMMAND_NOT_FOUND,
-        USH_MESSAGE_ERROR_NO_HELP_AVAILABLE,
-        USH_MESSAGE_ERROR_CANNOT_EXECUTE,
-        USH_MESSAGE__TOTAL_NUM,
-} ush_message_t;
-
 struct ush_object;
 struct ush_file_descriptor;
 
-typedef char* (*ush_file_execute_callback)(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
+typedef void (*ush_file_execute_callback)(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
 
 struct ush_file_descriptor {
         char const *name;

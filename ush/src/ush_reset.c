@@ -16,6 +16,9 @@ bool ush_reset_service(struct ush_object *self)
 
         switch (self->state) {
         case USH_STATE_RESET:
+                ush_write_pointer(self, "\r\n", USH_STATE_RESET_PROMPT);
+                break;
+        case USH_STATE_RESET_PROMPT:
                 ush_prompt_start(self);
                 break;
         default:
