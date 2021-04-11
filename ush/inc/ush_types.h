@@ -54,8 +54,9 @@ typedef enum {
         USH_STATE_PROCESS_FINISH,
 
         USH_STATE_AUTOCOMP_PREPARE,
+        USH_STATE_AUTOCOMP_CANDIDATES_START,
         USH_STATE_AUTOCOMP_CANDIDATES_COUNT,
-        USH_STATE_AUTOCOMP_CANDIDATES_SEARCH,
+        USH_STATE_AUTOCOMP_CANDIDATES_PRINT,
         USH_STATE_AUTOCOMP_CANDIDATES_FINISH,
         USH_STATE_AUTOCOMP_PROMPT_PREPARE,
         USH_STATE_AUTOCOMP_PROMPT,
@@ -112,6 +113,7 @@ struct ush_object {
         ush_state_t state;
         ush_state_t write_next_state;
         ush_state_t prompt_next_state;
+        ush_state_t autocomp_prev_state;
 
         char *write_buf;
         size_t write_size;
@@ -139,7 +141,7 @@ struct ush_object {
 
         char *autocomp_input;
         char *autocomp_candidate_name;
-        bool autocomp_print_flag;
+        int autocomp_stage;
         size_t autocomp_count;
 };
 

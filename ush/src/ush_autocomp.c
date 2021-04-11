@@ -24,24 +24,25 @@ bool ush_autocomp_service(struct ush_object *self)
                 if (self->autocomp_input == NULL) {
                         self->state = USH_STATE_AUTOCOMP_PROMPT_PREPARE;
                 } else {
-                        self->state = USH_STATE_AUTOCOMP_CANDIDATES_COUNT;
+                        self->state = USH_STATE_AUTOCOMP_CANDIDATES_START;
                         self->process_node = self->commands;
                         self->process_index = 0;
                         self->process_index_item = 0;
                 }
                 break;
 
-        case USH_STATE_AUTOCOMP_CANDIDATES_COUNT:
-                self->autocomp_print_flag = false;
+        case USH_STATE_AUTOCOMP_CANDIDATES_START:
                 self->autocomp_count = 0;
-                self->state = USH_STATE_AUTOCOMP_CANDIDATES_SEARCH;
+                self->state = USH_STATE_AUTOCOMP_CANDIDATES_COUNT;
                 self->process_node = self->commands;
                 self->process_index = 0;
                 self->process_index_item = 0;
                 break;
 
-        case USH_STATE_AUTOCOMP_CANDIDATES_SEARCH: {
+        case USH_STATE_AUTOCOMP_CANDIDATES_COUNT:
+        case USH_STATE_AUTOCOMP_CANDIDATES_PRINT: {
                 if (self->process_node == NULL) {
+                        self->autocomp_prev_state = self->state;
                         self->state = USH_STATE_AUTOCOMP_CANDIDATES_FINISH;
                         break;
                 }
@@ -62,15 +63,15 @@ bool ush_autocomp_service(struct ush_object *self)
 
                 switch (self->process_index_item) {
                 case 0:
-                        if (self->autocomp_print_flag != false)
-                                ush_write_pointer(self, (char*)file->name, USH_STATE_AUTOCOMP_CANDIDATES_SEARCH);
+                        if (self->state == USH_STATE_AUTOCOMP_CANDIDATES_PRINT)
+                                ush_write_pointer(self, (char*)file->name, self->state);
                         self->process_index_item = 1;
                         self->autocomp_count++;
                         self->autocomp_candidate_name = (char*)file->name;
                         break;
                 case 1:
-                        if (self->autocomp_print_flag != false)
-                                ush_write_pointer(self, "\r\n", USH_STATE_AUTOCOMP_CANDIDATES_SEARCH);
+                        if (self->state == USH_STATE_AUTOCOMP_CANDIDATES_PRINT)
+                                ush_write_pointer(self, "\r\n", self->state);
                         self->process_index_item = 2;
                         break;
                 case 2:
@@ -85,7 +86,7 @@ bool ush_autocomp_service(struct ush_object *self)
         }
 
         case USH_STATE_AUTOCOMP_CANDIDATES_FINISH:
-                if (self->autocomp_print_flag != false) {
+                if (self->autocomp_prev_state == USH_STATE_AUTOCOMP_CANDIDATES_PRINT) {
                         self->state = USH_STATE_AUTOCOMP_PROMPT;
                         break;
                 }
@@ -102,12 +103,11 @@ bool ush_autocomp_service(struct ush_object *self)
                         break;
                 }
                 default:
-                        self->autocomp_print_flag = true;
                         self->autocomp_count = 0;
                         self->process_node = self->commands;
                         self->process_index = 0;
                         self->process_index_item = 0;
-                        ush_write_pointer(self, "\r\n", USH_STATE_AUTOCOMP_CANDIDATES_SEARCH);
+                        ush_write_pointer(self, "\r\n", USH_STATE_AUTOCOMP_CANDIDATES_PRINT);
                         break;
                 }
                 break;
