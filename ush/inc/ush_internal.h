@@ -27,6 +27,9 @@ bool ush_reset_service(struct ush_object *self);
 void ush_prompt_start(struct ush_object *self);
 bool ush_prompt_service(struct ush_object *self);
 
+void ush_process_start(struct ush_object *self, const struct ush_file_descriptor *file);
+bool ush_process_service(struct ush_object *self);
+
 #ifdef __cplusplus
 }
 #endif

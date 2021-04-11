@@ -178,7 +178,6 @@ static const struct ush_file_descriptor g_path_dev_mem_ext_desc[] = {
         },
         {
                 .name = "disk",
-                .description = "show disk memory",
                 .exec = g_print_name_callback,
         }
 };
@@ -217,7 +216,7 @@ int main(int argc, char *argv[])
         ush_node_mount(&g_ush, "/dev/mem", &g_path_dev_mem, g_path_dev_mem_desc, sizeof(g_path_dev_mem_desc) / sizeof(g_path_dev_mem_desc[0]));
         ush_node_mount(&g_ush, "/dev/mem/external", &g_path_dev_mem_ext, g_path_dev_mem_ext_desc, sizeof(g_path_dev_mem_ext_desc) / sizeof(g_path_dev_mem_ext_desc[0]));
         
-        ush_node_unmount(&g_ush, "/dev/mem/external");
+        // ush_node_unmount(&g_ush, "/dev/mem/external");
 
         ush_node_set_current_dir(&g_ush, "/");
 

@@ -12,6 +12,8 @@ extern "C" {
 
 #include "ush_config.h"
 
+#define USH_PROCESS_WRITE_MAX_LEN 3
+
 typedef enum {
         USH_STATUS_OK,
         USH_STATUS_ERROR_NODE_NOT_EXISTS,
@@ -46,6 +48,10 @@ typedef enum {
 
         USH_STATE_WRITE_CHAR,
 
+        USH_STATE_PROCESS_START,
+        USH_STATE_PROCESS_SERVICE,
+        USH_STATE_PROCESS_FINISH,
+
         USH_STATE__TOTAL_NUM,
 } ush_state_t;
 
@@ -53,6 +59,7 @@ struct ush_object;
 struct ush_file_descriptor;
 
 typedef void (*ush_file_execute_callback)(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
+typedef void (*ush_file_process_service)(struct ush_object *self);
 
 struct ush_file_descriptor {
         char const *name;
@@ -60,6 +67,7 @@ struct ush_file_descriptor {
         char const *help;
 
         ush_file_execute_callback exec;
+        ush_file_process_service process;
 };
 
 struct ush_node_object {
@@ -112,6 +120,13 @@ struct ush_object {
         struct ush_node_object *current_node;
 
         struct ush_node_object buildin_commands;
+
+        struct ush_node_object *process_node;
+        struct ush_node_object *process_child_node;
+        struct ush_file_descriptor const *process_file;
+
+        size_t process_index;
+        size_t process_index_item;
 };
 
 #ifdef __cplusplus

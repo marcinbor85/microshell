@@ -42,6 +42,8 @@ bool ush_service(struct ush_object *self)
                 return true;        
         if (ush_write_service(self) != false)
                 return true;
+        if (ush_process_service(self) != false)
+                return true;
         
         USH_ASSERT(false);
         
