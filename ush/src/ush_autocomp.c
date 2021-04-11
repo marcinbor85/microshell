@@ -33,6 +33,7 @@ bool ush_autocomp_service(struct ush_object *self)
 
         case USH_STATE_AUTOCOMP_CANDIDATES_START:
                 self->autocomp_count = 0;
+                self->autocomp_prev_count = 0;
                 self->state = USH_STATE_AUTOCOMP_CANDIDATES_COUNT;
                 self->process_node = self->commands;
                 self->process_index = 0;
@@ -40,6 +41,7 @@ bool ush_autocomp_service(struct ush_object *self)
                 break;
 
         case USH_STATE_AUTOCOMP_CANDIDATES_COUNT:
+        case USH_STATE_AUTOCOMP_CANDIDATES_OPTIMISE:
         case USH_STATE_AUTOCOMP_CANDIDATES_PRINT: {
                 if (self->process_node == NULL) {
                         self->autocomp_prev_state = self->state;
@@ -86,29 +88,81 @@ bool ush_autocomp_service(struct ush_object *self)
         }
 
         case USH_STATE_AUTOCOMP_CANDIDATES_FINISH:
+
                 if (self->autocomp_prev_state == USH_STATE_AUTOCOMP_CANDIDATES_PRINT) {
                         self->state = USH_STATE_AUTOCOMP_PROMPT;
                         break;
                 }
 
-                switch (self->autocomp_count) {
-                case 0:
-                        self->state = USH_STATE_AUTOCOMP_PROMPT_PREPARE;
-                        break;
-                case 1: {
-                        char *suffix = self->autocomp_input + strlen(self->autocomp_input);
-                        strcpy(self->autocomp_input, self->autocomp_candidate_name);
-                        self->in_pos = strlen(self->autocomp_input);
-                        ush_write_pointer(self, suffix, USH_STATE_READ_CHAR);
-                        break;
-                }
-                default:
+                if (self->autocomp_prev_state == USH_STATE_AUTOCOMP_CANDIDATES_COUNT) {
+                        switch (self->autocomp_count) {
+                        case 0:
+                                self->state = USH_STATE_READ_CHAR;
+                                break;
+                        case 1: {
+                                char *suffix = self->autocomp_input + strlen(self->autocomp_input);
+                                strcpy(self->autocomp_input, self->autocomp_candidate_name);
+                                self->in_pos = strlen(self->desc->input_buffer);
+                                ush_write_pointer(self, suffix, USH_STATE_READ_CHAR);
+                                break;
+                        }
+                        default:
+                                self->autocomp_prev_count = self->autocomp_count;
+
+                                self->desc->input_buffer[self->in_pos++] = self->autocomp_candidate_name[strlen(self->autocomp_input)];
+                                if (self->in_pos >= self->desc->input_buffer_size)
+                                        self->in_pos = 0;
+                                self->desc->input_buffer[self->in_pos] = '\0';
+
+                                self->autocomp_suffix_len = 1;
+                                self->autocomp_count = 0;
+                                self->process_node = self->commands;
+                                self->process_index = 0;
+                                self->process_index_item = 0;
+                                self->state = USH_STATE_AUTOCOMP_CANDIDATES_OPTIMISE;
+                                break;
+                        }
+
+                } else if (self->autocomp_prev_state == USH_STATE_AUTOCOMP_CANDIDATES_OPTIMISE) {
+                        if (self->autocomp_count < self->autocomp_prev_count) {
+                                if (self->in_pos > 0)
+                                        self->in_pos--;
+                                self->desc->input_buffer[self->in_pos] = '\0';
+                                self->autocomp_suffix_len--;
+                                self->autocomp_count = 0;
+                                self->process_node = self->commands;
+                                self->process_index = 0;
+                                self->process_index_item = 0;
+
+                                char *suffix = self->autocomp_input + strlen(self->autocomp_input) - self->autocomp_suffix_len;
+                                if (strlen(suffix) > 0) {
+                                        ush_write_pointer(self, suffix, USH_STATE_READ_CHAR);
+                                } else {
+                                        self->autocomp_count = 0;
+                                        self->process_node = self->commands;
+                                        self->process_index = 0;
+                                        self->process_index_item = 0;
+                                        ush_write_pointer(self, "\r\n", USH_STATE_AUTOCOMP_CANDIDATES_PRINT);
+                                }
+                                break;
+                        }
+
+                        self->autocomp_prev_count = self->autocomp_count;
+
+                        self->desc->input_buffer[self->in_pos++] = self->autocomp_candidate_name[strlen(self->autocomp_input)];
+                        if (self->in_pos >= self->desc->input_buffer_size)
+                                self->in_pos = 0;
+                        self->desc->input_buffer[self->in_pos] = '\0';
+
+                        self->autocomp_suffix_len++;
                         self->autocomp_count = 0;
                         self->process_node = self->commands;
                         self->process_index = 0;
                         self->process_index_item = 0;
-                        ush_write_pointer(self, "\r\n", USH_STATE_AUTOCOMP_CANDIDATES_PRINT);
-                        break;
+                        self->state = USH_STATE_AUTOCOMP_CANDIDATES_OPTIMISE;
+
+                } else {
+                        USH_ASSERT(false);
                 }
                 break;
 
