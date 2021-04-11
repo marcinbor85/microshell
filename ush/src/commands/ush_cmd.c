@@ -2,6 +2,7 @@
 #include "ush_config.h"
 
 extern void ush_buildin_cmd_help_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
+extern void ush_buildin_cmd_help_service(struct ush_object *self);
 
 extern void ush_buildin_cmd_ls_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
 extern void ush_buildin_cmd_ls_service(struct ush_object *self);
@@ -16,6 +17,7 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
                 .help = "help: help [file]\r\n\tShow help information for file or command.\r\n"
                         "      help\r\n\tShow available commands.\r\n",
                 .exec = ush_buildin_cmd_help_callback,
+                .process = ush_buildin_cmd_help_service,
         },
         {
                 .name = "ls",
