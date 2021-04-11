@@ -52,6 +52,7 @@ bool ush_read_char(struct ush_object *self)
                 break;
         case '\x09':
                 /* tab */
+                ush_autocomp_start(self);
                 echo = false;
                 break;
         case '\x1B':

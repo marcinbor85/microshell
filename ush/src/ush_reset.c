@@ -19,7 +19,7 @@ bool ush_reset_service(struct ush_object *self)
                 ush_write_pointer(self, "\r\n", USH_STATE_RESET_PROMPT);
                 break;
         case USH_STATE_RESET_PROMPT:
-                ush_prompt_start(self);
+                ush_prompt_start(self, USH_STATE_READ_PREPARE);
                 break;
         default:
                 processed = false;

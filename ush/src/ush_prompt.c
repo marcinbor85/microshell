@@ -5,9 +5,10 @@
 
 #include <string.h>
 
-void ush_prompt_start(struct ush_object *self)
+void ush_prompt_start(struct ush_object *self, ush_state_t prompt_next_state)
 {
         self->state = USH_STATE_PROMPT_PREFIX;
+        self->prompt_next_state = prompt_next_state;
 }
 
 bool ush_prompt_service(struct ush_object *self)
@@ -33,7 +34,7 @@ bool ush_prompt_service(struct ush_object *self)
                 break;
         }
         case USH_STATE_PROMPT_SUFFIX:
-                ush_write_pointer(self, "]$ " USH_SHELL_FONT_STYLE_RESET, USH_STATE_READ_PREPARE);
+                ush_write_pointer(self, "]$ " USH_SHELL_FONT_STYLE_RESET, self->prompt_next_state);
                 break;
         default:
                 processed = false;

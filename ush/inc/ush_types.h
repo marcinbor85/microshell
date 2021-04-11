@@ -52,6 +52,10 @@ typedef enum {
         USH_STATE_PROCESS_SERVICE,
         USH_STATE_PROCESS_FINISH,
 
+        USH_STATE_AUTOCOMP_PREPARE,
+        USH_STATE_AUTOCOMP_PROMPT,
+        USH_STATE_AUTOCOMP_RECALL,
+
         USH_STATE__TOTAL_NUM,
 } ush_state_t;
 
@@ -104,6 +108,7 @@ struct ush_object {
 
         ush_state_t state;
         ush_state_t write_next_state;
+        ush_state_t prompt_next_state;
 
         char *write_buf;
         size_t write_size;

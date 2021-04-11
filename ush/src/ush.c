@@ -37,7 +37,9 @@ bool ush_service(struct ush_object *self)
         if (ush_prompt_service(self) != false)
                 return true;        
         if (ush_read_service(self, &busy) != false)
-                return busy;        
+                return busy;
+        if (ush_autocomp_service(self) != false)
+                return true;
         if (ush_parse_service(self) != false)
                 return true;        
         if (ush_write_service(self) != false)

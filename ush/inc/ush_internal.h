@@ -24,11 +24,14 @@ bool ush_write_service(struct ush_object *self);
 void ush_reset_start(struct ush_object *self);
 bool ush_reset_service(struct ush_object *self);
 
-void ush_prompt_start(struct ush_object *self);
+void ush_prompt_start(struct ush_object *self, ush_state_t prepare_next_state);
 bool ush_prompt_service(struct ush_object *self);
 
 void ush_process_start(struct ush_object *self, const struct ush_file_descriptor *file);
 bool ush_process_service(struct ush_object *self);
+
+void ush_autocomp_start(struct ush_object *self);
+bool ush_autocomp_service(struct ush_object *self);
 
 #ifdef __cplusplus
 }
