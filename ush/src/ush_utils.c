@@ -179,7 +179,7 @@ char* ush_utils_get_last_arg(const char *input)
         
         len--;
         if (input[len] == ' ')
-                return NULL;
+                return (char*)&input[len + 1];
 
         while (len > 0) {
                 char ch = input[len];
@@ -192,7 +192,7 @@ char* ush_utils_get_last_arg(const char *input)
 }
 
 bool ush_utils_startswith(char *input, char *prefix)
-{
+{       
         return (strncmp(prefix, input, strlen(prefix)) == 0) ? true : false;
 }
 
