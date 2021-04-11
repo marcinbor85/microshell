@@ -106,6 +106,9 @@ size_t ush_utils_get_path_levels_count(const char *path)
 
         if (strcmp(path, "/") == 0)
                 return 0;
+        
+        if (*path == '\0')
+                return 0;
 
         size_t count = 1;
         while (*path) {
