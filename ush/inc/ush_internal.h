@@ -31,6 +31,8 @@ bool ush_process_service(struct ush_object *self);
 
 void ush_autocomp_start(struct ush_object *self);
 bool ush_autocomp_service(struct ush_object *self);
+void ush_autocomp_prepare_candidates(struct ush_object *self);
+void ush_autocomp_optimize_continue(struct ush_object *self);
 
 #ifdef __cplusplus
 }

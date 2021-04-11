@@ -139,6 +139,7 @@ struct ush_object {
 
         size_t process_index;
         size_t process_index_item;
+        int process_stage;
 
         char *autocomp_input;
         char *autocomp_candidate_name;
