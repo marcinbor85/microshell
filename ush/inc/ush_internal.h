@@ -16,7 +16,6 @@ void ush_parse_start(struct ush_object *self);
 void ush_parse_char(struct ush_object *self);
 bool ush_parse_service(struct ush_object *self);
 
-void ush_write_copy(struct ush_object *self, char *text, ush_state_t write_next_state);
 void ush_write_pointer(struct ush_object *self, char *text, ush_state_t write_next_state);
 void ush_write_char(struct ush_object *self);
 bool ush_write_service(struct ush_object *self);

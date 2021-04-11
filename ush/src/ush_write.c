@@ -3,23 +3,6 @@
 
 #include <string.h>
 
-void ush_write_copy(struct ush_object *self, char *text, ush_state_t write_next_state)
-{
-        USH_ASSERT(self != NULL);
-        USH_ASSERT(text != NULL);
-        USH_ASSERT(write_next_state < USH_STATE__TOTAL_NUM);
-        
-        strncpy(self->desc->output_buffer, text, self->desc->output_buffer_size);
-        size_t text_length = strnlen(self->desc->output_buffer, self->desc->output_buffer_size);
-
-        self->write_pos = 0;
-        self->write_size = text_length;
-        self->write_buf = self->desc->output_buffer;
-
-        self->state = USH_STATE_WRITE_CHAR;
-        self->write_next_state = write_next_state;
-}
-
 void ush_write_pointer(struct ush_object *self, char *text, ush_state_t write_next_state)
 {
         USH_ASSERT(self != NULL);

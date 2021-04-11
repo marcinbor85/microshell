@@ -12,7 +12,8 @@ extern "C" {
 
 #include "ush_config.h"
 
-#define USH_PROCESS_WRITE_MAX_LEN 3
+#define USH_PROCESS_WRITE_MAX_LEN       3
+#define USH_ECHO_BUFFER_SIZE            4
 
 typedef enum {
         USH_STATUS_OK,
@@ -96,8 +97,6 @@ struct ush_descriptor {
         struct ush_io_interface const *io;
         char *input_buffer;
         size_t input_buffer_size;
-        char *output_buffer;
-        size_t output_buffer_size;
         char *hostname;
 
         ush_file_execute_callback exec;
@@ -113,6 +112,7 @@ struct ush_object {
         char *write_buf;
         size_t write_size;
         size_t write_pos;
+        char echo_buf[USH_ECHO_BUFFER_SIZE];
 
         int ansi_escape_state;
         size_t in_pos;

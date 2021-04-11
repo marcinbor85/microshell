@@ -74,14 +74,11 @@ static const struct ush_io_interface g_ush_io_interface = {
 // }
 
 static char g_input_buffer[256];
-static char g_output_buffer[256];
 
 static const struct ush_descriptor g_ush_desc = {
         .io = &g_ush_io_interface,
         .input_buffer = g_input_buffer,
         .input_buffer_size = sizeof(g_input_buffer),
-        .output_buffer = g_output_buffer,
-        .output_buffer_size = sizeof(g_output_buffer),
         .hostname = "host",
         // .exec = exec,
 };
