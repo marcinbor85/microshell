@@ -17,6 +17,10 @@ void ush_utils_path_last(const char *in_path, char* *out_path);
 void ush_utils_get_path_level(size_t level, const char *in_path, char *out_path);
 void ush_utils_join_path(const char *in_path, const char *name, char *out_path);
 
+char* ush_utils_get_last_arg(const char *input);
+
+bool ush_utils_startswith(char *input, char *prefix);
+
 const char* ush_utils_get_status_string(ush_status_t status);
 
 #ifdef __cplusplus

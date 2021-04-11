@@ -76,6 +76,9 @@ bool ush_buildin_cmd_help_service(struct ush_object *self)
                         self->process_index = 0;
                         self->process_index_item++;
                         break;
+                default:
+                        USH_ASSERT(false);
+                        break;
                 }
                 break;
         default:

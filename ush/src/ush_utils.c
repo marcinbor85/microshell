@@ -165,6 +165,34 @@ void ush_utils_path_last(const char *in_path, char* *out_path)
         }
 }
 
+char* ush_utils_get_last_arg(const char *input)
+{
+        USH_ASSERT(input != NULL);
+
+        size_t len = strlen(input);
+
+        if (len == 0)
+                return (char*)input;
+        
+        len--;
+        if (input[len] == ' ')
+                return NULL;
+
+        while (len > 0) {
+                char ch = input[len];
+                if (ch == ' ')
+                        return (char*)&input[len + 1];
+                len--;
+        }
+
+        return (char*)input;
+}
+
+bool ush_utils_startswith(char *input, char *prefix)
+{
+        return (strncmp(prefix, input, strlen(prefix)) == 0) ? true : false;
+}
+
 const char* ush_utils_get_status_string(ush_status_t status)
 {
         USH_ASSERT(status < USH_STATUS__TOTAL_NUM);

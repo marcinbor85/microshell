@@ -62,7 +62,7 @@ bool ush_buildin_cmd_ls_service(struct ush_object *self)
                         break;
                 }
                 case 1:
-                        ush_write_pointer(self, "\r\n", USH_STATE_PROCESS_SERVICE);
+                        ush_write_pointer(self, "/\r\n", USH_STATE_PROCESS_SERVICE);
                         self->process_index = 2;
                         break;
                 case 2:
@@ -102,6 +102,9 @@ bool ush_buildin_cmd_ls_service(struct ush_object *self)
                         ush_write_pointer(self, "\r\n", USH_STATE_PROCESS_FINISH);
                         self->process_index = 0;
                         self->process_index_item++;
+                        break;
+                default:
+                        USH_ASSERT(false);
                         break;
                 }
                 break;

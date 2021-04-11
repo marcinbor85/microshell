@@ -98,6 +98,16 @@ static const struct ush_file_descriptor g_path_global_desc2[] = {
                 .name = "test",
                 .description = "test command",
                 .exec = g_print_name_callback,
+        },
+        {
+                .name = "test_more1",
+                .description = "test_more1 command",
+                .exec = g_print_name_callback,
+        },
+        {
+                .name = "test_more2",
+                .description = "test_more2 command",
+                .exec = g_print_name_callback,
         }
 };
 

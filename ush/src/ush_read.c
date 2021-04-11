@@ -47,6 +47,7 @@ bool ush_read_char(struct ush_object *self)
                 /* backspace */
                 if (self->in_pos > 0) {
                         self->in_pos--;
+                        self->desc->input_buffer[self->in_pos] = '\0';
                 } else {
                         echo = false;
                 }
@@ -66,6 +67,7 @@ bool ush_read_char(struct ush_object *self)
                         self->desc->input_buffer[self->in_pos++] = ch;
                         if (self->in_pos >= self->desc->input_buffer_size)
                                 self->in_pos = 0;
+                        self->desc->input_buffer[self->in_pos] = '\0';
                 } else if (self->ansi_escape_state == 1) {
                         /* normal or ctrl */
                         if (ch == '\x5B' || ch == '\x4F') {
@@ -100,6 +102,7 @@ void ush_read_start(struct ush_object *self)
         USH_ASSERT(self != NULL);
 
         self->in_pos = 0;
+        self->desc->input_buffer[self->in_pos] = '\0';
         self->state = USH_STATE_READ_CHAR;
         self->ansi_escape_state = 0;
 }
