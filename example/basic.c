@@ -177,6 +177,16 @@ static const struct ush_file_descriptor g_path_dev_mem_desc[] = {
 
 static struct ush_node_object g_path_dev_mem;
 
+static const struct ush_file_descriptor g_path_dev_mem2_desc[] = {
+        {
+                .name = "ram2",
+                .description = "show ram2 memory",
+                .exec = g_print_name_callback,
+        }
+};
+
+static struct ush_node_object g_path_dev_mem2;
+
 static const struct ush_file_descriptor g_path_dev_mem_ext_desc[] = {
         {
                 .name = "flash",
@@ -221,6 +231,7 @@ int main(int argc, char *argv[])
         ush_node_mount(&g_ush, "/etc", &g_path_etc, g_path_etc_desc, sizeof(g_path_etc_desc) / sizeof(g_path_etc_desc[0]));
         ush_node_mount(&g_ush, "/dev/bus", &g_path_dev_bus, g_path_dev_bus_desc, sizeof(g_path_dev_bus_desc) / sizeof(g_path_dev_bus_desc[0]));
         ush_node_mount(&g_ush, "/dev/mem", &g_path_dev_mem, g_path_dev_mem_desc, sizeof(g_path_dev_mem_desc) / sizeof(g_path_dev_mem_desc[0]));
+        ush_node_mount(&g_ush, "/dev/mem2", &g_path_dev_mem2, g_path_dev_mem2_desc, sizeof(g_path_dev_mem2_desc) / sizeof(g_path_dev_mem2_desc[0]));
         ush_node_mount(&g_ush, "/dev/mem/external", &g_path_dev_mem_ext, g_path_dev_mem_ext_desc, sizeof(g_path_dev_mem_ext_desc) / sizeof(g_path_dev_mem_ext_desc[0]));
         
         // ush_node_unmount(&g_ush, "/dev/mem/external");

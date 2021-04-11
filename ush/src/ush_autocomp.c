@@ -26,7 +26,12 @@ void ush_autocomp_optimize_continue(struct ush_object *self)
         self->autocomp_prev_count = self->autocomp_count;
 
         size_t pos = strlen(self->autocomp_input);
-        self->desc->input_buffer[self->in_pos++] = self->autocomp_candidate_name[pos];
+        if (pos >= strlen(self->autocomp_candidate_name)) {
+                self->state = USH_STATE_AUTOCOMP_RECALL_SUFFIX;
+                return;
+        }
+        char ch = self->autocomp_candidate_name[pos];
+        self->desc->input_buffer[self->in_pos++] = ch;
         if (self->in_pos >= self->desc->input_buffer_size)
                 self->in_pos = 0;
         self->desc->input_buffer[self->in_pos] = '\0';
@@ -65,14 +70,29 @@ bool ush_autocomp_service(struct ush_object *self)
         case USH_STATE_AUTOCOMP_CANDIDATES_OPTIMISE:
         case USH_STATE_AUTOCOMP_CANDIDATES_PRINT: {
                 if (self->process_node == NULL) {
+                        char abs_path[USH_CONFIG_PATH_MAX_LENGTH];
                         if (self->process_stage == 0) {
                                 self->process_node = self->current_node;
                                 self->process_index = 0;
                                 self->process_index_item = 0;
                                 self->process_stage = 1;
                         } else if (self->process_stage == 1) {
-                                char abs_path[USH_CONFIG_PATH_MAX_LENGTH];
-
+                                ush_node_get_absolute_path(self, self->autocomp_input, abs_path);
+                                if (self->autocomp_input[0] == '\0') {
+                                        self->process_node = self->current_node;
+                                } else {
+                                        self->process_node = ush_node_get_by_path(self, abs_path);
+                                        if (self->process_node == NULL) {
+                                                self->process_node = ush_node_get_parent_by_path(self, abs_path);
+                                                if (self->process_node == NULL)
+                                                        self->process_node = self->current_node;
+                                        }
+                                }
+                                self->process_node = self->process_node->childs;
+                                self->process_index = 0;
+                                self->process_index_item = 0;
+                                self->process_stage = 2;
+                        } else if (self->process_stage == 2) {
                                 ush_node_get_absolute_path(self, self->autocomp_input, abs_path);
                                 if (self->autocomp_input[0] == '\0') {
                                         self->process_node = self->current_node;
@@ -85,8 +105,8 @@ bool ush_autocomp_service(struct ush_object *self)
                                 self->process_node = self->process_node->childs;
                                 self->process_index = 0;
                                 self->process_index_item = 0;
-                                self->process_stage = 2;
-                        } else if (self->process_stage == 2) {
+                                self->process_stage = 3;
+                        } else if (self->process_stage == 3) {
                                 self->autocomp_prev_state = self->state;
                                 self->state = USH_STATE_AUTOCOMP_CANDIDATES_FINISH;
                         } else {
@@ -109,6 +129,8 @@ bool ush_autocomp_service(struct ush_object *self)
                         }
                 } else if (self->process_stage == 2) {
                         /* do nothing */
+                } else if (self->process_stage == 3) {
+                        /* do nothing */
                 } else {
                         USH_ASSERT(false);
                 }
@@ -124,6 +146,13 @@ bool ush_autocomp_service(struct ush_object *self)
                         }
                 } else if (self->process_stage == 2) {
                         if (ush_utils_startswith((char*)self->process_node->path, self->autocomp_input) == false) {
+                                self->process_node = self->process_node->next;
+                                self->process_index = 0;
+                                break;
+                        }
+                } else if (self->process_stage == 3) {
+                        ush_utils_path_last(self->process_node->path, &self->autocomp_name);
+                        if (ush_utils_startswith(self->autocomp_name, self->autocomp_input) == false) {
                                 self->process_node = self->process_node->next;
                                 self->process_index = 0;
                                 break;
@@ -146,6 +175,12 @@ bool ush_autocomp_service(struct ush_object *self)
                                 self->process_index = 1;
                                 self->autocomp_count++;
                                 self->autocomp_candidate_name = (char*)self->process_node->path;
+                        } else if (self->process_stage == 3) {
+                                if (self->state == USH_STATE_AUTOCOMP_CANDIDATES_PRINT)
+                                        ush_write_pointer(self, self->autocomp_name, self->state);
+                                self->process_index = 1;
+                                self->autocomp_count++;
+                                self->autocomp_candidate_name = self->autocomp_name;
                         } else {
                                 USH_ASSERT(false);
                         }               
@@ -159,7 +194,7 @@ bool ush_autocomp_service(struct ush_object *self)
                         if ((self->process_stage == 0) || (self->process_stage == 1)) {
                                 self->process_index_item++;
                                 self->process_index = 0;
-                        } else if (self->process_stage == 2) {
+                        } else if ((self->process_stage == 2) || (self->process_stage == 3)) {
                                 self->process_node = self->process_node->next;
                                 self->process_index = 0;
                         } else {
@@ -193,6 +228,7 @@ bool ush_autocomp_service(struct ush_object *self)
                                 break;
                         }
                         default:
+                                self->autocomp_suffix_len = 0;
                                 ush_autocomp_optimize_continue(self);
                                 break;
                         }
@@ -204,15 +240,7 @@ bool ush_autocomp_service(struct ush_object *self)
                                 self->desc->input_buffer[self->in_pos] = '\0';
                                 self->autocomp_suffix_len--;
 
-                                ush_autocomp_prepare_candidates(self);
-
-                                char *suffix = self->autocomp_input + strlen(self->autocomp_input) - self->autocomp_suffix_len;
-                                if (strlen(suffix) > 0) {
-                                        ush_write_pointer(self, suffix, USH_STATE_READ_CHAR);
-                                } else {
-                                        ush_autocomp_prepare_candidates(self);
-                                        ush_write_pointer(self, "\r\n", USH_STATE_AUTOCOMP_CANDIDATES_PRINT);
-                                }
+                                self->state = USH_STATE_AUTOCOMP_RECALL_SUFFIX;
                                 break;
                         }
 
@@ -233,6 +261,17 @@ bool ush_autocomp_service(struct ush_object *self)
         case USH_STATE_AUTOCOMP_RECALL:
                 ush_write_pointer(self, self->desc->input_buffer, USH_STATE_READ_CHAR);
                 break;
+        
+        case USH_STATE_AUTOCOMP_RECALL_SUFFIX: {                
+                char *suffix = self->autocomp_input + strlen(self->autocomp_input) - self->autocomp_suffix_len;
+                if (strlen(suffix) > 0) {
+                        ush_write_pointer(self, suffix, USH_STATE_READ_CHAR);
+                } else {
+                        ush_autocomp_prepare_candidates(self);
+                        ush_write_pointer(self, "\r\n", USH_STATE_AUTOCOMP_CANDIDATES_PRINT);
+                }
+                break;
+        }
 
         default:
                 processed = false;

@@ -62,6 +62,7 @@ typedef enum {
         USH_STATE_AUTOCOMP_PROMPT_PREPARE,
         USH_STATE_AUTOCOMP_PROMPT,
         USH_STATE_AUTOCOMP_RECALL,
+        USH_STATE_AUTOCOMP_RECALL_SUFFIX,
 
         USH_STATE__TOTAL_NUM,
 } ush_state_t;
@@ -143,6 +144,7 @@ struct ush_object {
 
         char *autocomp_input;
         char *autocomp_candidate_name;
+        char *autocomp_name;
         size_t autocomp_count;
         size_t autocomp_prev_count;
         size_t autocomp_suffix_len;
