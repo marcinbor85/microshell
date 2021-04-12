@@ -17,6 +17,8 @@ extern void ush_buildin_cmd_cat_service(struct ush_object *self, struct ush_file
 extern void ush_buildin_cmd_xxd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
 extern void ush_buildin_cmd_xxd_service(struct ush_object *self, struct ush_file_descriptor const *file);
 
+extern void ush_buildin_cmd_echo_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
+
 const struct ush_file_descriptor g_ush_buildin_commands[] = {
         {
                 .name = "help",
@@ -59,6 +61,13 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
                 .help = "xxd: xxd [file]\r\n\tShow file hex content.\r\n",
                 .exec = ush_buildin_cmd_xxd_callback,
                 .process = ush_buildin_cmd_xxd_service,
+        },
+        {
+                .name = "echo",
+                .description = "print string to file",
+                .help = "echo: echo [string] > [file]\r\n\tPrint string to file.\r\n"
+                        "      echo [string] \r\n\tPrint string to console.\r\n",
+                .exec = ush_buildin_cmd_echo_callback,
         }
 };
 

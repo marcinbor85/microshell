@@ -223,6 +223,8 @@ const char* ush_utils_get_status_string(ush_status_t status)
                 return "error: file not exists";
         case USH_STATUS_ERROR_FILE_NO_DATA:
                 return "error: no data available";
+        case USH_STATUS_ERROR_FILE_READ_ONLY:
+                return "error: read only file";
         default:
                 USH_ASSERT(false);
         }

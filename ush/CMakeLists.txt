@@ -20,6 +20,7 @@ file(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/commands/ush_cmd_pwd.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/commands/ush_cmd_cat.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/commands/ush_cmd_xxd.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/commands/ush_cmd_echo.c
 )
 
 add_library(

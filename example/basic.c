@@ -18,7 +18,7 @@ static char g_config_data[] = {
         "# this is config file content.\n"
         "var = 1\n"
 };
-static char g_hostname_data[] = {
+static char g_hostname_data[16] = {
         "host"
 };
 static uint8_t g_binary_data[] = {
@@ -177,6 +177,16 @@ static size_t g_hostname_data_getter(struct ush_object *self, struct ush_file_de
         return strlen(g_hostname_data);
 }
 
+static void g_hostname_data_setter(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t *data, size_t size)
+{
+        (void)self;
+        (void)file;
+        (void)size;
+
+        g_hostname_data[0] = '\0';
+        strncat(g_hostname_data, (char*)data, sizeof(g_hostname_data));
+}
+
 static size_t g_binary_data_getter(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data)
 {
         (void)self;
@@ -196,6 +206,7 @@ static const struct ush_file_descriptor g_path_etc_desc[] = {
                 .name = "hostname",
                 .description = "system hostname",
                 .get_data = g_hostname_data_getter,
+                .set_data = g_hostname_data_setter,
         },
         {
                 .name = "binary",
@@ -300,8 +311,6 @@ int main(int argc, char *argv[])
         ush_node_mount(&g_ush, "/dev/mem2", &g_path_dev_mem2, g_path_dev_mem2_desc, sizeof(g_path_dev_mem2_desc) / sizeof(g_path_dev_mem2_desc[0]));
         ush_node_mount(&g_ush, "/dev/mem/external", &g_path_dev_mem_ext, g_path_dev_mem_ext_desc, sizeof(g_path_dev_mem_ext_desc) / sizeof(g_path_dev_mem_ext_desc[0]));
         
-        // ush_node_unmount(&g_ush, "/dev/mem/external");
-
         ush_node_set_current_dir(&g_ush, "/");
 
         while (1) {

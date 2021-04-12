@@ -24,6 +24,7 @@ typedef enum {
         USH_STATUS_ERROR_FILE_NO_HELP,
         USH_STATUS_ERROR_FILE_NOT_EXISTS,
         USH_STATUS_ERROR_FILE_NO_DATA,
+        USH_STATUS_ERROR_FILE_READ_ONLY,
         USH_STATUS__TOTAL_NUM,
 } ush_status_t;
 
@@ -72,6 +73,7 @@ struct ush_file_descriptor;
 typedef void (*ush_file_execute_callback)(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
 typedef void (*ush_file_process_service)(struct ush_object *self, struct ush_file_descriptor const *file);
 typedef size_t (*ush_file_data_getter)(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data);
+typedef void (*ush_file_data_setter)(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t *data, size_t size);
 
 struct ush_file_descriptor {
         char const *name;
@@ -81,6 +83,7 @@ struct ush_file_descriptor {
         ush_file_execute_callback exec;
         ush_file_process_service process;
         ush_file_data_getter get_data;
+        ush_file_data_setter set_data;
 };
 
 struct ush_node_object {
