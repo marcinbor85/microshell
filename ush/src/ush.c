@@ -1,6 +1,7 @@
 #include "ush.h"
 #include "ush_internal.h"
 #include "ush_shell.h"
+#include "ush_const.h"
 
 void ush_init(struct ush_object *self, const struct ush_descriptor *desc)
 {
@@ -9,6 +10,8 @@ void ush_init(struct ush_object *self, const struct ush_descriptor *desc)
 
         USH_ASSERT(desc->input_buffer != NULL);
         USH_ASSERT(desc->input_buffer_size > 0);
+        USH_ASSERT(desc->output_buffer != NULL);
+        USH_ASSERT(desc->output_buffer_size >= 4); /* internal echo buffer */
 
         USH_ASSERT(desc->io != NULL);
         USH_ASSERT(desc->io->read != NULL);
@@ -54,7 +57,7 @@ void ush_reset(struct ush_object *self)
 {
         USH_ASSERT(self != NULL);
 
-        ush_reset_start(self);
+        ush_write_pointer(self, "uShell " USH_CONST_VERSION "\r\n", USH_STATE_RESET_PROMPT);
 }
 
 void ush_print_status(struct ush_object *self, ush_status_t status)

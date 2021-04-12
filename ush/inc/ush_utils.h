@@ -20,6 +20,7 @@ void ush_utils_join_path(const char *in_path, const char *name, char *out_path);
 char* ush_utils_get_last_arg(const char *input);
 
 bool ush_utils_startswith(char *input, char *prefix);
+bool ush_utils_is_printable(uint8_t ch);
 
 const char* ush_utils_get_status_string(ush_status_t status);
 

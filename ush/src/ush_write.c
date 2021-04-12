@@ -9,9 +9,18 @@ void ush_write_pointer(struct ush_object *self, char *text, ush_state_t write_ne
         USH_ASSERT(text != NULL);
         USH_ASSERT(write_next_state < USH_STATE__TOTAL_NUM);
         
+        ush_write_pointer_bin(self, (uint8_t*)text, strlen(text), write_next_state);
+}
+
+void ush_write_pointer_bin(struct ush_object *self, uint8_t *data, size_t data_size, ush_state_t write_next_state)
+{
+        USH_ASSERT(self != NULL);
+        USH_ASSERT(data != NULL);
+        USH_ASSERT(write_next_state < USH_STATE__TOTAL_NUM);
+        
         self->write_pos = 0;
-        self->write_size = strlen(text);
-        self->write_buf = text;
+        self->write_size = data_size;
+        self->write_buf = (char*)data;
 
         self->state = USH_STATE_WRITE_CHAR;
         self->write_next_state = write_next_state;
@@ -33,7 +42,6 @@ void ush_write_char(struct ush_object *self)
         
         self->write_pos++;
 }
-
 
 bool ush_write_service(struct ush_object *self)
 {

@@ -26,7 +26,7 @@ bool ush_process_service(struct ush_object *self)
                         self->state = USH_STATE_RESET;
                         break;
                 }
-                self->process_file->process(self);
+                self->process_file->process(self, self->process_file);
                 break;
         default:
                 processed = false;

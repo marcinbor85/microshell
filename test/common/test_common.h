@@ -16,6 +16,7 @@ extern "C" {
 #include "ush.h"
 
 #define TEST_COMMON_INPUT_BUFFER_SIZE           256UL
+#define TEST_COMMON_OUTPUT_BUFFER_SIZE          256UL
 #define TEST_COMMON_EMULATE_IO_BUFFER_SIZE      256UL
 
 void test_common_init(void);

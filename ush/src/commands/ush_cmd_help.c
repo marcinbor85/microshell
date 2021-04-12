@@ -33,9 +33,12 @@ void ush_buildin_cmd_help_callback(struct ush_object *self, struct ush_file_desc
         }
 }
 
-bool ush_buildin_cmd_help_service(struct ush_object *self)
+bool ush_buildin_cmd_help_service(struct ush_object *self, struct ush_file_descriptor const *file)
 {
+        (void)file;
+
         USH_ASSERT(self != NULL);
+        USH_ASSERT(file != NULL);
 
         bool processed = true;
 
@@ -53,26 +56,26 @@ bool ush_buildin_cmd_help_service(struct ush_object *self)
                         break;
                 }
 
-                struct ush_file_descriptor const *file = &self->process_node->file_list[self->process_index_item];
+                struct ush_file_descriptor const *f = &self->process_node->file_list[self->process_index_item];
                 switch (self->process_index) {
                 case 0:        
-                        ush_write_pointer(self, (char*)file->name, USH_STATE_PROCESS_START);
+                        ush_write_pointer(self, (char*)f->name, self->state);
                         self->process_index = 1;
                         break;
                 case 1:
-                        if (file->description != NULL) {
-                                ush_write_pointer(self, "\t- ", USH_STATE_PROCESS_START);
+                        if (f->description != NULL) {
+                                ush_write_pointer(self, "\t- ", self->state);
                                 self->process_index = 2;
                                 break;
                         }
                         self->process_index = 3;
                         break;
                 case 2:
-                        ush_write_pointer(self, (char*)file->description, USH_STATE_PROCESS_START);
+                        ush_write_pointer(self, (char*)f->description, self->state);
                         self->process_index = 3;
                         break;
                 case 3:
-                        ush_write_pointer(self, "\r\n", USH_STATE_PROCESS_START);
+                        ush_write_pointer(self, "\r\n", self->state);
                         self->process_index = 0;
                         self->process_index_item++;
                         break;

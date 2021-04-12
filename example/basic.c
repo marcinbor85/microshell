@@ -12,12 +12,17 @@ static FILE *g_io_write;
 
 struct termios g_saved_attributes;
 
+static uint8_t *g_stack;
+
 static char g_config_data[] = {
         "# this is config file content.\n"
         "var = 1\n"
 };
 static char g_hostname_data[] = {
         "host"
+};
+static uint8_t g_binary_data[] = {
+        0x00, 0xAA, 0x12, 0x34
 };
 
 void reset_input_mode(void)
@@ -82,11 +87,14 @@ static const struct ush_io_interface g_ush_io_interface = {
 // }
 
 static char g_input_buffer[256];
+static char g_output_buffer[256];
 
 static const struct ush_descriptor g_ush_desc = {
         .io = &g_ush_io_interface,
         .input_buffer = g_input_buffer,
         .input_buffer_size = sizeof(g_input_buffer),
+        .output_buffer = g_output_buffer,
+        .output_buffer_size = sizeof(g_output_buffer),
         .hostname = g_hostname_data,
         // .exec = exec,
 };
@@ -151,16 +159,48 @@ static const struct ush_file_descriptor g_path_dev_desc[] = {
 
 static struct ush_node_object g_path_dev;
 
+static size_t g_config_data_getter(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data)
+{
+        (void)self;
+        (void)file;
+
+        *data = (uint8_t*)g_config_data;
+        return strlen(g_config_data);
+}
+
+static size_t g_hostname_data_getter(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data)
+{
+        (void)self;
+        (void)file;
+
+        *data = (uint8_t*)g_hostname_data;
+        return strlen(g_hostname_data);
+}
+
+static size_t g_binary_data_getter(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data)
+{
+        (void)self;
+        (void)file;
+
+        *data = g_binary_data;
+        return sizeof(g_binary_data);
+}
+
 static const struct ush_file_descriptor g_path_etc_desc[] = {
         {
                 .name = "config",
                 .description = "example configuration",
-                .data = g_config_data,
+                .get_data = g_config_data_getter,
         },
         {
                 .name = "hostname",
                 .description = "system hostname",
-                .data = g_hostname_data,
+                .get_data = g_hostname_data_getter,
+        },
+        {
+                .name = "binary",
+                .description = "binary data file",
+                .get_data = g_binary_data_getter,
         },
 };
 
@@ -181,11 +221,21 @@ static const struct ush_file_descriptor g_path_dev_bus_desc[] = {
 
 static struct ush_node_object g_path_dev_bus;
 
+static size_t g_ram_data_getter(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data)
+{
+        (void)self;
+        (void)file;
+
+        *data = g_stack;
+        return 1024;
+}
+
 static const struct ush_file_descriptor g_path_dev_mem_desc[] = {
         {
                 .name = "ram",
                 .description = "show ram memory",
                 .exec = g_print_name_callback,
+                .get_data = g_ram_data_getter,
         }
 };
 
@@ -219,6 +269,8 @@ int main(int argc, char *argv[])
 {
         (void)argc;
         (void)argv;
+
+        g_stack = (uint8_t*)&argc;
 
         if (argc == 1) {
                 g_io_read = stdin;

@@ -2,16 +2,20 @@
 #include "ush_config.h"
 
 extern void ush_buildin_cmd_help_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
-extern void ush_buildin_cmd_help_service(struct ush_object *self);
+extern void ush_buildin_cmd_help_service(struct ush_object *self, struct ush_file_descriptor const *file);
 
 extern void ush_buildin_cmd_ls_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
-extern void ush_buildin_cmd_ls_service(struct ush_object *self);
+extern void ush_buildin_cmd_ls_service(struct ush_object *self, struct ush_file_descriptor const *file);
 
 extern void ush_buildin_cmd_cd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
+
 extern void ush_buildin_cmd_pwd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
 
 extern void ush_buildin_cmd_cat_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
-extern void ush_buildin_cmd_cat_service(struct ush_object *self);
+extern void ush_buildin_cmd_cat_service(struct ush_object *self, struct ush_file_descriptor const *file);
+
+extern void ush_buildin_cmd_xxd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
+extern void ush_buildin_cmd_xxd_service(struct ush_object *self, struct ush_file_descriptor const *file);
 
 const struct ush_file_descriptor g_ush_buildin_commands[] = {
         {
@@ -48,6 +52,13 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
                 .help = "cat: cat [file...]\r\n\tPrint concatenate text files content.\r\n",
                 .exec = ush_buildin_cmd_cat_callback,
                 .process = ush_buildin_cmd_cat_service,
+        },
+        {
+                .name = "xxd",
+                .description = "dump file hex content",
+                .help = "xxd: xxd [file]\r\n\tShow file hex content.\r\n",
+                .exec = ush_buildin_cmd_xxd_callback,
+                .process = ush_buildin_cmd_xxd_service,
         }
 };
 

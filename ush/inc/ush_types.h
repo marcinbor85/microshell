@@ -12,9 +12,6 @@ extern "C" {
 
 #include "ush_config.h"
 
-#define USH_PROCESS_WRITE_MAX_LEN       3
-#define USH_ECHO_BUFFER_SIZE            4
-
 typedef enum {
         USH_STATUS_OK,
         USH_STATUS_ERROR_NODE_NOT_EXISTS,
@@ -73,16 +70,17 @@ struct ush_object;
 struct ush_file_descriptor;
 
 typedef void (*ush_file_execute_callback)(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
-typedef void (*ush_file_process_service)(struct ush_object *self);
+typedef void (*ush_file_process_service)(struct ush_object *self, struct ush_file_descriptor const *file);
+typedef size_t (*ush_file_data_getter)(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data);
 
 struct ush_file_descriptor {
         char const *name;
         char const *description;
         char const *help;
-        void *data;
 
         ush_file_execute_callback exec;
         ush_file_process_service process;
+        ush_file_data_getter get_data;
 };
 
 struct ush_node_object {
@@ -107,6 +105,8 @@ struct ush_descriptor {
         struct ush_io_interface const *io;
         char *input_buffer;
         size_t input_buffer_size;
+        char *output_buffer;
+        size_t output_buffer_size;
         char *hostname;
 
         ush_file_execute_callback exec;
@@ -123,7 +123,6 @@ struct ush_object {
         char *write_buf;
         size_t write_size;
         size_t write_pos;
-        char echo_buf[USH_ECHO_BUFFER_SIZE];
 
         int ansi_escape_state;
         size_t in_pos;
@@ -143,6 +142,8 @@ struct ush_object {
 
         size_t process_index;
         size_t process_index_item;
+        uint8_t *process_data;
+        size_t process_data_size;
         int process_stage;
 
         char *autocomp_input;

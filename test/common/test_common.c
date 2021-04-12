@@ -32,11 +32,14 @@ static const struct ush_io_interface g_ush_iface = {
 };
 
 static char g_input_buffer[TEST_COMMON_INPUT_BUFFER_SIZE];
+static char g_output_buffer[TEST_COMMON_OUTPUT_BUFFER_SIZE];
 
 static const struct ush_descriptor g_ush_desc = {
         .io = &g_ush_iface,
         .input_buffer = g_input_buffer,
         .input_buffer_size = sizeof(g_input_buffer),
+        .output_buffer = g_output_buffer,
+        .output_buffer_size = sizeof(g_output_buffer),
 };
 
 struct ush_object g_ush;

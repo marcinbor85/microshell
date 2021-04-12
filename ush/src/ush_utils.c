@@ -229,3 +229,8 @@ const char* ush_utils_get_status_string(ush_status_t status)
 
         return "error";
 }
+
+bool ush_utils_is_printable(uint8_t ch)
+{
+        return ((ch >= 0x20) && (ch <= 0x7E));
+}
