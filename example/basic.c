@@ -12,6 +12,14 @@ static FILE *g_io_write;
 
 struct termios g_saved_attributes;
 
+static char g_config_data[] = {
+        "# this is config file content.\n"
+        "var = 1\n"
+};
+static char g_hostname_data[] = {
+        "host"
+};
+
 void reset_input_mode(void)
 {
         tcsetattr(STDIN_FILENO, TCSANOW, &g_saved_attributes);
@@ -79,7 +87,7 @@ static const struct ush_descriptor g_ush_desc = {
         .io = &g_ush_io_interface,
         .input_buffer = g_input_buffer,
         .input_buffer_size = sizeof(g_input_buffer),
-        .hostname = "host",
+        .hostname = g_hostname_data,
         // .exec = exec,
 };
 static struct ush_object g_ush;
@@ -146,7 +154,13 @@ static struct ush_node_object g_path_dev;
 static const struct ush_file_descriptor g_path_etc_desc[] = {
         {
                 .name = "config",
-                .description = "configuration",
+                .description = "example configuration",
+                .data = g_config_data,
+        },
+        {
+                .name = "hostname",
+                .description = "system hostname",
+                .data = g_hostname_data,
         },
 };
 

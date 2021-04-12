@@ -17,11 +17,11 @@ void ush_buildin_cmd_help_callback(struct ush_object *self, struct ush_file_desc
         case 2: {
                 struct ush_file_descriptor const *f = ush_file_find_by_name(self, argv[1]);
                 if (f == NULL) {
-                        ush_print_status(self, USH_STATUS_ERROR_COMMAND_WRONG_ARGUMENTS);
+                        ush_print_status(self, USH_STATUS_ERROR_FILE_NOT_EXISTS);
                         return;
                 }
                 if (f->help == NULL) {
-                        ush_print_status(self, USH_STATUS_ERROR_COMMAND_WITHOUT_HELP);
+                        ush_print_status(self, USH_STATUS_ERROR_FILE_NO_HELP);
                         return;
                 }
                 ush_print_no_newline(self, (char*)f->help);

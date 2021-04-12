@@ -24,7 +24,9 @@ typedef enum {
         USH_STATUS_ERROR_COMMAND_SYNTAX_ERROR,
         USH_STATUS_ERROR_COMMAND_WRONG_ARGUMENTS,
         USH_STATUS_ERROR_COMMAND_NOT_EXECUTABLE,
-        USH_STATUS_ERROR_COMMAND_WITHOUT_HELP,
+        USH_STATUS_ERROR_FILE_NO_HELP,
+        USH_STATUS_ERROR_FILE_NOT_EXISTS,
+        USH_STATUS_ERROR_FILE_NO_DATA,
         USH_STATUS__TOTAL_NUM,
 } ush_status_t;
 
@@ -77,6 +79,7 @@ struct ush_file_descriptor {
         char const *name;
         char const *description;
         char const *help;
+        void *data;
 
         ush_file_execute_callback exec;
         ush_file_process_service process;

@@ -10,6 +10,9 @@ extern void ush_buildin_cmd_ls_service(struct ush_object *self);
 extern void ush_buildin_cmd_cd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
 extern void ush_buildin_cmd_pwd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
 
+extern void ush_buildin_cmd_cat_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
+extern void ush_buildin_cmd_cat_service(struct ush_object *self);
+
 const struct ush_file_descriptor g_ush_buildin_commands[] = {
         {
                 .name = "help",
@@ -38,6 +41,13 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
                 .description = "print current directory",
                 .help = "pwd: pwd\r\n\tPrint current working directory path.\r\n",
                 .exec = ush_buildin_cmd_pwd_callback,
+        },
+        {
+                .name = "cat",
+                .description = "print files content",
+                .help = "cat: cat [file...]\r\n\tPrint concatenate text files content.\r\n",
+                .exec = ush_buildin_cmd_cat_callback,
+                .process = ush_buildin_cmd_cat_service,
         }
 };
 

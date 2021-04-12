@@ -17,20 +17,30 @@ void ush_parse_start(struct ush_object *self)
         self->state = USH_STATE_PARSE_SEARCH_ARG;
 }
 
-void ush_parse_finish(struct ush_object *self)
+int ush_parse_get_args(struct ush_object *self, char* *argv)
 {
-        USH_ASSERT(self != NULL);
-
-        int i;
-        char *argv[self->args_count];
-        int argc = self->args_count;
         char *ptr = self->desc->input_buffer;
+        int argc = self->args_count;
 
-        for (i = 0; i < argc; i++) {
+        if (argv == NULL)
+                return argc;
+
+        for (int i = 0; i < argc; i++) {
                 argv[i] = ptr;
                 ptr += strlen(argv[i]) + 1;
         }
 
+        return argc;        
+}
+
+void ush_parse_finish(struct ush_object *self)
+{
+        USH_ASSERT(self != NULL);
+
+        char *argv[self->args_count];
+        int argc;
+
+        argc = ush_parse_get_args(self, argv);
         if (argc == 0)
                 return;
         

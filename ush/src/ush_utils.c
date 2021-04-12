@@ -217,8 +217,12 @@ const char* ush_utils_get_status_string(ush_status_t status)
                 return "error: wrong arguments";
         case USH_STATUS_ERROR_COMMAND_NOT_EXECUTABLE:
                 return "error: command not executable";
-        case USH_STATUS_ERROR_COMMAND_WITHOUT_HELP:
+        case USH_STATUS_ERROR_FILE_NO_HELP:
                 return "error: no help available";
+        case USH_STATUS_ERROR_FILE_NOT_EXISTS:
+                return "error: file not exists";
+        case USH_STATUS_ERROR_FILE_NO_DATA:
+                return "error: no data available";
         default:
                 USH_ASSERT(false);
         }
