@@ -12,6 +12,9 @@ extern "C" {
 
 #include "ush_config.h"
 
+#define USH_STRING(s)   USH_STRING_(s)
+#define USH_STRING_(s)  #s
+
 typedef enum {
         USH_STATUS_OK,
         USH_STATUS_ERROR_NODE_NOT_EXISTS,
