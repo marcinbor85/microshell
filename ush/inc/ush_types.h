@@ -17,15 +17,15 @@ extern "C" {
 
 typedef enum {
         USH_STATUS_OK,
-        USH_STATUS_ERROR_NODE_NOT_EXISTS,
+        USH_STATUS_ERROR_NODE_NOT_FOUND,
         USH_STATUS_ERROR_NODE_WITH_CHILDS,
         USH_STATUS_ERROR_NODE_WITHOUT_PARENT,
         USH_STATUS_ERROR_NODE_ALREADY_MOUNTED,
         USH_STATUS_ERROR_COMMAND_SYNTAX_ERROR,
         USH_STATUS_ERROR_COMMAND_WRONG_ARGUMENTS,
-        USH_STATUS_ERROR_COMMAND_NOT_EXECUTABLE,
+        USH_STATUS_ERROR_FILE_NOT_EXECUTABLE,
         USH_STATUS_ERROR_FILE_NO_HELP,
-        USH_STATUS_ERROR_FILE_NOT_EXISTS,
+        USH_STATUS_ERROR_FILE_NOT_FOUND,
         USH_STATUS_ERROR_FILE_NO_DATA,
         USH_STATUS_ERROR_FILE_READ_ONLY,
         USH_STATUS__TOTAL_NUM,
@@ -56,6 +56,7 @@ typedef enum {
         USH_STATE_PROCESS_SERVICE,
         USH_STATE_PROCESS_FINISH,
 
+#if USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE == 1
         USH_STATE_AUTOCOMP_PREPARE,
         USH_STATE_AUTOCOMP_CANDIDATES_START,
         USH_STATE_AUTOCOMP_CANDIDATES_COUNT,
@@ -66,6 +67,7 @@ typedef enum {
         USH_STATE_AUTOCOMP_PROMPT,
         USH_STATE_AUTOCOMP_RECALL,
         USH_STATE_AUTOCOMP_RECALL_SUFFIX,
+#endif /* USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE */
 
         USH_STATE__TOTAL_NUM,
 } ush_state_t;
@@ -124,7 +126,6 @@ struct ush_object {
         ush_state_t state;
         ush_state_t write_next_state;
         ush_state_t prompt_next_state;
-        ush_state_t autocomp_prev_state;
 
         char *write_buf;
         size_t write_size;
@@ -152,12 +153,17 @@ struct ush_object {
         size_t process_data_size;
         int process_stage;
 
+#if USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE == 1
+        ush_state_t autocomp_prev_state;
+
         char *autocomp_input;
         char *autocomp_candidate_name;
         char *autocomp_name;
+
         size_t autocomp_count;
         size_t autocomp_prev_count;
         size_t autocomp_suffix_len;
+#endif /* USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE */
 };
 
 #ifdef __cplusplus

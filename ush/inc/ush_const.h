@@ -5,7 +5,8 @@
 extern "C" {
 #endif
 
-#define USH_CONST_VERSION       "0.1.0"
+#define USH_NAME        "uShell"
+#define USH_VERSION     "0.1.0"
 
 #ifdef __cplusplus
 }

@@ -5,8 +5,6 @@
 extern "C" {
 #endif
 
-#include <stddef.h>
-
 #include "ush_types.h"
 
 size_t ush_utils_get_path_levels_count(const char *path);

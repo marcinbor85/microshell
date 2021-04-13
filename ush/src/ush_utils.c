@@ -202,34 +202,34 @@ const char* ush_utils_get_status_string(ush_status_t status)
 
         switch (status) {
         case USH_STATUS_OK:
-                return "ok";
-        case USH_STATUS_ERROR_NODE_NOT_EXISTS:
-                return "error: directory not exist";
+                return USH_CONFIG_TRANSLATION_OK;
+        case USH_STATUS_ERROR_NODE_NOT_FOUND:
+                return USH_CONFIG_TRANSLATION_ERROR ": " USH_CONFIG_TRANSLATION_DIRECTORY_NOT_FOUND;
         case USH_STATUS_ERROR_NODE_WITH_CHILDS:
-                return "error: nested directories exist";
+                return USH_CONFIG_TRANSLATION_ERROR ": " USH_CONFIG_TRANSLATION_NESTED_DIRECTORIES_EXIST;
         case USH_STATUS_ERROR_NODE_WITHOUT_PARENT:
-                return "error: cannot find parent node";
+                return USH_CONFIG_TRANSLATION_ERROR ": " USH_CONFIG_TRANSLATION_CANNOT_FIND_PARENT_NODE;
         case USH_STATUS_ERROR_NODE_ALREADY_MOUNTED:
-                return "error: directory already mounted";
+                return USH_CONFIG_TRANSLATION_ERROR ": " USH_CONFIG_TRANSLATION_DIRECTORY_ALREADY_MOUNTED;
         case USH_STATUS_ERROR_COMMAND_SYNTAX_ERROR:
-                return "error: syntax error";
+                return USH_CONFIG_TRANSLATION_ERROR ": " USH_CONFIG_TRANSLATION_SYNTAX_ERROR;
         case USH_STATUS_ERROR_COMMAND_WRONG_ARGUMENTS:
-                return "error: wrong arguments";
-        case USH_STATUS_ERROR_COMMAND_NOT_EXECUTABLE:
-                return "error: command not executable";
+                return USH_CONFIG_TRANSLATION_ERROR ": " USH_CONFIG_TRANSLATION_WRONG_ARGUMENTS;
+        case USH_STATUS_ERROR_FILE_NOT_EXECUTABLE:
+                return USH_CONFIG_TRANSLATION_ERROR ": " USH_CONFIG_TRANSLATION_FILE_NOT_EXECUTABLE;
         case USH_STATUS_ERROR_FILE_NO_HELP:
-                return "error: no help available";
-        case USH_STATUS_ERROR_FILE_NOT_EXISTS:
-                return "error: file not exists";
+                return USH_CONFIG_TRANSLATION_ERROR ": " USH_CONFIG_TRANSLATION_NO_HELP_AVAILABLE;
+        case USH_STATUS_ERROR_FILE_NOT_FOUND:
+                return USH_CONFIG_TRANSLATION_ERROR ": " USH_CONFIG_TRANSLATION_FILE_NOT_FOUND;
         case USH_STATUS_ERROR_FILE_NO_DATA:
-                return "error: no data available";
+                return USH_CONFIG_TRANSLATION_ERROR ": " USH_CONFIG_TRANSLATION_NO_DATA_AVAILABLE;
         case USH_STATUS_ERROR_FILE_READ_ONLY:
-                return "error: read only file";
+                return USH_CONFIG_TRANSLATION_ERROR ": " USH_CONFIG_TRANSLATION_READ_ONLY_FILE;
         default:
-                USH_ASSERT(false);
+                break;
         }
 
-        return "error";
+        return USH_CONFIG_TRANSLATION_ERROR;
 }
 
 bool ush_utils_is_printable(uint8_t ch)

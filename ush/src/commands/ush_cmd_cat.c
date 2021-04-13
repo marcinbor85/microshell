@@ -1,6 +1,10 @@
 #include "ush.h"
 #include "ush_internal.h"
 
+#if USH_CONFIG_ENABLE_FEATURE_COMMANDS == 1
+
+#if USH_CONFIG_ENABLE_COMMAND_CAT == 1
+
 void ush_buildin_cmd_cat_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
         (void)file;
@@ -13,7 +17,7 @@ void ush_buildin_cmd_cat_callback(struct ush_object *self, struct ush_file_descr
         for (int i = 1; i < argc; i++) {
                 struct ush_file_descriptor const *f = ush_file_find_by_name(self, argv[i]);
                 if (f == NULL) {
-                        ush_print_status(self, USH_STATUS_ERROR_FILE_NOT_EXISTS);
+                        ush_print_status(self, USH_STATUS_ERROR_FILE_NOT_FOUND);
                         return;
                 }
                 if (f->get_data == NULL) {
@@ -69,3 +73,7 @@ bool ush_buildin_cmd_cat_service(struct ush_object *self, struct ush_file_descri
 
         return processed;
 }
+
+#endif /* USH_CONFIG_ENABLE_COMMAND_CAT */
+
+#endif /* USH_CONFIG_ENABLE_FEATURE_COMMANDS */

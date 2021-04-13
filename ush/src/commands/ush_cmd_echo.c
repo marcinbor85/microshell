@@ -3,6 +3,10 @@
 
 #include <string.h>
 
+#if USH_CONFIG_ENABLE_FEATURE_COMMANDS == 1
+
+#if USH_CONFIG_ENABLE_COMMAND_ECHO == 1
+
 void ush_buildin_cmd_echo_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
         (void)argv;
@@ -20,7 +24,7 @@ void ush_buildin_cmd_echo_callback(struct ush_object *self, struct ush_file_desc
                 }
                 f = ush_file_find_by_name(self, argv[3]);
                 if (f == NULL) {
-                        ush_print_status(self, USH_STATUS_ERROR_FILE_NOT_EXISTS);
+                        ush_print_status(self, USH_STATUS_ERROR_FILE_NOT_FOUND);
                         break;
                 }
                 if (f->set_data == NULL) {
@@ -43,3 +47,7 @@ void ush_buildin_cmd_echo_callback(struct ush_object *self, struct ush_file_desc
                 break;
         }
 }
+
+#endif /* USH_CONFIG_ENABLE_COMMAND_ECHO */
+
+#endif /* USH_CONFIG_ENABLE_FEATURE_COMMANDS */

@@ -5,6 +5,8 @@
 
 #include <string.h>
 
+#if USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE == 1
+
 void ush_autocomp_start(struct ush_object *self)
 {
         USH_ASSERT(self != NULL);
@@ -251,3 +253,5 @@ bool ush_autocomp_service(struct ush_object *self)
 
         return processed;
 }
+
+#endif /* USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE */

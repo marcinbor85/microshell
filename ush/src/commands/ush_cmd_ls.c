@@ -3,6 +3,10 @@
 
 #include <string.h>
 
+#if USH_CONFIG_ENABLE_FEATURE_COMMANDS == 1
+
+#if USH_CONFIG_ENABLE_COMMAND_LS == 1
+
 void ush_buildin_cmd_ls_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
         (void)file;
@@ -21,7 +25,7 @@ void ush_buildin_cmd_ls_callback(struct ush_object *self, struct ush_file_descri
 
                 self->process_node = ush_node_get_by_path(self, abs_path);
                 if (self->process_node == NULL) {
-                        ush_print_status(self, USH_STATUS_ERROR_NODE_NOT_EXISTS);
+                        ush_print_status(self, USH_STATUS_ERROR_NODE_NOT_FOUND);
                         return;
                 }
         }
@@ -50,7 +54,7 @@ bool ush_buildin_cmd_ls_service(struct ush_object *self, struct ush_file_descrip
                 break;
         case USH_STATE_PROCESS_SERVICE:
                 if (self->process_child_node == NULL) {
-                        ush_write_pointer(self, USH_SHELL_FONT_STYLE_RESET, USH_STATE_PROCESS_FINISH);
+                        ush_write_pointer(self, USH_SHELL_FONT_STYLE_RESET "", USH_STATE_PROCESS_FINISH);
                         self->process_index = 0;
                         self->process_index_item = 0;
                         break;
@@ -86,7 +90,7 @@ bool ush_buildin_cmd_ls_service(struct ush_object *self, struct ush_file_descrip
                 struct ush_file_descriptor const *f = &self->process_node->file_list[self->process_index_item];
                 switch (self->process_index) {
                 case 0:
-                        sprintf(self->desc->output_buffer, "%-" USH_STRING(USH_CONFIG_NAME_ALIGN_SPACE) "s", (char*)f->name);
+                        sprintf(self->desc->output_buffer, "%-" USH_STRING(USH_CONFIG_FILENAME_ALIGN_SPACE) "s", (char*)f->name);
                         ush_write_pointer(self, self->desc->output_buffer, self->state);
                         self->process_index = 1;
                         break;
@@ -119,3 +123,7 @@ bool ush_buildin_cmd_ls_service(struct ush_object *self, struct ush_file_descrip
 
         return processed;
 }
+
+#endif /* USH_CONFIG_ENABLE_COMMAND_LS */
+
+#endif /* USH_CONFIG_ENABLE_FEATURE_COMMANDS */

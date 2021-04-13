@@ -45,5 +45,5 @@ ush_status_t ush_commands_remove(struct ush_object *self, struct ush_node_object
                 return USH_STATUS_OK;           
         }
 
-        return USH_STATUS_ERROR_NODE_NOT_EXISTS;
+        return USH_STATUS_ERROR_NODE_NOT_FOUND;
 }

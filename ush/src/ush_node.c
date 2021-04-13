@@ -112,7 +112,7 @@ ush_status_t ush_node_unmount(struct ush_object *self, const char *path)
         struct ush_node_object *node = ush_node_get_by_path(self, path);
 
         if ((node == NULL) || (parent_node == NULL))
-                return USH_STATUS_ERROR_NODE_NOT_EXISTS;
+                return USH_STATUS_ERROR_NODE_NOT_FOUND;
         
         if (node->childs != NULL)
                 return USH_STATUS_ERROR_NODE_WITH_CHILDS;
@@ -134,7 +134,7 @@ ush_status_t ush_node_unmount(struct ush_object *self, const char *path)
                 return USH_STATUS_OK;           
         }
 
-        return USH_STATUS_ERROR_NODE_NOT_EXISTS;
+        return USH_STATUS_ERROR_NODE_NOT_FOUND;
 }
 
 void ush_node_get_absolute_path(struct ush_object *self, const char *in_path, char *out_path)
@@ -171,7 +171,7 @@ ush_status_t ush_node_set_current_dir(struct ush_object *self, const char *path)
         ush_node_get_absolute_path(self, path, abs_path);
 
         if (path[0] == '\0')
-                return USH_STATUS_ERROR_NODE_NOT_EXISTS;
+                return USH_STATUS_ERROR_NODE_NOT_FOUND;
 
         struct ush_node_object *node = ush_node_get_by_path(self, abs_path);
         if (node != NULL) {
@@ -179,5 +179,5 @@ ush_status_t ush_node_set_current_dir(struct ush_object *self, const char *path)
                 return USH_STATUS_OK;
         }
 
-        return USH_STATUS_ERROR_NODE_NOT_EXISTS;
+        return USH_STATUS_ERROR_NODE_NOT_FOUND;
 }

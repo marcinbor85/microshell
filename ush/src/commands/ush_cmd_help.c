@@ -3,6 +3,10 @@
 
 #include <string.h>
 
+#if USH_CONFIG_ENABLE_FEATURE_COMMANDS == 1
+
+#if USH_CONFIG_ENABLE_COMMAND_HELP == 1
+
 void ush_buildin_cmd_help_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
         (void)file;
@@ -17,7 +21,7 @@ void ush_buildin_cmd_help_callback(struct ush_object *self, struct ush_file_desc
         case 2: {
                 struct ush_file_descriptor const *f = ush_file_find_by_name(self, argv[1]);
                 if (f == NULL) {
-                        ush_print_status(self, USH_STATUS_ERROR_FILE_NOT_EXISTS);
+                        ush_print_status(self, USH_STATUS_ERROR_FILE_NOT_FOUND);
                         return;
                 }
                 if (f->help == NULL) {
@@ -59,7 +63,7 @@ bool ush_buildin_cmd_help_service(struct ush_object *self, struct ush_file_descr
                 struct ush_file_descriptor const *f = &self->process_node->file_list[self->process_index_item];
                 switch (self->process_index) {
                 case 0:        
-                        sprintf(self->desc->output_buffer, "%-" USH_STRING(USH_CONFIG_NAME_ALIGN_SPACE) "s", (char*)f->name);
+                        sprintf(self->desc->output_buffer, "%-" USH_STRING(USH_CONFIG_FILENAME_ALIGN_SPACE) "s", (char*)f->name);
                         ush_write_pointer(self, self->desc->output_buffer, self->state);
                         self->process_index = 1;
                         break;
@@ -92,3 +96,7 @@ bool ush_buildin_cmd_help_service(struct ush_object *self, struct ush_file_descr
 
         return processed;
 }
+
+#endif /* USH_CONFIG_ENABLE_COMMAND_HELP */
+
+#endif /* USH_CONFIG_ENABLE_FEATURE_COMMANDS */

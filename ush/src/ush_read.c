@@ -54,7 +54,9 @@ bool ush_read_char(struct ush_object *self)
                 break;
         case '\x09':
                 /* tab */
+#if USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE == 1      
                 ush_autocomp_start(self);
+#endif /* USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE */
                 echo = false;
                 break;
         case '\x1B':

@@ -22,7 +22,9 @@ void ush_init(struct ush_object *self, const struct ush_descriptor *desc)
         self->desc = desc;
         self->root = NULL;
 
+#if USH_CONFIG_ENABLE_FEATURE_COMMANDS == 1
         ush_commands_add(self, &self->buildin_commands, g_ush_buildin_commands, g_ush_buildin_commands_num);
+#endif /* USH_CONFIG_ENABLE_FEATURE_COMMANDS */
 
         ush_reset(self);
 }
@@ -39,8 +41,10 @@ bool ush_service(struct ush_object *self)
                 return true;        
         if (ush_read_service(self, &busy) != false)
                 return busy;
+#if USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE == 1
         if (ush_autocomp_service(self) != false)
                 return true;
+#endif /* USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE */
         if (ush_parse_service(self) != false)
                 return true;        
         if (ush_write_service(self) != false)
@@ -57,7 +61,7 @@ void ush_reset(struct ush_object *self)
 {
         USH_ASSERT(self != NULL);
 
-        ush_write_pointer(self, "uShell " USH_CONST_VERSION "\r\n", USH_STATE_RESET_PROMPT);
+        ush_write_pointer(self, USH_NAME " " USH_VERSION "\r\n", USH_STATE_RESET_PROMPT);
 }
 
 void ush_print_status(struct ush_object *self, ush_status_t status)

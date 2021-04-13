@@ -54,7 +54,7 @@ void ush_parse_finish(struct ush_object *self)
         }
 
         if (file->exec == NULL) {
-                ush_print_status(self, USH_STATUS_ERROR_COMMAND_NOT_EXECUTABLE);
+                ush_print_status(self, USH_STATUS_ERROR_FILE_NOT_EXECUTABLE);
                 return;
         }
         

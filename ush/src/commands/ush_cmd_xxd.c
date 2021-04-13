@@ -3,6 +3,12 @@
 
 #include <string.h>
 
+#if USH_CONFIG_ENABLE_FEATURE_COMMANDS == 1
+
+#if USH_CONFIG_ENABLE_COMMAND_XXD == 1
+
+#define USH_CMD_XXD_COLUMNS     USH_CONFIG_CMD_XXD_COLUMNS
+
 void ush_buildin_cmd_xxd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
         (void)file;
@@ -14,7 +20,7 @@ void ush_buildin_cmd_xxd_callback(struct ush_object *self, struct ush_file_descr
 
         struct ush_file_descriptor const *f = ush_file_find_by_name(self, argv[1]);
         if (f == NULL) {
-                ush_print_status(self, USH_STATUS_ERROR_FILE_NOT_EXISTS);
+                ush_print_status(self, USH_STATUS_ERROR_FILE_NOT_FOUND);
                 return;
         }
 
@@ -53,7 +59,7 @@ bool ush_buildin_cmd_xxd_service(struct ush_object *self, struct ush_file_descri
                         break;
                 case 1: {                        
                         self->desc->output_buffer[0] = '\0';
-                        for (size_t i = 0; i < 16; i++) {
+                        for (size_t i = 0; i < USH_CMD_XXD_COLUMNS; i++) {
                                 size_t offset = self->process_index_item + i;
                                 if (offset < self->process_data_size) {
                                         uint8_t b = self->process_data[offset];
@@ -69,7 +75,7 @@ bool ush_buildin_cmd_xxd_service(struct ush_object *self, struct ush_file_descri
                 }
                 case 2:{
                         self->desc->output_buffer[0] = '\0';
-                        for (size_t i = 0; i < 16; i++) {
+                        for (size_t i = 0; i < USH_CMD_XXD_COLUMNS; i++) {
                                 size_t offset = self->process_index_item;
                                 if (offset < self->process_data_size) {
                                         uint8_t b = self->process_data[offset];
@@ -113,3 +119,7 @@ bool ush_buildin_cmd_xxd_service(struct ush_object *self, struct ush_file_descri
 
         return processed;
 }
+
+#endif /* USH_CONFIG_ENABLE_COMMAND_XXD */
+
+#endif /* USH_CONFIG_ENABLE_FEATURE_COMMANDS */
