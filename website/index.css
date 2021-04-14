@@ -1,0 +1,50 @@
+/* from: https://hackernoon.com/how-to-make-a-terminal-like-portfolio-website-for-yourself-27d7a7030004 */
+
+body {
+	background-color: #000
+}
+
+#console {
+	font-family: courier, monospace;
+	color: #fff;
+	max-width: 750px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 60px;
+	font-size: 14px;
+}
+
+a {
+	color: #0cd;
+	text-decoration: underline;
+}
+
+#a {
+	color: #0f0;
+}
+
+#c {
+	color: #0cd;
+}
+
+#b {
+	color: #ff0096;
+}
+
+#u {
+	font-weight: bold;
+}
+
+#k {
+	animation: change 1s;
+}
+
+#op {
+	color: #888888
+}
+
+@keyframes change {
+	0%  { color: #0f0; }
+	50% { color: #0f0; }
+	99% { color: black; }
+}
