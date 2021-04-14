@@ -29,7 +29,6 @@ void ush_utils_get_collapse_path(char *in_path, char *out_path)
                 return;
 
         size_t levels = ush_utils_get_path_levels_count(in_path);
-
         char *nodes[levels];
         size_t index = 0;
         int state = 0;
