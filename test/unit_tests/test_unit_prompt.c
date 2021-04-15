@@ -77,8 +77,7 @@ void ush_write_pointer(struct ush_object *self, char *text, ush_state_t state)
                 ush_write_pointer_call_flag = true;
                 break;
         default:
-                TEST_ASSERT_FALSE(ush_prompt_service(&ush));
-                TEST_ASSERT_FALSE(ush_utils_path_last_call_flag);
+                TEST_ASSERT_TRUE(false);
                 break;
         }
 }
