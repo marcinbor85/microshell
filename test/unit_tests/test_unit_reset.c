@@ -8,7 +8,6 @@
 struct ush_object ush;
 bool ush_write_pointer_call_flag;
 bool ush_prompt_start_call_flag;
-ush_state_t init_state;
 
 void setUp(void)
 {
@@ -49,23 +48,26 @@ void test_ush_reset_start(void)
 
 void test_ush_reset_service(void)
 {
-        ush.state = init_state;
-        switch (ush.state) {
-        case USH_STATE_RESET:
-                TEST_ASSERT_TRUE(ush_reset_service(&ush));
-                TEST_ASSERT_TRUE(ush_write_pointer_call_flag);
-                TEST_ASSERT_FALSE(ush_prompt_start_call_flag);
-                break;
-        case USH_STATE_RESET_PROMPT:
-                TEST_ASSERT_TRUE(ush_reset_service(&ush));
-                TEST_ASSERT_FALSE(ush_write_pointer_call_flag);
-                TEST_ASSERT_TRUE(ush_prompt_start_call_flag);
-                break;
-        default:
-                TEST_ASSERT_FALSE(ush_reset_service(&ush));
-                TEST_ASSERT_FALSE(ush_write_pointer_call_flag);
-                TEST_ASSERT_FALSE(ush_prompt_start_call_flag);
-                break;
+        for (int i = 0; i < USH_STATE__TOTAL_NUM; i++) {
+                setUp();
+                ush.state = (ush_state_t)i;
+                switch (ush.state) {
+                case USH_STATE_RESET:
+                        TEST_ASSERT_TRUE(ush_reset_service(&ush));
+                        TEST_ASSERT_TRUE(ush_write_pointer_call_flag);
+                        TEST_ASSERT_FALSE(ush_prompt_start_call_flag);
+                        break;
+                case USH_STATE_RESET_PROMPT:
+                        TEST_ASSERT_TRUE(ush_reset_service(&ush));
+                        TEST_ASSERT_FALSE(ush_write_pointer_call_flag);
+                        TEST_ASSERT_TRUE(ush_prompt_start_call_flag);
+                        break;
+                default:
+                        TEST_ASSERT_FALSE(ush_reset_service(&ush));
+                        TEST_ASSERT_FALSE(ush_write_pointer_call_flag);
+                        TEST_ASSERT_FALSE(ush_prompt_start_call_flag);
+                        break;
+                }
         }
 }
 
@@ -77,10 +79,7 @@ int main(int argc, char *argv[])
         UNITY_BEGIN();
 
         RUN_TEST(test_ush_reset_start);
-        for (int i = 0; i < USH_STATE__TOTAL_NUM; i++) {
-                init_state = (ush_state_t)i;
-                RUN_TEST(test_ush_reset_service);
-        }
+        RUN_TEST(test_ush_reset_service);
 
         return UNITY_END();
 }
