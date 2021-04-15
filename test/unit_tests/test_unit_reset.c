@@ -53,12 +53,18 @@ void test_ush_reset_service(void)
         switch (ush.state) {
         case USH_STATE_RESET:
                 TEST_ASSERT_TRUE(ush_reset_service(&ush));
+                TEST_ASSERT_TRUE(ush_write_pointer_call_flag);
+                TEST_ASSERT_FALSE(ush_prompt_start_call_flag);
                 break;
         case USH_STATE_RESET_PROMPT:
                 TEST_ASSERT_TRUE(ush_reset_service(&ush));
+                TEST_ASSERT_FALSE(ush_write_pointer_call_flag);
+                TEST_ASSERT_TRUE(ush_prompt_start_call_flag);
                 break;
         default:
                 TEST_ASSERT_FALSE(ush_reset_service(&ush));
+                TEST_ASSERT_FALSE(ush_write_pointer_call_flag);
+                TEST_ASSERT_FALSE(ush_prompt_start_call_flag);
                 break;
         }
 }
