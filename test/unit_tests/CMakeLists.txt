@@ -8,3 +8,8 @@ create_test( test_unit_reset
     ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_reset.c
     ${PROJECT_SOURCE_DIR}/ush/src/ush_reset.c
 )
+
+create_test( test_unit_prompt
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_prompt.c
+    ${PROJECT_SOURCE_DIR}/ush/src/ush_prompt.c
+)
