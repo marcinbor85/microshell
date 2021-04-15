@@ -11,7 +11,6 @@ struct ush_object ush;
 int write_callback_call_count;
 int write_callback_pattern_index;
 int write_callback_return_val;
-int read_callback_return_val;
 
 int write_callback(struct ush_object *self, char ch);
 
@@ -28,7 +27,6 @@ void setUp(void)
         write_callback_call_count = 0;
         write_callback_pattern_index = 0;
         write_callback_return_val = 0;
-        read_callback_return_val = 0;
 }
 
 void tearDown(void)
