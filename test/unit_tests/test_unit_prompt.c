@@ -105,7 +105,7 @@ void test_ush_prompt_service(void)
                 ush_state_t state = (ush_state_t)i;
                 ush.state = state;
 
-                switch (ush.state) {
+                switch (state) {
                 case USH_STATE_PROMPT_PREFIX:
                         TEST_ASSERT_TRUE(ush_prompt_service(&ush));
                         TEST_ASSERT_TRUE(ush_write_pointer_call_flag);
