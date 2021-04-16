@@ -9,8 +9,8 @@
 struct ush_descriptor ush_desc;
 struct ush_node_object ush_current_node;
 struct ush_object ush;
-bool ush_write_pointer_call_flag;
-bool ush_utils_path_last_call_flag;
+int ush_write_pointer_call_count;
+int ush_utils_path_last_call_count;
 
 void setUp(void)
 {
@@ -22,8 +22,8 @@ void setUp(void)
         ush.current_node = &ush_current_node;
         ush.prompt_next_state = USH_STATE__TOTAL_NUM;
 
-        ush_write_pointer_call_flag = false;
-        ush_utils_path_last_call_flag = false;
+        ush_write_pointer_call_count = 0;
+        ush_utils_path_last_call_count = 0;
 }
 
 void tearDown(void)
@@ -35,7 +35,7 @@ void ush_utils_path_last(const char *in_path, char* *out_path)
 {
         TEST_ASSERT_EQUAL_STRING("test_node_1", in_path);
         *out_path = "test_node_2";
-        ush_utils_path_last_call_flag = true;
+        ush_utils_path_last_call_count++;
 }
 
 void ush_write_pointer(struct ush_object *self, char *text, ush_state_t state)
@@ -45,41 +45,33 @@ void ush_write_pointer(struct ush_object *self, char *text, ush_state_t state)
                 TEST_ASSERT_EQUAL(&ush, self);
                 TEST_ASSERT_EQUAL_STRING(USH_SHELL_FONT_COLOR_MAGENTA "[", text);
                 TEST_ASSERT_EQUAL(USH_STATE_PROMPT_HOST, state);
-                TEST_ASSERT_FALSE(ush_utils_path_last_call_flag);
-                ush_write_pointer_call_flag = true;
                 break;
         case USH_STATE_PROMPT_HOST:
                 TEST_ASSERT_EQUAL(&ush, self);
                 TEST_ASSERT_EQUAL_STRING("test_hostname", text);
                 TEST_ASSERT_EQUAL(USH_STATE_PROMPT_SPACE, state);
-                TEST_ASSERT_FALSE(ush_utils_path_last_call_flag);
-                ush_write_pointer_call_flag = true;
                 break;
         case USH_STATE_PROMPT_SPACE:
                 TEST_ASSERT_EQUAL(&ush, self);
                 TEST_ASSERT_EQUAL_STRING(" ", text);
                 TEST_ASSERT_EQUAL(USH_STATE_PROMPT_PATH, state);
-                TEST_ASSERT_FALSE(ush_utils_path_last_call_flag);
-                ush_write_pointer_call_flag = true;
                 break;
         case USH_STATE_PROMPT_PATH:
                 TEST_ASSERT_EQUAL(&ush, self);
                 TEST_ASSERT_EQUAL_STRING("test_node_2", text);
                 TEST_ASSERT_EQUAL(USH_STATE_PROMPT_SUFFIX, state);
-                TEST_ASSERT_TRUE(ush_utils_path_last_call_flag);
-                ush_write_pointer_call_flag = true;
                 break;
         case USH_STATE_PROMPT_SUFFIX:
                 TEST_ASSERT_EQUAL(&ush, self);
                 TEST_ASSERT_EQUAL_STRING("]$ " USH_SHELL_FONT_STYLE_RESET, text);
                 TEST_ASSERT_EQUAL(USH_STATE__TOTAL_NUM, state);
-                TEST_ASSERT_FALSE(ush_utils_path_last_call_flag);
-                ush_write_pointer_call_flag = true;
                 break;
         default:
                 TEST_ASSERT_TRUE(false);
                 break;
         }
+
+        ush_write_pointer_call_count++;
 }
 
 void test_ush_prompt_start(void)
@@ -108,33 +100,33 @@ void test_ush_prompt_service(void)
                 switch (state) {
                 case USH_STATE_PROMPT_PREFIX:
                         TEST_ASSERT_TRUE(ush_prompt_service(&ush));
-                        TEST_ASSERT_TRUE(ush_write_pointer_call_flag);
-                        TEST_ASSERT_FALSE(ush_utils_path_last_call_flag);
+                        TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_utils_path_last_call_count);
                         break;
                 case USH_STATE_PROMPT_HOST:
                         TEST_ASSERT_TRUE(ush_prompt_service(&ush));
-                        TEST_ASSERT_TRUE(ush_write_pointer_call_flag);
-                        TEST_ASSERT_FALSE(ush_utils_path_last_call_flag);
+                        TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_utils_path_last_call_count);
                         break;
                 case USH_STATE_PROMPT_SPACE:
                         TEST_ASSERT_TRUE(ush_prompt_service(&ush));
-                        TEST_ASSERT_TRUE(ush_write_pointer_call_flag);
-                        TEST_ASSERT_FALSE(ush_utils_path_last_call_flag);
+                        TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_utils_path_last_call_count);
                         break;
                 case USH_STATE_PROMPT_PATH:
                         TEST_ASSERT_TRUE(ush_prompt_service(&ush));
-                        TEST_ASSERT_TRUE(ush_write_pointer_call_flag);
-                        TEST_ASSERT_TRUE(ush_utils_path_last_call_flag);
+                        TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(1, ush_utils_path_last_call_count);
                         break;
                 case USH_STATE_PROMPT_SUFFIX:
                         TEST_ASSERT_TRUE(ush_prompt_service(&ush));
-                        TEST_ASSERT_TRUE(ush_write_pointer_call_flag);
-                        TEST_ASSERT_FALSE(ush_utils_path_last_call_flag);
+                        TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_utils_path_last_call_count);
                         break;
                 default:
                         TEST_ASSERT_FALSE(ush_prompt_service(&ush));
-                        TEST_ASSERT_FALSE(ush_write_pointer_call_flag);
-                        TEST_ASSERT_FALSE(ush_utils_path_last_call_flag);
+                        TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_utils_path_last_call_count);
                         break;
                 }
        }
