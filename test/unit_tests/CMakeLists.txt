@@ -48,3 +48,8 @@ create_test( test_unit_parse
     ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_parse.c
     ${PROJECT_SOURCE_DIR}/ush/src/ush_parse.c
 )
+
+create_test( test_unit_parse_utils
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_parse_utils.c
+    ${PROJECT_SOURCE_DIR}/ush/src/ush_parse_utils.c
+)
