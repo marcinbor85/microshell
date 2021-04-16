@@ -98,7 +98,7 @@ void test_ush_write_char_states(void)
                 TEST_ASSERT_EQUAL(1, ush.write_pos);
                 TEST_ASSERT_EQUAL(1, ush.write_size);
 
-                TEST_ASSERT_EQUAL_INT(0, write_callback_call_count);
+                TEST_ASSERT_EQUAL(0, write_callback_call_count);
         }
 }
 
@@ -113,7 +113,7 @@ void test_ush_write_char_ok(void)
         TEST_ASSERT_EQUAL(0, ush.state);
         TEST_ASSERT_EQUAL(4, ush.write_pos);
         TEST_ASSERT_EQUAL(4, ush.write_size);
-        TEST_ASSERT_EQUAL_INT(4, write_callback_call_count);
+        TEST_ASSERT_EQUAL(4, write_callback_call_count);
 }
 
 void test_ush_write_char_busy(void)
@@ -127,7 +127,7 @@ void test_ush_write_char_busy(void)
         TEST_ASSERT_EQUAL(0, ush.state);
         TEST_ASSERT_EQUAL(0, ush.write_pos);
         TEST_ASSERT_EQUAL(4, ush.write_size);
-        TEST_ASSERT_EQUAL_INT(4, write_callback_call_count);        
+        TEST_ASSERT_EQUAL(4, write_callback_call_count);        
 }
 
 int main(int argc, char *argv[])
