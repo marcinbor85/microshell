@@ -6,6 +6,8 @@ file(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_read_utils.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_read_char.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_parse.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_parse_char.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_parse_utils.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_write.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_write_utils.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ush_prompt.c
