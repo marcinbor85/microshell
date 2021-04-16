@@ -38,3 +38,8 @@ create_test( test_unit_read_char
     ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_read_char.c
     ${PROJECT_SOURCE_DIR}/ush/src/ush_read_char.c
 )
+
+create_test( test_unit_process
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_process.c
+    ${PROJECT_SOURCE_DIR}/ush/src/ush_process.c
+)
