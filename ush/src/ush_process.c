@@ -21,8 +21,9 @@ bool ush_process_service(struct ush_object *self)
         case USH_STATE_PROCESS_START:
         case USH_STATE_PROCESS_SERVICE:
         case USH_STATE_PROCESS_FINISH:
+                USH_ASSERT(self->process_file != NULL);
+                
                 if (self->process_file->process == NULL) {
-                        USH_ASSERT(false);
                         self->state = USH_STATE_RESET;
                         break;
                 }

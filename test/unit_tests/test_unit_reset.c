@@ -43,9 +43,11 @@ void ush_prompt_start(struct ush_object *self, ush_state_t prepare_next_state)
 void test_ush_reset_start(void)
 {
         for (int i = 0; i < USH_STATE__TOTAL_NUM; i++) {
-                setUp();
-                ush.state = (ush_state_t)i;
+                ush_state_t state = (ush_state_t)i;
 
+                setUp();
+                ush.state = state;
+                
                 ush_reset_start(&ush);
                 TEST_ASSERT_EQUAL(USH_STATE_RESET, ush.state);
                 TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
@@ -56,9 +58,12 @@ void test_ush_reset_start(void)
 void test_ush_reset_service(void)
 {
         for (int i = 0; i < USH_STATE__TOTAL_NUM; i++) {
+                ush_state_t state = (ush_state_t)i;
+
                 setUp();
-                ush.state = (ush_state_t)i;
-                switch (ush.state) {
+                ush.state = state;
+
+                switch (state) {
                 case USH_STATE_RESET:
                         TEST_ASSERT_TRUE(ush_reset_service(&ush));
                         TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
