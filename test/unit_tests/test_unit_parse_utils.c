@@ -13,8 +13,9 @@ void setUp(void)
 {
         ush_desc.input_buffer = input_buffer;
         ush_desc.input_buffer_size = sizeof(input_buffer);
-        
+
         memset((uint8_t*)&ush, 0, sizeof(ush));
+        memset(input_buffer, 0, sizeof(input_buffer));
         ush.desc = &ush_desc;
 }
 
@@ -104,6 +105,168 @@ void test_ush_parse_get_args_data(void)
         TEST_ASSERT_NULL(argv[3]);
 }
 
+void test_ush_parse_char_standard_search(void)
+{
+        for (int i = 0; i < 256; i++) {
+                char ch = (char)i;
+                char in_char = (char)(~ch);
+
+                setUp();
+                ush.args_count = 1;
+                ush.out_pos = 1;
+                ush.state = USH_STATE_PARSE_SEARCH_ARG;
+                input_buffer[1] = in_char;
+                ush_parse_char_standard(&ush, ch);
+
+                switch (ch) {
+                case ' ':
+                        TEST_ASSERT_EQUAL(USH_STATE_PARSE_SEARCH_ARG, ush.state);
+                        TEST_ASSERT_EQUAL(1, ush.args_count);
+                        TEST_ASSERT_FALSE(ush.escape_flag);
+                        TEST_ASSERT_EQUAL(1, ush.out_pos);
+                        TEST_ASSERT_EQUAL(in_char, input_buffer[1]);
+                        break;
+                case '\"':
+                        TEST_ASSERT_EQUAL(USH_STATE_PARSE_QUOTE_ARG, ush.state);
+                        TEST_ASSERT_EQUAL(2, ush.args_count);
+                        TEST_ASSERT_FALSE(ush.escape_flag);
+                        TEST_ASSERT_EQUAL(1, ush.out_pos);
+                        TEST_ASSERT_EQUAL(in_char, input_buffer[1]);
+                        break;
+                case '\\':
+                        TEST_ASSERT_EQUAL(USH_STATE_PARSE_STANDARD_ARG, ush.state);
+                        TEST_ASSERT_EQUAL(2, ush.args_count);
+                        TEST_ASSERT_TRUE(ush.escape_flag);
+                        TEST_ASSERT_EQUAL(1, ush.out_pos);
+                        TEST_ASSERT_EQUAL(in_char, input_buffer[1]);
+                        break;
+                default:
+                        TEST_ASSERT_EQUAL(USH_STATE_PARSE_STANDARD_ARG, ush.state);
+                        TEST_ASSERT_EQUAL(2, ush.args_count);
+                        TEST_ASSERT_FALSE(ush.escape_flag);
+                        TEST_ASSERT_EQUAL(2, ush.out_pos);
+                        TEST_ASSERT_EQUAL(ch, input_buffer[1]);
+                        break;
+                }
+                break;
+        }
+}
+
+void test_ush_parse_char_standard_quote(void)
+{
+        for (int i = 0; i < 256; i++) {
+                char ch = (char)i;
+                char in_char = (char)(~ch);
+
+                setUp();
+                ush.args_count = 1;
+                ush.out_pos = 1;
+                ush.state = USH_STATE_PARSE_QUOTE_ARG;
+                ush.escape_flag = false;
+                input_buffer[1] = in_char;
+                ush_parse_char_standard(&ush, ch);
+
+                switch (ch) {
+                case '\"':
+                        TEST_ASSERT_EQUAL(USH_STATE_PARSE_STANDARD_ARG, ush.state);
+                        TEST_ASSERT_EQUAL(1, ush.args_count);
+                        TEST_ASSERT_FALSE(ush.escape_flag);
+                        TEST_ASSERT_EQUAL(1, ush.out_pos);
+                        TEST_ASSERT_EQUAL(in_char, input_buffer[1]);
+                        break;
+                case '\\':
+                        TEST_ASSERT_EQUAL(USH_STATE_PARSE_QUOTE_ARG, ush.state);
+                        TEST_ASSERT_EQUAL(1, ush.args_count);
+                        TEST_ASSERT_TRUE(ush.escape_flag);
+                        TEST_ASSERT_EQUAL(1, ush.out_pos);
+                        TEST_ASSERT_EQUAL(in_char, input_buffer[1]);
+                        break;
+                default:
+                        TEST_ASSERT_EQUAL(USH_STATE_PARSE_QUOTE_ARG, ush.state);
+                        TEST_ASSERT_EQUAL(1, ush.args_count);
+                        TEST_ASSERT_FALSE(ush.escape_flag);
+                        TEST_ASSERT_EQUAL(2, ush.out_pos);
+                        TEST_ASSERT_EQUAL(ch, input_buffer[1]);
+                        break;
+                }
+
+                setUp();
+                ush.args_count = 1;
+                ush.out_pos = 1;
+                ush.state = USH_STATE_PARSE_QUOTE_ARG;
+                ush.escape_flag = true;
+                input_buffer[1] = in_char;
+                ush_parse_char_standard(&ush, ch);
+
+                TEST_ASSERT_EQUAL(USH_STATE_PARSE_QUOTE_ARG, ush.state);
+                TEST_ASSERT_EQUAL(1, ush.args_count);
+                TEST_ASSERT_FALSE(ush.escape_flag);
+                TEST_ASSERT_EQUAL(2, ush.out_pos);
+                TEST_ASSERT_EQUAL(ch, input_buffer[1]);
+        }
+}
+
+void test_ush_parse_char_standard_standard(void)
+{
+        for (int i = 0; i < 256; i++) {
+                char ch = (char)i;
+                char in_char = (char)(~ch);
+
+                setUp();
+                ush.args_count = 1;
+                ush.out_pos = 1;
+                ush.state = USH_STATE_PARSE_STANDARD_ARG;
+                ush.escape_flag = false;
+                input_buffer[1] = in_char;
+                ush_parse_char_standard(&ush, ch);
+
+                switch (ch) {
+                case ' ':
+                        TEST_ASSERT_EQUAL(USH_STATE_PARSE_SEARCH_ARG, ush.state);
+                        TEST_ASSERT_EQUAL(1, ush.args_count);
+                        TEST_ASSERT_FALSE(ush.escape_flag);
+                        TEST_ASSERT_EQUAL(2, ush.out_pos);
+                        TEST_ASSERT_EQUAL('\0', input_buffer[1]);
+                        break;
+                case '\"':
+                        TEST_ASSERT_EQUAL(USH_STATE_PARSE_QUOTE_ARG, ush.state);
+                        TEST_ASSERT_EQUAL(1, ush.args_count);
+                        TEST_ASSERT_FALSE(ush.escape_flag);
+                        TEST_ASSERT_EQUAL(1, ush.out_pos);
+                        TEST_ASSERT_EQUAL(in_char, input_buffer[1]);
+                        break;
+                case '\\':
+                        TEST_ASSERT_EQUAL(USH_STATE_PARSE_STANDARD_ARG, ush.state);
+                        TEST_ASSERT_EQUAL(1, ush.args_count);
+                        TEST_ASSERT_TRUE(ush.escape_flag);
+                        TEST_ASSERT_EQUAL(1, ush.out_pos);
+                        TEST_ASSERT_EQUAL(in_char, input_buffer[1]);
+                        break;
+                default:
+                        TEST_ASSERT_EQUAL(USH_STATE_PARSE_STANDARD_ARG, ush.state);
+                        TEST_ASSERT_EQUAL(1, ush.args_count);
+                        TEST_ASSERT_FALSE(ush.escape_flag);
+                        TEST_ASSERT_EQUAL(2, ush.out_pos);
+                        TEST_ASSERT_EQUAL(ch, input_buffer[1]);
+                        break;
+                }
+
+                setUp();
+                ush.args_count = 1;
+                ush.out_pos = 1;
+                ush.state = USH_STATE_PARSE_STANDARD_ARG;
+                ush.escape_flag = true;
+                input_buffer[1] = in_char;
+                ush_parse_char_standard(&ush, ch);
+
+                TEST_ASSERT_EQUAL(USH_STATE_PARSE_STANDARD_ARG, ush.state);
+                TEST_ASSERT_EQUAL(1, ush.args_count);
+                TEST_ASSERT_FALSE(ush.escape_flag);
+                TEST_ASSERT_EQUAL(2, ush.out_pos);
+                TEST_ASSERT_EQUAL(ch, input_buffer[1]);
+        }
+}
+
 int main(int argc, char *argv[])
 {
         (void)argc;
@@ -114,6 +277,9 @@ int main(int argc, char *argv[])
         RUN_TEST(test_ush_parse_start);
         RUN_TEST(test_ush_parse_get_args_null);
         RUN_TEST(test_ush_parse_get_args_data);
+        RUN_TEST(test_ush_parse_char_standard_search);
+        RUN_TEST(test_ush_parse_char_standard_quote);
+        RUN_TEST(test_ush_parse_char_standard_standard);
 
         return UNITY_END();
 }
