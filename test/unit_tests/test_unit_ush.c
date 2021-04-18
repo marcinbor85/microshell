@@ -209,6 +209,30 @@ void test_ush_service_none(void)
         TEST_ASSERT_EQUAL(1, ush_process_service_call_count);
 }
 
+void test_ush_service_all(void)
+{
+        ush_reset_service_return_val = true;
+        ush_prompt_service_return_val = true;
+        ush_read_service_return_val = true;
+        ush_read_service_busy = true;
+        ush_autocomp_service_return_val = true;
+        ush_parse_service_return_val = true;
+        ush_write_service_return_val = true;
+        ush_process_service_return_val = true;
+        TEST_ASSERT_TRUE(ush_service(&ush));
+        TEST_ASSERT_EQUAL(0, ush_commands_add_call_count);
+        TEST_ASSERT_EQUAL(0, ush_reset_call_count);
+        TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+        TEST_ASSERT_EQUAL(0, ush_utils_get_status_string_call_count);
+        TEST_ASSERT_EQUAL(1, ush_reset_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_prompt_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_read_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+}
+
 void test_ush_service_reset(void)
 {
         ush_reset_service_return_val = true;
@@ -490,6 +514,7 @@ int main(int argc, char *argv[])
 
         RUN_TEST(test_ush_init);
         RUN_TEST(test_ush_service_none);
+        RUN_TEST(test_ush_service_all);
         RUN_TEST(test_ush_service_reset);
         RUN_TEST(test_ush_service_prompt);
         RUN_TEST(test_ush_service_read);
