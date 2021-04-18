@@ -78,3 +78,8 @@ create_test( test_unit_ush
     ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_ush.c
     ${PROJECT_SOURCE_DIR}/ush/src/ush.c
 )
+
+create_test( test_unit_node_utils
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_node_utils.c
+    ${PROJECT_SOURCE_DIR}/ush/src/ush_node_utils.c
+)

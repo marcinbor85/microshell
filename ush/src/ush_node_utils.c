@@ -24,13 +24,12 @@ ush_status_t ush_node_set_current_dir(struct ush_object *self, const char *path)
         USH_ASSERT(self != NULL);
         USH_ASSERT(path != NULL);
 
-        char abs_path[USH_CONFIG_PATH_MAX_LENGTH];
-
-        ush_node_get_absolute_path(self, path, abs_path);
-
         if (path[0] == '\0')
                 return USH_STATUS_ERROR_NODE_NOT_FOUND;
 
+        char abs_path[USH_CONFIG_PATH_MAX_LENGTH];
+        
+        ush_node_get_absolute_path(self, path, abs_path);
         struct ush_node_object *node = ush_node_get_by_path(self, abs_path);
         if (node != NULL) {
                 self->current_node = node;
