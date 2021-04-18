@@ -22,7 +22,10 @@ void ush_init(struct ush_object *self, const struct ush_descriptor *desc)
         self->root = NULL;
 
 #if USH_CONFIG_ENABLE_FEATURE_COMMANDS == 1
-        ush_commands_add(self, &self->buildin_commands, g_ush_buildin_commands, g_ush_buildin_commands_num);
+        ush_status_t stat = ush_commands_add(self, &self->buildin_commands, g_ush_buildin_commands, g_ush_buildin_commands_num);
+        if (stat != USH_STATUS_OK) {
+                USH_ASSERT(false);
+        }
 #endif /* USH_CONFIG_ENABLE_FEATURE_COMMANDS */
 
         ush_reset(self);
