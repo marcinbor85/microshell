@@ -12,8 +12,6 @@ struct ush_file_descriptor const* ush_file_find_by_name(struct ush_object *self,
         struct ush_node_object *curr;
         struct ush_file_descriptor const *file;
 
-        ush_node_get_absolute_path(self, name, abs_path);
-
         curr = self->commands;        
         while (curr != NULL) {
                 for (size_t i = 0; i < curr->file_list_size; i++) {
@@ -24,6 +22,7 @@ struct ush_file_descriptor const* ush_file_find_by_name(struct ush_object *self,
                 curr = curr->next;                
         }
 
+        ush_node_get_absolute_path(self, name, abs_path);
         curr = ush_node_get_parent_by_path(self, abs_path);      
         while (curr != NULL) {
                 for (size_t i = 0; i < curr->file_list_size; i++) {
