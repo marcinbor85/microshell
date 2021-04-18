@@ -49,11 +49,16 @@ ush_status_t ush_node_unmount(struct ush_object *self, const char *path)
         struct ush_node_object *parent_node = ush_node_get_parent_by_path(self, path);
         struct ush_node_object *node = ush_node_get_by_path(self, path);
 
-        if ((node == NULL) || (parent_node == NULL))
+        if ((node == NULL) || ((node != self->root) && (parent_node == NULL)))
                 return USH_STATUS_ERROR_NODE_NOT_FOUND;
         
         if (node->childs != NULL)
                 return USH_STATUS_ERROR_NODE_WITH_CHILDS;
+
+        if (parent_node == NULL) {
+                self->root = NULL;
+                return USH_STATUS_OK;
+        }
 
         struct ush_node_object *prev = NULL;
         struct ush_node_object *curr = parent_node->childs;
