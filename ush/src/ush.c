@@ -1,7 +1,6 @@
 #include "ush.h"
 #include "ush_internal.h"
 #include "ush_shell.h"
-#include "ush_const.h"
 
 void ush_init(struct ush_object *self, const struct ush_descriptor *desc)
 {
@@ -57,25 +56,27 @@ bool ush_service(struct ush_object *self)
         return false;
 }
 
-void ush_reset(struct ush_object *self)
-{
-        USH_ASSERT(self != NULL);
-
-        ush_write_pointer(self, USH_NAME " " USH_VERSION "\r\n", USH_STATE_RESET_PROMPT);
-}
-
 void ush_print_status(struct ush_object *self, ush_status_t status)
 {
+        USH_ASSERT(self != NULL);
+        USH_ASSERT(status < USH_STATUS__TOTAL_NUM);
+
         char *ret = (char*)ush_utils_get_status_string(status);
         ush_write_pointer(self, ret, USH_STATE_RESET);
 }
 
 void ush_print(struct ush_object *self, char *buf)
 {
+        USH_ASSERT(self != NULL);
+        USH_ASSERT(buf != NULL);
+
         ush_write_pointer(self, buf, USH_STATE_RESET);
 }
 
 void ush_print_no_newline(struct ush_object *self, char *buf)
 {
+        USH_ASSERT(self != NULL);
+        USH_ASSERT(buf != NULL);
+
         ush_write_pointer(self, buf, USH_STATE_RESET_PROMPT);
 }

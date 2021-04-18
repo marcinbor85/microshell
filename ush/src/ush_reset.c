@@ -1,11 +1,21 @@
 #include "ush_internal.h"
+#include "ush_const.h"
 #include "ush.h"
 
 #include <string.h>
 
 void ush_reset_start(struct ush_object *self)
 {
+        USH_ASSERT(self != NULL);
+
         self->state = USH_STATE_RESET;
+}
+
+void ush_reset(struct ush_object *self)
+{
+        USH_ASSERT(self != NULL);
+        
+        ush_write_pointer(self, USH_NAME " " USH_VERSION "\r\n", USH_STATE_RESET_PROMPT);
 }
 
 bool ush_reset_service(struct ush_object *self)
