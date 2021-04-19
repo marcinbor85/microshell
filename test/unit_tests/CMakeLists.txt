@@ -64,9 +64,24 @@ create_test( test_unit_commands
     ${PROJECT_SOURCE_DIR}/ush/src/ush_commands.c
 )
 
-create_test( test_unit_commands_buildin
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_commands_buildin.c
+create_test( test_unit_cmd
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_cmd.c
     ${PROJECT_SOURCE_DIR}/ush/src/commands/ush_cmd.c
+)
+
+create_test( test_unit_cmd_cd
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_cmd_cd.c
+    ${PROJECT_SOURCE_DIR}/ush/src/commands/ush_cmd_cd.c
+)
+
+create_test( test_unit_cmd_pwd
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_cmd_pwd.c
+    ${PROJECT_SOURCE_DIR}/ush/src/commands/ush_cmd_pwd.c
+)
+
+create_test( test_unit_cmd_echo
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_cmd_echo.c
+    ${PROJECT_SOURCE_DIR}/ush/src/commands/ush_cmd_echo.c
 )
 
 create_test( test_unit_file
