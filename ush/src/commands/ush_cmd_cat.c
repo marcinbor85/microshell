@@ -31,6 +31,8 @@ void ush_buildin_cmd_cat_callback(struct ush_object *self, struct ush_file_descr
 
 bool ush_buildin_cmd_cat_service(struct ush_object *self, struct ush_file_descriptor const *file)
 {
+        (void)file;
+        
         USH_ASSERT(self != NULL);
         USH_ASSERT(file != NULL);
 
