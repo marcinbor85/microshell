@@ -41,7 +41,7 @@ extern "C" {
 
 extern int g_assert_call_count;
 
-#define USH_ASSERT(cond) { if (!(cond)) { g_assert_call_count = 0; } }
+#define USH_ASSERT(cond) { if (!(cond)) { g_assert_call_count++; } }
 
 #ifdef __cplusplus
 }

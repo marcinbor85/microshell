@@ -19,6 +19,8 @@ void setUp(void)
         memset((uint8_t*)&ush, 0, sizeof(ush));
         memset(input_buffer, 0, sizeof(input_buffer));
         ush.desc = &ush_desc;
+
+        g_assert_call_count = 0;
 }
 
 void tearDown(void)
@@ -269,6 +271,28 @@ void test_ush_parse_char_standard_standard(void)
         }
 }
 
+void test_ush_parse_char_standard_states(void)
+{
+        for (int i = 0; i < USH_STATE__TOTAL_NUM; i++) {
+                ush_state_t state = (ush_state_t)i;
+
+                setUp();
+                ush.state = state;
+                ush_parse_char_standard(&ush, 0);
+
+                switch (state) {
+                case USH_STATE_PARSE_SEARCH_ARG:
+                case USH_STATE_PARSE_QUOTE_ARG:
+                case USH_STATE_PARSE_STANDARD_ARG:
+                        TEST_ASSERT_EQUAL(0, g_assert_call_count);
+                        break;
+                default:
+                        TEST_ASSERT_EQUAL(1, g_assert_call_count);
+                        break;
+                }                
+        }
+}
+
 int main(int argc, char *argv[])
 {
         (void)argc;
@@ -282,6 +306,7 @@ int main(int argc, char *argv[])
         RUN_TEST(test_ush_parse_char_standard_search);
         RUN_TEST(test_ush_parse_char_standard_quote);
         RUN_TEST(test_ush_parse_char_standard_standard);
+        RUN_TEST(test_ush_parse_char_standard_states);
 
         return UNITY_END();
 }
