@@ -89,6 +89,11 @@ create_test( test_unit_cmd_cat
     ${PROJECT_SOURCE_DIR}/ush/src/commands/ush_cmd_cat.c
 )
 
+create_test( test_unit_cmd_help
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_cmd_help.c
+    ${PROJECT_SOURCE_DIR}/ush/src/commands/ush_cmd_help.c
+)
+
 create_test( test_unit_file
     ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_file.c
     ${PROJECT_SOURCE_DIR}/ush/src/ush_file.c
