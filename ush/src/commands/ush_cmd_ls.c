@@ -11,16 +11,12 @@ void ush_buildin_cmd_ls_callback(struct ush_object *self, struct ush_file_descri
 {
         (void)file;
 
-        if (argc > 2) {
-                ush_print_status(self, USH_STATUS_ERROR_COMMAND_WRONG_ARGUMENTS);
-                return;
-        }
-
-        char abs_path[USH_CONFIG_PATH_MAX_LENGTH];
-
-        if (argc == 1) {
+        switch (argc) {
+        case 1:
                 self->process_node = self->current_node;
-        } else {
+                break;
+        case 2: {
+                char abs_path[USH_CONFIG_PATH_MAX_LENGTH];
                 ush_node_get_absolute_path(self, argv[1], abs_path);
 
                 self->process_node = ush_node_get_by_path(self, abs_path);
@@ -28,8 +24,13 @@ void ush_buildin_cmd_ls_callback(struct ush_object *self, struct ush_file_descri
                         ush_print_status(self, USH_STATUS_ERROR_NODE_NOT_FOUND);
                         return;
                 }
+                break;
         }
-        
+        default:
+                ush_print_status(self, USH_STATUS_ERROR_COMMAND_WRONG_ARGUMENTS);
+                return;
+        }
+
         ush_process_start(self, file);
 }
 
