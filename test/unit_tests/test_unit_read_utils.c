@@ -5,6 +5,8 @@
 
 #include "ush_internal.h"
 
+int g_assert_call_count;
+
 char input_buffer[128];
 char output_buffer[128];
 

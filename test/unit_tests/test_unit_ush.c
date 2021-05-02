@@ -5,6 +5,9 @@
 
 #include "ush.h"
 
+int g_assert_call_count;
+
+struct ush_io_interface ush_io_iface;
 struct ush_descriptor ush_desc;
 struct ush_object ush;
 
@@ -43,6 +46,7 @@ void setUp(void)
 {
         memset((uint8_t*)&ush_desc, 0, sizeof(ush_desc));
         memset((uint8_t*)&ush, 0, sizeof(ush));
+        ush_desc.io = &ush_io_iface;
 
         ush_commands_add_call_count = 0;
         ush_reset_call_count = 0;

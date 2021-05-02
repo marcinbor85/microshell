@@ -5,6 +5,8 @@
 
 #include "ush_internal.h"
 
+int g_assert_call_count;
+
 struct ush_object ush;
 
 int ush_read_start_call_count;

@@ -39,7 +39,9 @@ extern "C" {
 #define USH_CONFIG_TRANSLATION_NO_DATA_AVAILABLE                "no data available"
 #define USH_CONFIG_TRANSLATION_READ_ONLY_FILE                   "read only file"
 
-#define USH_ASSERT(cond) { }
+extern int g_assert_call_count;
+
+#define USH_ASSERT(cond) { if (!(cond)) { g_assert_call_count = 0; } }
 
 #ifdef __cplusplus
 }

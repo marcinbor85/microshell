@@ -5,6 +5,8 @@
 
 #include "ush_internal.h"
 
+int g_assert_call_count;
+
 struct ush_object ush;
 
 void file_process_service(struct ush_object *self, struct ush_file_descriptor const *file);

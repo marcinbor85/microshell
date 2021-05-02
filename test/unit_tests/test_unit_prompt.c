@@ -6,6 +6,8 @@
 #include "ush_internal.h"
 #include "ush_shell.h"
 
+int g_assert_call_count;
+
 struct ush_descriptor ush_desc;
 struct ush_node_object ush_current_node;
 struct ush_object ush;

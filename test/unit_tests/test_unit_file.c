@@ -5,6 +5,8 @@
 
 #include "ush_file.h"
 
+int g_assert_call_count;
+
 struct ush_object ush;
 
 char *ush_node_get_absolute_path_in_path;

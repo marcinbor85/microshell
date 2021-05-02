@@ -7,6 +7,8 @@
 #include "ush_const.h"
 #include "ush.h"
 
+int g_assert_call_count;
+
 struct ush_object ush;
 
 char *ush_node_get_by_path_path;
@@ -65,13 +67,15 @@ struct ush_node_object* ush_node_get_parent_by_path(struct ush_object *self, con
 
 void test_ush_node_mount_already(void)
 {       
+        struct ush_file_descriptor files[1] = {0};
+
         ush_node_get_by_path_path = "test";
         ush_node_get_by_path_return_val = &node1;
-        TEST_ASSERT_EQUAL(USH_STATUS_ERROR_NODE_ALREADY_MOUNTED, ush_node_mount(&ush, "test", &node1, (struct ush_file_descriptor*)1234, 1));
+        TEST_ASSERT_EQUAL(USH_STATUS_ERROR_NODE_ALREADY_MOUNTED, ush_node_mount(&ush, "test", &node1, files, 1));
         TEST_ASSERT_EQUAL(1, ush_node_get_by_path_call_count);
         TEST_ASSERT_EQUAL(0, ush_node_get_parent_by_path_call_count);
         TEST_ASSERT_NULL(ush.root);
-        TEST_ASSERT_EQUAL(USH_STATUS_ERROR_NODE_ALREADY_MOUNTED, ush_node_mount(&ush, "test", &node2, (struct ush_file_descriptor*)1234, 1));
+        TEST_ASSERT_EQUAL(USH_STATUS_ERROR_NODE_ALREADY_MOUNTED, ush_node_mount(&ush, "test", &node2, files, 1));
         TEST_ASSERT_EQUAL(2, ush_node_get_by_path_call_count);
         TEST_ASSERT_EQUAL(0, ush_node_get_parent_by_path_call_count);
         TEST_ASSERT_NULL(ush.root);
@@ -79,11 +83,13 @@ void test_ush_node_mount_already(void)
 
 void test_ush_node_mount_no_parent(void)
 {        
+        struct ush_file_descriptor files[1] = {0};
+
         ush_node_get_by_path_path = "test_some";
         ush_node_get_by_path_return_val = NULL;
         ush_node_get_parent_by_path_path = "test_some";
         ush_node_get_parent_by_path_return_val = NULL;
-        TEST_ASSERT_EQUAL(USH_STATUS_ERROR_NODE_WITHOUT_PARENT, ush_node_mount(&ush, "test_some", &node1, (struct ush_file_descriptor*)1234, 1));
+        TEST_ASSERT_EQUAL(USH_STATUS_ERROR_NODE_WITHOUT_PARENT, ush_node_mount(&ush, "test_some", &node1, files, 1));
         TEST_ASSERT_EQUAL(1, ush_node_get_by_path_call_count);
         TEST_ASSERT_EQUAL(1, ush_node_get_parent_by_path_call_count);
         TEST_ASSERT_NULL(ush.root);
@@ -94,7 +100,7 @@ void test_ush_node_mount_no_parent(void)
         ush_node_get_by_path_return_val = NULL;
         ush_node_get_parent_by_path_path = "/test_some";
         ush_node_get_parent_by_path_return_val = NULL;
-        TEST_ASSERT_EQUAL(USH_STATUS_ERROR_NODE_WITHOUT_PARENT, ush_node_mount(&ush, "/test_some", &node1, (struct ush_file_descriptor*)1234, 1));
+        TEST_ASSERT_EQUAL(USH_STATUS_ERROR_NODE_WITHOUT_PARENT, ush_node_mount(&ush, "/test_some", &node1, files, 1));
         TEST_ASSERT_EQUAL(1, ush_node_get_by_path_call_count);
         TEST_ASSERT_EQUAL(1, ush_node_get_parent_by_path_call_count);
         TEST_ASSERT_NULL(ush.root);
@@ -102,13 +108,15 @@ void test_ush_node_mount_no_parent(void)
 
 void test_ush_node_mount_root(void)
 {        
+        struct ush_file_descriptor files[1] = {0};
+
         ush_node_get_by_path_path = "/";
         ush_node_get_by_path_return_val = NULL;
         ush_node_get_parent_by_path_path = "/";
         ush_node_get_parent_by_path_return_val = NULL;
         node1.parent = (struct ush_node_object*)1234;
         node1.next = (struct ush_node_object*)1234;
-        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_mount(&ush, "/", &node1, (struct ush_file_descriptor*)1234, 1));
+        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_mount(&ush, "/", &node1, files, 1));
         TEST_ASSERT_EQUAL(1, ush_node_get_by_path_call_count);
         TEST_ASSERT_EQUAL(1, ush_node_get_parent_by_path_call_count);
         TEST_ASSERT_EQUAL(&node1, ush.root);
@@ -118,14 +126,16 @@ void test_ush_node_mount_root(void)
 }
 
 void test_ush_node_mount(void)
-{        
+{       
+        struct ush_file_descriptor files[1] = {0};
+        
         node1.childs = &node2;
         node2.next = NULL;
         ush_node_get_by_path_path = "/";
         ush_node_get_by_path_return_val = NULL;
         ush_node_get_parent_by_path_path = "/";
         ush_node_get_parent_by_path_return_val = &node1;
-        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_mount(&ush, "/", &node3, (struct ush_file_descriptor*)1234, 1));
+        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_mount(&ush, "/", &node3, files, 1));
         TEST_ASSERT_EQUAL(1, ush_node_get_by_path_call_count);
         TEST_ASSERT_EQUAL(1, ush_node_get_parent_by_path_call_count);
         TEST_ASSERT_NULL(ush.root);

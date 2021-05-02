@@ -7,6 +7,8 @@
 #include "ush_const.h"
 #include "ush.h"
 
+int g_assert_call_count;
+
 char input_buf[256];
 
 struct ush_object ush;

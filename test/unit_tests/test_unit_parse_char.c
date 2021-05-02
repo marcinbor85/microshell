@@ -5,6 +5,8 @@
 
 #include "ush_internal.h"
 
+int g_assert_call_count;
+
 char input_buffer[128];
 struct ush_object ush;
 struct ush_descriptor ush_desc;

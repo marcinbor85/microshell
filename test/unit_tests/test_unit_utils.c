@@ -5,6 +5,8 @@
 
 #include "ush_utils.h"
 
+int g_assert_call_count;
+
 void setUp(void)
 {
         

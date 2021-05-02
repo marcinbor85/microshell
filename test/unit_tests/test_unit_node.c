@@ -7,6 +7,8 @@
 #include "ush_const.h"
 #include "ush.h"
 
+int g_assert_call_count;
+
 struct ush_object ush;
 
 struct ush_node_object root;

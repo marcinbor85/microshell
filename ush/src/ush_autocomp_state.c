@@ -35,32 +35,7 @@ void ush_autocomp_state_candidates_start(struct ush_object *self)
 void ush_autocomp_state_candidates_process(struct ush_object *self)
 {
         if (self->process_node == NULL) {
-                char abs_path[USH_CONFIG_PATH_MAX_LENGTH];
-                if (self->process_stage == 0) {
-                        self->process_node = self->current_node;
-                        self->process_index = 0;
-                        self->process_index_item = 0;
-                        self->process_stage = 1;
-                } else if (self->process_stage == 1) {
-                        ush_node_get_absolute_path(self, self->autocomp_input, abs_path);
-                        if (self->autocomp_input[0] == '\0') {
-                                self->process_node = self->current_node;
-                        } else {
-                                self->process_node = ush_node_get_parent_by_path(self, abs_path);
-                                if (self->process_node == NULL)
-                                        self->process_node = self->current_node;
-                        }
-
-                        self->process_node = self->process_node->childs;
-                        self->process_index = 0;
-                        self->process_index_item = 0;
-                        self->process_stage = 2;
-                } else if (self->process_stage == 2) {
-                        self->autocomp_prev_state = self->state;
-                        self->state = USH_STATE_AUTOCOMP_CANDIDATES_FINISH;
-                } else {
-                        USH_ASSERT(false);
-                }
+                ush_autocomp_check_for_finish(self);
                 return;                        
         }
 

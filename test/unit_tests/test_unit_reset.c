@@ -7,6 +7,8 @@
 #include "ush_const.h"
 #include "ush.h"
 
+int g_assert_call_count;
+
 struct ush_object ush;
 
 int ush_write_pointer_call_count;

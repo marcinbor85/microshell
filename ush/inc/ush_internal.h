@@ -40,6 +40,7 @@ void ush_autocomp_start(struct ush_object *self);
 bool ush_autocomp_service(struct ush_object *self);
 void ush_autocomp_prepare_candidates(struct ush_object *self);
 void ush_autocomp_optimize_continue(struct ush_object *self);
+void ush_autocomp_check_for_finish(struct ush_object *self);
 void ush_autocomp_state_prepare(struct ush_object *self);
 void ush_autocomp_state_candidates_start(struct ush_object *self);
 void ush_autocomp_state_candidates_process(struct ush_object *self);
