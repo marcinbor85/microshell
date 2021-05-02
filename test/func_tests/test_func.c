@@ -59,6 +59,31 @@ static const struct ush_file_descriptor g_path_root_desc[] = {
         },
 };
 
+static struct ush_node_object g_path_data;
+static const struct ush_file_descriptor g_path_data_desc[] = {
+        {
+                .name = "text",
+                .description = "text file",
+                .exec = NULL,
+        },
+        {
+                .name = "binary",
+                .description = "binary file",
+                .exec = NULL,
+        },
+};
+
+static struct ush_node_object g_path_dir;
+static struct ush_node_object g_path_dir1;
+static struct ush_node_object g_path_dir2;
+static struct ush_node_object g_path_dir11;
+static struct ush_node_object g_path_dir111;
+static struct ush_node_object g_path_dir12;
+static struct ush_node_object g_path_dir13;
+static struct ush_node_object g_path_dir21;
+static struct ush_node_object g_path_dir211;
+static struct ush_node_object g_path_dir212;
+
 void test_func_init(void)
 {
         g_read_buf_size = 0;
@@ -67,7 +92,18 @@ void test_func_init(void)
         ush_init(&g_ush, &g_ush_desc);
 
         ush_node_mount(&g_ush, "/", &g_path_root, g_path_root_desc, sizeof(g_path_root_desc) / sizeof(g_path_root_desc[0]));
-
+        ush_node_mount(&g_ush, "/data", &g_path_data, g_path_data_desc, sizeof(g_path_data_desc) / sizeof(g_path_data_desc[0]));
+        ush_node_mount(&g_ush, "/dir", &g_path_dir, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/1", &g_path_dir1, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/2", &g_path_dir2, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/1/1", &g_path_dir11, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/1/1/1", &g_path_dir111, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/1/2", &g_path_dir12, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/1/3", &g_path_dir13, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/2/1", &g_path_dir21, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/2/1/1", &g_path_dir211, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/2/1/2", &g_path_dir212, NULL, 0);
+        
         ush_node_set_current_dir(&g_ush, "/");
 
         test_func_read_all();

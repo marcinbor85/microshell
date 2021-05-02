@@ -5,10 +5,31 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "gcc - Kompiluj i debuguj aktywny plik",
+            "name": "example_basic",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/bin/example_basic",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Włącz formatowanie kodu dla gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            // "preLaunchTask": "C/C++: gcc kompiluj aktywny plik",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+            "name": "test_func_help",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/test_func_help",
             "args": [],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",

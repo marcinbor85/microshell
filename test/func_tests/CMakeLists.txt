@@ -3,3 +3,8 @@ create_func_test( test_func_help
     ${CMAKE_CURRENT_SOURCE_DIR}/test_func_help.c
     ${CMAKE_CURRENT_SOURCE_DIR}/test_func.c
 )
+
+create_func_test( test_func_pwd
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_func_pwd.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_func.c
+)

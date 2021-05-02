@@ -40,6 +40,19 @@ void test_help_help(void)
         );
 }
 
+void test_help_error(void)
+{
+        test_func_ask("help help abc",
+                "error: wrong arguments\r\n"
+                "[test /]$ "
+        );
+
+        test_func_ask("help hel",
+                "error: file not found\r\n"
+                "[test /]$ "
+        );
+}
+
 int main(int argc, char *argv[])
 {
         (void)argc;
@@ -49,6 +62,7 @@ int main(int argc, char *argv[])
 
         RUN_TEST(test_help_self);
         RUN_TEST(test_help_help);
+        RUN_TEST(test_help_error);
 
         return UNITY_END();
 }
