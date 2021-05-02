@@ -35,10 +35,17 @@ void ush_process_start(struct ush_object *self, const struct ush_file_descriptor
 bool ush_process_service(struct ush_object *self);
 
 #if USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE == 1      
+
 void ush_autocomp_start(struct ush_object *self);
 bool ush_autocomp_service(struct ush_object *self);
 void ush_autocomp_prepare_candidates(struct ush_object *self);
 void ush_autocomp_optimize_continue(struct ush_object *self);
+void ush_autocomp_state_prepare(struct ush_object *self);
+void ush_autocomp_state_candidates_start(struct ush_object *self);
+void ush_autocomp_state_candidates_process(struct ush_object *self);
+void ush_autocomp_state_candidates_finish(struct ush_object *self);
+void ush_autocomp_state_recall_suffix(struct ush_object *self);
+
 #endif /* USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE */
 
 
