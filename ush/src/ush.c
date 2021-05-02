@@ -2,6 +2,8 @@
 #include "ush_internal.h"
 #include "ush_shell.h"
 
+#include <string.h>
+
 void ush_init(struct ush_object *self, const struct ush_descriptor *desc)
 {
         USH_ASSERT(self != NULL);
@@ -17,6 +19,8 @@ void ush_init(struct ush_object *self, const struct ush_descriptor *desc)
         USH_ASSERT(desc->io->write != NULL);
 
         USH_ASSERT(desc->hostname != NULL);
+
+        memset(self, 0, sizeof(struct ush_object));
 
         self->desc = desc;
         self->root = NULL;
