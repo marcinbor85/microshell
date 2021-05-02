@@ -32,15 +32,14 @@ file(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/commands/ush_cmd_echo.c
 )
 
-add_library(
-    ${USH_TARGET}
-    STATIC
+set(
+    USH_SRC_FILES
     ${SRC_FILES}
+    PARENT_SCOPE
 )
 
-target_include_directories(
-    ${USH_TARGET}
-    PUBLIC
+set(
+    USH_INC_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/port/${USH_PORT}
+    PARENT_SCOPE
 )
