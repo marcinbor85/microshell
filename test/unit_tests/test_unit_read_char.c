@@ -78,18 +78,8 @@ void ush_write_pointer(struct ush_object *self, char *text, ush_state_t state)
         TEST_ASSERT_EQUAL(&ush, self);
         TEST_ASSERT_NOT_NULL(text);
 
-        switch (read_callback_read_char) {
-        case '\x03':
-                TEST_ASSERT_EQUAL_STRING("^C", text);
-                TEST_ASSERT_EQUAL(USH_STATE_RESET, state);
-                break;
-
-        case '\x08':
-        case '\x7F':
-                TEST_ASSERT_EQUAL(0, self->in_pos);
-                TEST_ASSERT_EQUAL('\0', self->desc->input_buffer[0]);
-                break;
-        }
+        TEST_ASSERT_EQUAL_STRING("^C", text);
+        TEST_ASSERT_EQUAL(USH_STATE_RESET, state);
 
         ush_write_pointer_call_count++;
 }
@@ -163,6 +153,8 @@ void test_ush_read_char_buffer_full(void)
                         TEST_ASSERT_EQUAL(0, ush_autocomp_start_call_count);
                         TEST_ASSERT_EQUAL(0, ush_read_char_by_escape_state_call_count);
                         TEST_ASSERT_EQUAL(1, ush_read_echo_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush.in_pos);
+                        TEST_ASSERT_EQUAL('\0', input_buffer[0]);
                         break;
                 case '\x09':
                         prepare_char_buffer_full(ch);

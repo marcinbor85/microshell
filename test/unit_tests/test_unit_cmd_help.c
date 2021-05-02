@@ -56,6 +56,8 @@ void setUp(void)
         ush_write_pointer_call_count = 0;
         ush_write_pointer_text = NULL;
         ush_write_pointer_state = USH_STATE__TOTAL_NUM;
+
+        g_assert_call_count = 0;
 }
 
 void tearDown(void)
@@ -275,7 +277,7 @@ void test_ush_buildin_cmd_help_service_next(void)
 
 void test_ush_buildin_cmd_help_service_index(void)
 {
-        struct ush_file_descriptor cmd_file;
+        struct ush_file_descriptor cmd_file = {0};
         struct ush_node_object node = {0};
         struct ush_file_descriptor file_list[2] = {
                 {
@@ -289,114 +291,129 @@ void test_ush_buildin_cmd_help_service_index(void)
         };
         bool ret;
 
-        setUp();
-        ush.state = USH_STATE_PROCESS_START;
-        node.file_list_size = 2;
-        node.file_list = file_list;
-        node.next = (struct ush_node_object *)1234;
-        ush.process_node = &node;
-        ush.process_index_item = 0;
-        ush.process_index = 0;
-        ush_write_pointer_state = USH_STATE_PROCESS_START;
-        ush_write_pointer_text = "test            ";
-        ret = ush_buildin_cmd_help_service(&ush, &cmd_file);
-        TEST_ASSERT_TRUE(ret);
-        TEST_ASSERT_EQUAL_STRING("test            ", output_buf);
-        TEST_ASSERT_EQUAL(&node, ush.process_node);
-        TEST_ASSERT_EQUAL(0, ush.process_index_item);
-        TEST_ASSERT_EQUAL(1, ush.process_index);
-        TEST_ASSERT_EQUAL(USH_STATE_PROCESS_START, ush.state);
-        TEST_ASSERT_EQUAL(0, ush_file_find_by_name_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
-        TEST_ASSERT_EQUAL(0, ush_process_start_call_count);
-        TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_no_newline_call_count);
+        for (int i = 0; i < 10; i++) {
+                setUp();
+                ush.state = USH_STATE_PROCESS_START;
+                node.file_list_size = 2;
+                node.file_list = file_list;
+                node.next = (struct ush_node_object *)1234;
+                ush.process_node = &node;
+                ush.process_index = i;
 
-        setUp();
-        ush.state = USH_STATE_PROCESS_START;
-        node.file_list_size = 2;
-        node.file_list = file_list;
-        node.next = (struct ush_node_object *)1234;
-        ush.process_node = &node;
-        ush.process_index_item = 0;
-        ush.process_index = 1;
-        ret = ush_buildin_cmd_help_service(&ush, &cmd_file);
-        TEST_ASSERT_TRUE(ret);
-        TEST_ASSERT_EQUAL(&node, ush.process_node);
-        TEST_ASSERT_EQUAL(0, ush.process_index_item);
-        TEST_ASSERT_EQUAL(3, ush.process_index);
-        TEST_ASSERT_EQUAL(USH_STATE_PROCESS_START, ush.state);
-        TEST_ASSERT_EQUAL(0, ush_file_find_by_name_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
-        TEST_ASSERT_EQUAL(0, ush_process_start_call_count);
-        TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_no_newline_call_count);
-
-        setUp();
-        ush.state = USH_STATE_PROCESS_START;
-        node.file_list_size = 2;
-        node.file_list = file_list;
-        node.next = (struct ush_node_object *)1234;
-        ush.process_node = &node;
-        ush.process_index_item = 1;
-        ush.process_index = 1;
-        ush_write_pointer_state = USH_STATE_PROCESS_START;
-        ush_write_pointer_text = "- ";
-        ret = ush_buildin_cmd_help_service(&ush, &cmd_file);
-        TEST_ASSERT_TRUE(ret);
-        TEST_ASSERT_EQUAL(&node, ush.process_node);
-        TEST_ASSERT_EQUAL(1, ush.process_index_item);
-        TEST_ASSERT_EQUAL(2, ush.process_index);
-        TEST_ASSERT_EQUAL(USH_STATE_PROCESS_START, ush.state);
-        TEST_ASSERT_EQUAL(0, ush_file_find_by_name_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
-        TEST_ASSERT_EQUAL(0, ush_process_start_call_count);
-        TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_no_newline_call_count);
-
-        setUp();
-        ush.state = USH_STATE_PROCESS_START;
-        node.file_list_size = 2;
-        node.file_list = file_list;
-        node.next = (struct ush_node_object *)1234;
-        ush.process_node = &node;
-        ush.process_index_item = 1;
-        ush.process_index = 2;
-        ush_write_pointer_state = USH_STATE_PROCESS_START;
-        ush_write_pointer_text = "desc";
-        ret = ush_buildin_cmd_help_service(&ush, &cmd_file);
-        TEST_ASSERT_TRUE(ret);
-        TEST_ASSERT_EQUAL(&node, ush.process_node);
-        TEST_ASSERT_EQUAL(1, ush.process_index_item);
-        TEST_ASSERT_EQUAL(3, ush.process_index);
-        TEST_ASSERT_EQUAL(USH_STATE_PROCESS_START, ush.state);
-        TEST_ASSERT_EQUAL(0, ush_file_find_by_name_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
-        TEST_ASSERT_EQUAL(0, ush_process_start_call_count);
-        TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_no_newline_call_count);
-
-        setUp();
-        ush.state = USH_STATE_PROCESS_START;
-        node.file_list_size = 2;
-        node.file_list = file_list;
-        node.next = (struct ush_node_object *)1234;
-        ush.process_node = &node;
-        ush.process_index_item = 1;
-        ush.process_index = 3;
-        ush_write_pointer_state = USH_STATE_PROCESS_START;
-        ush_write_pointer_text = "\r\n";
-        ret = ush_buildin_cmd_help_service(&ush, &cmd_file);
-        TEST_ASSERT_TRUE(ret);
-        TEST_ASSERT_EQUAL(&node, ush.process_node);
-        TEST_ASSERT_EQUAL(2, ush.process_index_item);
-        TEST_ASSERT_EQUAL(0, ush.process_index);
-        TEST_ASSERT_EQUAL(USH_STATE_PROCESS_START, ush.state);
-        TEST_ASSERT_EQUAL(0, ush_file_find_by_name_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
-        TEST_ASSERT_EQUAL(0, ush_process_start_call_count);
-        TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_no_newline_call_count);
+                switch (i) {
+                case 0:
+                        ush.process_index_item = 0;
+                        ush_write_pointer_state = USH_STATE_PROCESS_START;
+                        ush_write_pointer_text = "test            ";
+                        ret = ush_buildin_cmd_help_service(&ush, &cmd_file);
+                        TEST_ASSERT_TRUE(ret);
+                        TEST_ASSERT_EQUAL_STRING("test            ", output_buf);
+                        TEST_ASSERT_EQUAL(&node, ush.process_node);
+                        TEST_ASSERT_EQUAL(0, ush.process_index_item);
+                        TEST_ASSERT_EQUAL(1, ush.process_index);
+                        TEST_ASSERT_EQUAL(USH_STATE_PROCESS_START, ush.state);
+                        TEST_ASSERT_EQUAL(0, ush_file_find_by_name_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_process_start_call_count);
+                        TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_print_no_newline_call_count);
+                        TEST_ASSERT_EQUAL(0, g_assert_call_count);
+                        break;
+                case 1:
+                        setUp();
+                        ush.state = USH_STATE_PROCESS_START;
+                        node.file_list_size = 2;
+                        node.file_list = file_list;
+                        node.next = (struct ush_node_object *)1234;
+                        ush.process_node = &node;
+                        ush.process_index_item = 0;
+                        ush.process_index = i;
+                        ret = ush_buildin_cmd_help_service(&ush, &cmd_file);
+                        TEST_ASSERT_TRUE(ret);
+                        TEST_ASSERT_EQUAL(&node, ush.process_node);
+                        TEST_ASSERT_EQUAL(0, ush.process_index_item);
+                        TEST_ASSERT_EQUAL(3, ush.process_index);
+                        TEST_ASSERT_EQUAL(USH_STATE_PROCESS_START, ush.state);
+                        TEST_ASSERT_EQUAL(0, ush_file_find_by_name_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_process_start_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_print_no_newline_call_count);
+                        TEST_ASSERT_EQUAL(0, g_assert_call_count);
+                        
+                        setUp();
+                        ush.state = USH_STATE_PROCESS_START;
+                        node.file_list_size = 2;
+                        node.file_list = file_list;
+                        node.next = (struct ush_node_object *)1234;
+                        ush.process_node = &node;
+                        ush.process_index_item = 1;
+                        ush.process_index = i;
+                        ush_write_pointer_state = USH_STATE_PROCESS_START;
+                        ush_write_pointer_text = "- ";
+                        ret = ush_buildin_cmd_help_service(&ush, &cmd_file);
+                        TEST_ASSERT_TRUE(ret);
+                        TEST_ASSERT_EQUAL(&node, ush.process_node);
+                        TEST_ASSERT_EQUAL(1, ush.process_index_item);
+                        TEST_ASSERT_EQUAL(2, ush.process_index);
+                        TEST_ASSERT_EQUAL(USH_STATE_PROCESS_START, ush.state);
+                        TEST_ASSERT_EQUAL(0, ush_file_find_by_name_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_process_start_call_count);
+                        TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_print_no_newline_call_count);
+                        TEST_ASSERT_EQUAL(0, g_assert_call_count);
+                        break;
+                case 2:
+                        ush.process_index_item = 1;
+                        ush_write_pointer_state = USH_STATE_PROCESS_START;
+                        ush_write_pointer_text = "desc";
+                        ret = ush_buildin_cmd_help_service(&ush, &cmd_file);
+                        TEST_ASSERT_TRUE(ret);
+                        TEST_ASSERT_EQUAL(&node, ush.process_node);
+                        TEST_ASSERT_EQUAL(1, ush.process_index_item);
+                        TEST_ASSERT_EQUAL(3, ush.process_index);
+                        TEST_ASSERT_EQUAL(USH_STATE_PROCESS_START, ush.state);
+                        TEST_ASSERT_EQUAL(0, ush_file_find_by_name_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_process_start_call_count);
+                        TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_print_no_newline_call_count);
+                        TEST_ASSERT_EQUAL(0, g_assert_call_count);
+                        break;
+                case 3:
+                        ush.process_index_item = 1;
+                        ush_write_pointer_state = USH_STATE_PROCESS_START;
+                        ush_write_pointer_text = "\r\n";
+                        ret = ush_buildin_cmd_help_service(&ush, &cmd_file);
+                        TEST_ASSERT_TRUE(ret);
+                        TEST_ASSERT_EQUAL(&node, ush.process_node);
+                        TEST_ASSERT_EQUAL(2, ush.process_index_item);
+                        TEST_ASSERT_EQUAL(0, ush.process_index);
+                        TEST_ASSERT_EQUAL(USH_STATE_PROCESS_START, ush.state);
+                        TEST_ASSERT_EQUAL(0, ush_file_find_by_name_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_process_start_call_count);
+                        TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_print_no_newline_call_count);
+                        TEST_ASSERT_EQUAL(0, g_assert_call_count);
+                        break;
+                default:
+                        ret = ush_buildin_cmd_help_service(&ush, &cmd_file);
+                        TEST_ASSERT_TRUE(ret);
+                        TEST_ASSERT_EQUAL(&node, ush.process_node);
+                        TEST_ASSERT_EQUAL(0, ush.process_index_item);
+                        TEST_ASSERT_EQUAL(i, ush.process_index);
+                        TEST_ASSERT_EQUAL(USH_STATE_PROCESS_START, ush.state);
+                        TEST_ASSERT_EQUAL(0, ush_file_find_by_name_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_process_start_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_print_no_newline_call_count);
+                        TEST_ASSERT_EQUAL(1, g_assert_call_count);
+                        break;
+                }
+        }
 }
 
 int main(int argc, char *argv[])

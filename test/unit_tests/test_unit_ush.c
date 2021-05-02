@@ -14,6 +14,7 @@ struct ush_object ush;
 const struct ush_file_descriptor g_ush_buildin_commands[3];
 const size_t g_ush_buildin_commands_num = 3;
 
+ush_status_t ush_commands_add_return_val;
 int ush_commands_add_call_count;
 int ush_reset_call_count;
 
@@ -48,6 +49,7 @@ void setUp(void)
         memset((uint8_t*)&ush, 0, sizeof(ush));
         ush_desc.io = &ush_io_iface;
 
+        ush_commands_add_return_val = USH_STATUS_OK;
         ush_commands_add_call_count = 0;
         ush_reset_call_count = 0;
 
@@ -75,6 +77,8 @@ void setUp(void)
         ush_parse_service_return_val = false;
         ush_write_service_return_val = false;
         ush_process_service_return_val = false;
+
+        g_assert_call_count = 0;
 }
 
 void tearDown(void)
@@ -91,7 +95,7 @@ ush_status_t ush_commands_add(struct ush_object *self, struct ush_node_object *n
 
         ush_commands_add_call_count++;
 
-        return USH_STATUS_OK;
+        return ush_commands_add_return_val;
 }
 
 void ush_reset(struct ush_object *self)
@@ -172,21 +176,48 @@ bool ush_process_service(struct ush_object *self)
 
 void test_ush_init(void)
 {
-        ush.root = (struct ush_node_object*)1234;
-        ush_init(&ush, &ush_desc);
-        TEST_ASSERT_EQUAL(&ush_desc, ush.desc);
-        TEST_ASSERT_NULL(ush.root);
-        TEST_ASSERT_EQUAL(1, ush_commands_add_call_count);
-        TEST_ASSERT_EQUAL(1, ush_reset_call_count);
-        TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
-        TEST_ASSERT_EQUAL(0, ush_utils_get_status_string_call_count);
-        TEST_ASSERT_EQUAL(0, ush_reset_service_call_count);
-        TEST_ASSERT_EQUAL(0, ush_prompt_service_call_count);
-        TEST_ASSERT_EQUAL(0, ush_read_service_call_count);
-        TEST_ASSERT_EQUAL(0, ush_autocomp_service_call_count);
-        TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
-        TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
-        TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+        for (int s = 0; s < USH_STATUS__TOTAL_NUM; s++) {
+                ush_status_t status = (ush_status_t)s;
+                setUp();
+
+                ush_commands_add_return_val = s;
+                ush.root = (struct ush_node_object*)1234;
+                ush_init(&ush, &ush_desc);
+                switch (status) {
+                case USH_STATUS_OK:
+                        TEST_ASSERT_EQUAL(&ush_desc, ush.desc);
+                        TEST_ASSERT_NULL(ush.root);
+                        TEST_ASSERT_EQUAL(7, g_assert_call_count);
+                        TEST_ASSERT_EQUAL(1, ush_commands_add_call_count);
+                        TEST_ASSERT_EQUAL(1, ush_reset_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_utils_get_status_string_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_reset_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_prompt_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_read_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+                        break;
+                default:
+                        TEST_ASSERT_EQUAL(&ush_desc, ush.desc);
+                        TEST_ASSERT_NULL(ush.root);
+                        TEST_ASSERT_EQUAL(8, g_assert_call_count);
+                        TEST_ASSERT_EQUAL(1, ush_commands_add_call_count);
+                        TEST_ASSERT_EQUAL(1, ush_reset_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_utils_get_status_string_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_reset_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_prompt_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_read_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+                        break;
+                }
+        }
 }
 
 void test_ush_service_none(void)

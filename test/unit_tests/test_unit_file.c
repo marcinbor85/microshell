@@ -21,7 +21,6 @@ char *ush_utils_join_path_in_path;
 char *ush_utils_join_path_name;
 char *ush_utils_join_path_out_path;
 int ush_utils_join_path_call_count;
-int ush_utils_join_path_mode;
 
 struct ush_node_object node1;
 const struct ush_file_descriptor cmd_files1[] = {
@@ -90,7 +89,6 @@ void setUp(void)
         ush_utils_join_path_name = NULL;
         ush_utils_join_path_out_path = NULL;
         ush_utils_join_path_call_count = 0;
-        ush_utils_join_path_mode = 0;
 }
 
 void tearDown(void)
@@ -118,16 +116,9 @@ struct ush_node_object* ush_node_get_parent_by_path(struct ush_object *self, con
 
 void ush_utils_join_path(const char *in_path, const char *name, char *out_path)
 {
-        if (ush_utils_join_path_mode == 0) {
-                TEST_ASSERT_EQUAL_STRING(ush_utils_join_path_in_path, in_path);
-                TEST_ASSERT_EQUAL_STRING(ush_utils_join_path_name, name);
-
-                strcpy(out_path, ush_utils_join_path_out_path);
-        } else {
-                strcpy(out_path, in_path);
-                strcat(out_path, "/");
-                strcat(out_path, name);
-        }
+        strcpy(out_path, in_path);
+        strcat(out_path, "/");
+        strcat(out_path, name);
 
         ush_utils_join_path_call_count++;
 }
@@ -224,7 +215,6 @@ void test_ush_file_find_by_path_file_first(void)
         ush_node_get_absolute_path_out_path = "node1/test";
         ush_node_get_parent_by_path_path = "node1/test";
         ush_node_get_parent_by_path_return_val = &node1;
-        ush_utils_join_path_mode = 1;
         ret = ush_file_find_by_name(&ush, "test");
         TEST_ASSERT_EQUAL(&cmd_files1[0], ret);
         TEST_ASSERT_EQUAL(1, ush_node_get_absolute_path_call_count);
@@ -241,7 +231,6 @@ void test_ush_file_find_by_path_file_mid(void)
         ush_node_get_absolute_path_out_path = "node1/qwerty";
         ush_node_get_parent_by_path_path = "node1/qwerty";
         ush_node_get_parent_by_path_return_val = &node1;
-        ush_utils_join_path_mode = 1;
         ret = ush_file_find_by_name(&ush, "qwerty");
         TEST_ASSERT_EQUAL(&cmd_files1[2], ret);
         TEST_ASSERT_EQUAL(1, ush_node_get_absolute_path_call_count);
@@ -258,7 +247,6 @@ void test_ush_file_find_by_path_file_last(void)
         ush_node_get_absolute_path_out_path = "node2/ghi";
         ush_node_get_parent_by_path_path = "node2/ghi";
         ush_node_get_parent_by_path_return_val = &node1;
-        ush_utils_join_path_mode = 1;
         ret = ush_file_find_by_name(&ush, "ghi");
         TEST_ASSERT_EQUAL(&cmd_files2[2], ret);
         TEST_ASSERT_EQUAL(1, ush_node_get_absolute_path_call_count);

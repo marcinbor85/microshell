@@ -12,9 +12,6 @@ struct ush_object ush;
 ush_status_t ush_print_status_status;
 int ush_print_status_call_count;
 
-char* ush_print_buf;
-int ush_print_call_count;
-
 char* ush_file_find_by_name_name[4];
 int ush_file_find_by_name_call_count;
 struct ush_file_descriptor *ush_file_find_by_name_return_val[4];
@@ -47,9 +44,6 @@ void setUp(void)
 
         ush_print_status_status = USH_STATUS__TOTAL_NUM;
         ush_print_status_call_count = 0;
-
-        ush_print_buf = NULL;
-        ush_print_call_count = 0;
 
         memset((uint8_t*)ush_file_find_by_name_name, 0, sizeof(ush_file_find_by_name_name));
         memset((uint8_t*)ush_file_find_by_name_return_val, 0, sizeof(ush_file_find_by_name_return_val));
@@ -87,15 +81,6 @@ void ush_print_status(struct ush_object *self, ush_status_t status)
 
         ush_print_status_call_count++;
 }
-
-void ush_print(struct ush_object *self, char *buf)
-{
-        TEST_ASSERT_EQUAL(&ush, self);
-        TEST_ASSERT_EQUAL_STRING(ush_print_buf, buf);
-
-        ush_print_call_count++;
-}
-
 
 struct ush_file_descriptor const* ush_file_find_by_name(struct ush_object *self, const char *name)
 {
@@ -161,7 +146,6 @@ void test_ush_buildin_cmd_cat_callback_neg_argc(void)
                 ush_print_status_status = USH_STATUS_ERROR_COMMAND_WRONG_ARGUMENTS;
                 ush_buildin_cmd_cat_callback(&ush, NULL, i, argv);
                 TEST_ASSERT_EQUAL(1, ush_print_status_call_count);
-                TEST_ASSERT_EQUAL(0, ush_print_call_count);
                 TEST_ASSERT_EQUAL(0, ush_file_find_by_name_call_count);
                 TEST_ASSERT_EQUAL(0, ush_parse_get_args_call_count);
                 TEST_ASSERT_EQUAL(0, ush_write_pointer_bin_call_count);
@@ -183,7 +167,6 @@ void test_ush_buildin_cmd_cat_callback_neg_filenotfound(void)
         ush_print_status_status = USH_STATUS_ERROR_FILE_NOT_FOUND;
         ush_buildin_cmd_cat_callback(&ush, NULL, 2, argv);
         TEST_ASSERT_EQUAL(1, ush_print_status_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_call_count);
         TEST_ASSERT_EQUAL(1, ush_file_find_by_name_call_count);
         TEST_ASSERT_EQUAL(0, ush_parse_get_args_call_count);
         TEST_ASSERT_EQUAL(0, ush_write_pointer_bin_call_count);
@@ -202,7 +185,6 @@ void test_ush_buildin_cmd_cat_callback_neg_filenotfound(void)
         ush_print_status_status = USH_STATUS_ERROR_FILE_NOT_FOUND;
         ush_buildin_cmd_cat_callback(&ush, NULL, 3, argv);
         TEST_ASSERT_EQUAL(1, ush_print_status_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_call_count);
         TEST_ASSERT_EQUAL(2, ush_file_find_by_name_call_count);
         TEST_ASSERT_EQUAL(0, ush_parse_get_args_call_count);
         TEST_ASSERT_EQUAL(0, ush_write_pointer_bin_call_count);
@@ -225,7 +207,6 @@ void test_ush_buildin_cmd_cat_callback_neg_filenodata(void)
         ush_print_status_status = USH_STATUS_ERROR_FILE_NO_DATA;
         ush_buildin_cmd_cat_callback(&ush, NULL, 2, argv);
         TEST_ASSERT_EQUAL(1, ush_print_status_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_call_count);
         TEST_ASSERT_EQUAL(1, ush_file_find_by_name_call_count);
         TEST_ASSERT_EQUAL(0, ush_parse_get_args_call_count);
         TEST_ASSERT_EQUAL(0, ush_write_pointer_bin_call_count);
@@ -245,7 +226,6 @@ void test_ush_buildin_cmd_cat_callback_neg_filenodata(void)
         ush_print_status_status = USH_STATUS_ERROR_FILE_NO_DATA;
         ush_buildin_cmd_cat_callback(&ush, NULL, 3, argv);
         TEST_ASSERT_EQUAL(1, ush_print_status_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_call_count);
         TEST_ASSERT_EQUAL(2, ush_file_find_by_name_call_count);
         TEST_ASSERT_EQUAL(0, ush_parse_get_args_call_count);
         TEST_ASSERT_EQUAL(0, ush_write_pointer_bin_call_count);
@@ -272,7 +252,6 @@ void test_ush_buildin_cmd_cat_callback_pos(void)
         ush_print_status_status = USH_STATUS_ERROR_FILE_NO_DATA;
         ush_buildin_cmd_cat_callback(&ush, &cat_cmd, 3, argv);
         TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_call_count);
         TEST_ASSERT_EQUAL(2, ush_file_find_by_name_call_count);
         TEST_ASSERT_EQUAL(0, ush_parse_get_args_call_count);
         TEST_ASSERT_EQUAL(0, ush_write_pointer_bin_call_count);
@@ -294,7 +273,6 @@ void test_ush_buildin_cmd_cat_service_states(void)
 
                 bool ret = ush_buildin_cmd_cat_service(&ush, &cat_cmd);
                 TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
-                TEST_ASSERT_EQUAL(0, ush_print_call_count);
                 TEST_ASSERT_EQUAL(0, ush_file_find_by_name_call_count);
                 TEST_ASSERT_EQUAL(0, ush_parse_get_args_call_count);
                 TEST_ASSERT_EQUAL(0, ush_write_pointer_bin_call_count);
@@ -347,7 +325,6 @@ void test_ush_buildin_cmd_cat_service_process(void)
 
         TEST_ASSERT_TRUE(ush_buildin_cmd_cat_service(&ush, &cat_cmd));
         TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_call_count);
         TEST_ASSERT_EQUAL(1, ush_file_find_by_name_call_count);
         TEST_ASSERT_EQUAL(1, ush_parse_get_args_call_count);
         TEST_ASSERT_EQUAL(1, ush_write_pointer_bin_call_count);
@@ -384,7 +361,6 @@ void test_ush_buildin_cmd_cat_service_process(void)
 
         TEST_ASSERT_TRUE(ush_buildin_cmd_cat_service(&ush, &cat_cmd));
         TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
-        TEST_ASSERT_EQUAL(0, ush_print_call_count);
         TEST_ASSERT_EQUAL(1, ush_file_find_by_name_call_count);
         TEST_ASSERT_EQUAL(1, ush_parse_get_args_call_count);
         TEST_ASSERT_EQUAL(1, ush_write_pointer_bin_call_count);

@@ -110,6 +110,8 @@ void test_g_ush_buildin_commands_help(void)
         TEST_ASSERT_EQUAL(ush_buildin_cmd_help_service, help->process);
         TEST_ASSERT_NULL(help->get_data);
         TEST_ASSERT_NULL(help->set_data);
+        help->exec(&ush, help, 0, NULL);
+        help->process(&ush, help);
 }
 
 void test_g_ush_buildin_commands_ls(void)
@@ -123,6 +125,8 @@ void test_g_ush_buildin_commands_ls(void)
         TEST_ASSERT_EQUAL(ush_buildin_cmd_ls_service, ls->process);
         TEST_ASSERT_NULL(ls->get_data);
         TEST_ASSERT_NULL(ls->set_data);
+        ls->exec(&ush, ls, 0, NULL);
+        ls->process(&ush, ls);
 }
 
 void test_g_ush_buildin_commands_cd(void)
@@ -136,6 +140,7 @@ void test_g_ush_buildin_commands_cd(void)
         TEST_ASSERT_NULL(cd->process);
         TEST_ASSERT_NULL(cd->get_data);
         TEST_ASSERT_NULL(cd->set_data);
+        cd->exec(&ush, cd, 0, NULL);
 }
 
 void test_g_ush_buildin_commands_pwd(void)
@@ -149,6 +154,7 @@ void test_g_ush_buildin_commands_pwd(void)
         TEST_ASSERT_NULL(pwd->process);
         TEST_ASSERT_NULL(pwd->get_data);
         TEST_ASSERT_NULL(pwd->set_data);
+        pwd->exec(&ush, pwd, 0, NULL);
 }
 
 void test_g_ush_buildin_commands_cat(void)
@@ -162,6 +168,8 @@ void test_g_ush_buildin_commands_cat(void)
         TEST_ASSERT_EQUAL(ush_buildin_cmd_cat_service, cat->process);
         TEST_ASSERT_NULL(cat->get_data);
         TEST_ASSERT_NULL(cat->set_data);
+        cat->exec(&ush, cat, 0, NULL);
+        cat->process(&ush, cat);
 }
 
 void test_g_ush_buildin_commands_xxd(void)
@@ -175,6 +183,8 @@ void test_g_ush_buildin_commands_xxd(void)
         TEST_ASSERT_EQUAL(ush_buildin_cmd_xxd_service, xxd->process);
         TEST_ASSERT_NULL(xxd->get_data);
         TEST_ASSERT_NULL(xxd->set_data);
+        xxd->exec(&ush, xxd, 0, NULL);
+        xxd->process(&ush, xxd);
 }
 
 void test_g_ush_buildin_commands_echo(void)
@@ -188,6 +198,7 @@ void test_g_ush_buildin_commands_echo(void)
         TEST_ASSERT_NULL(echo->process);
         TEST_ASSERT_NULL(echo->get_data);
         TEST_ASSERT_NULL(echo->set_data);
+        echo->exec(&ush, echo, 0, NULL);
 }
 
 void test_g_ush_buildin_commands_num(void)

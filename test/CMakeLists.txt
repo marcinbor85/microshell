@@ -17,5 +17,5 @@ add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/unit_tests )
 add_custom_target(
     check
     COMMAND ctest
-    COMMAND gcovr -r ${PROJECT_SOURCE_DIR} --print-summary --html -o test_coverage.html
+    COMMAND gcovr -r ${PROJECT_SOURCE_DIR} --print-summary --html --html-details -o test_coverage.html
 )

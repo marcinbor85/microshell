@@ -128,7 +128,7 @@ void test_ush_node_mount_root(void)
 void test_ush_node_mount(void)
 {       
         struct ush_file_descriptor files[1] = {0};
-        
+
         node1.childs = &node2;
         node2.next = NULL;
         ush_node_get_by_path_path = "/";
@@ -179,6 +179,20 @@ void test_ush_node_unmount_not_found(void)
         TEST_ASSERT_EQUAL(1, ush_node_get_by_path_call_count);
         TEST_ASSERT_EQUAL(1, ush_node_get_parent_by_path_call_count);
         TEST_ASSERT_EQUAL(&node2, ush.root);
+
+        setUp();
+
+        ush.root = &node1;
+        node1.childs = NULL;
+        ush_node_get_by_path_path = "test2";
+        ush_node_get_by_path_return_val = &node2;
+        ush_node_get_parent_by_path_path = "test2";
+        ush_node_get_parent_by_path_return_val = &node1;
+        TEST_ASSERT_EQUAL(USH_STATUS_ERROR_NODE_NOT_FOUND, ush_node_unmount(&ush, "test2"));
+        TEST_ASSERT_EQUAL(1, ush_node_get_by_path_call_count);
+        TEST_ASSERT_EQUAL(1, ush_node_get_parent_by_path_call_count);
+        TEST_ASSERT_EQUAL(&node1, ush.root);
+        TEST_ASSERT_NULL(node1.childs);
 }
 
 void test_ush_node_unmount_parents(void)

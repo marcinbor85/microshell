@@ -78,6 +78,20 @@ void tearDown(void)
 
 }
 
+void test_ush_node_get_by_path_null(void)
+{
+        struct ush_node_object node = {0};
+
+        setUp();
+        ush.root = NULL;
+        TEST_ASSERT_NULL(ush_node_get_by_path(&ush, "/1"));
+
+        setUp();
+        ush.root = &node;
+        node.childs = NULL;
+        TEST_ASSERT_NULL(ush_node_get_by_path(&ush, "/1"));
+}
+
 void test_ush_node_get_by_path_exist(void)
 {
         TEST_ASSERT_EQUAL(&root, ush_node_get_by_path(&ush, ""));
@@ -116,6 +130,19 @@ void test_ush_node_get_absolute_path(void)
 {
         char in[128];
         char out[128];
+
+        TEST_STRING_PROCESS_ARGS("/", &ush, "/", ush_node_get_absolute_path);
+        TEST_STRING_PROCESS_ARGS("/", &ush, "/.", ush_node_get_absolute_path);
+        TEST_STRING_PROCESS_ARGS("/", &ush, "/..", ush_node_get_absolute_path);
+        TEST_STRING_PROCESS_ARGS("/", &ush, "/../", ush_node_get_absolute_path);
+        TEST_STRING_PROCESS_ARGS("/1", &ush, "/../1", ush_node_get_absolute_path);
+        TEST_STRING_PROCESS_ARGS("/test", &ush, "/../test", ush_node_get_absolute_path);
+        TEST_STRING_PROCESS_ARGS("/3/1/1", &ush, "/../3/1/1", ush_node_get_absolute_path);
+        TEST_STRING_PROCESS_ARGS("/2/1", &ush, "/2/1", ush_node_get_absolute_path);
+        TEST_STRING_PROCESS_ARGS("/1/2/test", &ush, "/./1/2/test", ush_node_get_absolute_path);
+        TEST_STRING_PROCESS_ARGS("/", &ush, "/../../../../..", ush_node_get_absolute_path);
+        TEST_STRING_PROCESS_ARGS("/root", &ush, "/../../../../../root", ush_node_get_absolute_path);
+        TEST_STRING_PROCESS_ARGS("/9/8/7", &ush, "/9/8/7", ush_node_get_absolute_path);
 
         ush.current_node = &root;
         TEST_STRING_PROCESS_ARGS("/", &ush, "", ush_node_get_absolute_path);
@@ -167,6 +194,7 @@ int main(int argc, char *argv[])
 
         UNITY_BEGIN();
 
+        RUN_TEST(test_ush_node_get_by_path_null);
         RUN_TEST(test_ush_node_get_by_path_exist);
         RUN_TEST(test_ush_node_get_by_path_not_exist);
         RUN_TEST(test_ush_node_get_absolute_path);

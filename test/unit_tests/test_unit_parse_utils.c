@@ -152,7 +152,6 @@ void test_ush_parse_char_standard_search(void)
                         TEST_ASSERT_EQUAL(ch, input_buffer[1]);
                         break;
                 }
-                break;
         }
 }
 

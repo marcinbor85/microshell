@@ -30,19 +30,13 @@ struct ush_node_object* ush_node_get_by_path(struct ush_object *self, const char
                         curr = curr->next;
                 }
 
-                if (i == levels) {
-                        if (found == false) {
-                                return NULL;
-                        } else {
-                                return curr;
-                        }
-                }
+                if (found == false)
+                        break;
+                
+                if (i == levels)
+                        return curr;
 
-                if (found == false) {
-                        return NULL;
-                } else {
-                        curr = curr->childs;
-                }
+                curr = curr->childs;
         }
         
 
@@ -51,11 +45,11 @@ struct ush_node_object* ush_node_get_by_path(struct ush_object *self, const char
 
 void ush_node_get_absolute_path(struct ush_object *self, const char *in_path, char *out_path)
 {
+        char abs_path[USH_CONFIG_PATH_MAX_LENGTH];
+
         USH_ASSERT(self != NULL);
         USH_ASSERT(in_path != NULL);
         USH_ASSERT(out_path != NULL);
-
-        char abs_path[USH_CONFIG_PATH_MAX_LENGTH];
 
         if (in_path[0] == '/') {
                 strcpy(abs_path, in_path);

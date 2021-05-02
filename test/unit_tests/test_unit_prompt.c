@@ -42,35 +42,26 @@ void ush_utils_path_last(const char *in_path, char* *out_path)
 
 void ush_write_pointer(struct ush_object *self, char *text, ush_state_t state)
 {
-        switch (self->state) {
-        case USH_STATE_PROMPT_PREFIX:
+        if (self->state == USH_STATE_PROMPT_PREFIX) {
                 TEST_ASSERT_EQUAL(&ush, self);
                 TEST_ASSERT_EQUAL_STRING(USH_SHELL_FONT_COLOR_MAGENTA "[", text);
                 TEST_ASSERT_EQUAL(USH_STATE_PROMPT_HOST, state);
-                break;
-        case USH_STATE_PROMPT_HOST:
+        } else if (self->state == USH_STATE_PROMPT_HOST) {
                 TEST_ASSERT_EQUAL(&ush, self);
                 TEST_ASSERT_EQUAL_STRING("test_hostname", text);
                 TEST_ASSERT_EQUAL(USH_STATE_PROMPT_SPACE, state);
-                break;
-        case USH_STATE_PROMPT_SPACE:
+        } else if (self->state == USH_STATE_PROMPT_SPACE) {
                 TEST_ASSERT_EQUAL(&ush, self);
                 TEST_ASSERT_EQUAL_STRING(" ", text);
                 TEST_ASSERT_EQUAL(USH_STATE_PROMPT_PATH, state);
-                break;
-        case USH_STATE_PROMPT_PATH:
+        } else if (self->state == USH_STATE_PROMPT_PATH) {
                 TEST_ASSERT_EQUAL(&ush, self);
                 TEST_ASSERT_EQUAL_STRING("test_node_2", text);
                 TEST_ASSERT_EQUAL(USH_STATE_PROMPT_SUFFIX, state);
-                break;
-        case USH_STATE_PROMPT_SUFFIX:
+        } else if (self->state == USH_STATE_PROMPT_SUFFIX) {
                 TEST_ASSERT_EQUAL(&ush, self);
                 TEST_ASSERT_EQUAL_STRING("]$ " USH_SHELL_FONT_STYLE_RESET, text);
                 TEST_ASSERT_EQUAL(USH_STATE__TOTAL_NUM, state);
-                break;
-        default:
-                TEST_ASSERT_TRUE(false);
-                break;
         }
 
         ush_write_pointer_call_count++;
