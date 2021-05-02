@@ -21,11 +21,7 @@ void ush_autocomp_state_recall_suffix(struct ush_object *self)
 void ush_autocomp_state_prepare(struct ush_object *self)
 {
         self->autocomp_input = ush_utils_get_last_arg(self->desc->input_buffer);
-        if (self->autocomp_input == NULL) {
-                self->state = USH_STATE_AUTOCOMP_PROMPT_PREPARE;
-        } else {
-                self->state = USH_STATE_AUTOCOMP_CANDIDATES_START;
-        }
+        self->state = USH_STATE_AUTOCOMP_CANDIDATES_START;
 }
 
 void ush_autocomp_state_candidates_start(struct ush_object *self)
