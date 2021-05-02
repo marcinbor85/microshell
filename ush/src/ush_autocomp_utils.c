@@ -74,4 +74,29 @@ void ush_autocomp_check_for_finish(struct ush_object *self)
         }
 }
 
+bool ush_autocomp_check_for_next(struct ush_object *self)
+{
+        bool ret = false;
+
+        if (self->process_stage == 0) {
+                if (self->process_index_item >= self->process_node->file_list_size) {
+                        self->process_index_item = 0;
+                        self->process_node = self->process_node->next;
+                        ret = true;
+                }
+        } else if (self->process_stage == 1) {
+                if (self->process_index_item >= self->process_node->file_list_size) {
+                        self->process_index_item = 0;
+                        self->process_node = NULL;
+                        ret = true;
+                }
+        } else if (self->process_stage == 2) {
+                /* do nothing */
+        } else {
+                USH_ASSERT(false);
+        }
+
+        return ret;
+}
+
 #endif /* USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE */

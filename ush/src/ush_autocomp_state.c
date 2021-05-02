@@ -39,23 +39,8 @@ void ush_autocomp_state_candidates_process(struct ush_object *self)
                 return;                        
         }
 
-        if (self->process_stage == 0) {
-                if (self->process_index_item >= self->process_node->file_list_size) {
-                        self->process_index_item = 0;
-                        self->process_node = self->process_node->next;
-                        return;
-                }
-        } else if (self->process_stage == 1) {
-                if (self->process_index_item >= self->process_node->file_list_size) {
-                        self->process_index_item = 0;
-                        self->process_node = NULL;
-                        return;
-                }
-        } else if (self->process_stage == 2) {
-                /* do nothing */
-        } else {
-                USH_ASSERT(false);
-        }
+        if (ush_autocomp_check_for_next(self) != false)
+                return;
         
         struct ush_file_descriptor const *file = NULL;
         
@@ -121,7 +106,7 @@ void ush_autocomp_state_candidates_finish(struct ush_object *self)
 {
         if (self->autocomp_prev_state == USH_STATE_AUTOCOMP_CANDIDATES_PRINT) {
                 self->state = USH_STATE_AUTOCOMP_PROMPT;
-                
+
         } else if (self->autocomp_prev_state == USH_STATE_AUTOCOMP_CANDIDATES_COUNT) {
                 switch (self->autocomp_count) {
                 case 0:

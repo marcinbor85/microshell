@@ -257,6 +257,66 @@ void test_ush_autocomp_check_for_finish(void)
         }
 }
 
+void test_ush_autocomp_check_for_next(void)
+{
+        struct ush_node_object node = {0};
+        node.file_list_size = 1;
+        node.next = (struct ush_node_object*)1234;
+
+        for (int i = 0; i < 10; i++) {
+                setUp();
+                ush.process_stage = i;
+                ush.process_node = &node;
+
+                switch (i) {
+                case 0:
+                        setUp();
+                        ush.process_stage = i;
+                        ush.process_node = &node;
+                        TEST_ASSERT_FALSE(ush_autocomp_check_for_next(&ush));
+                        TEST_ASSERT_EQUAL(0, g_assert_call_count);
+                        TEST_ASSERT_EQUAL(0, ush.process_index_item);
+                        TEST_ASSERT_EQUAL(&node, ush.process_node);
+
+                        setUp();
+                        ush.process_stage = i;
+                        ush.process_node = &node;
+                        ush.process_index_item = 1;
+                        TEST_ASSERT_TRUE(ush_autocomp_check_for_next(&ush));
+                        TEST_ASSERT_EQUAL(0, g_assert_call_count);
+                        TEST_ASSERT_EQUAL(0, ush.process_index_item);
+                        TEST_ASSERT_EQUAL((struct ush_node_object*)1234, ush.process_node);
+                        break;
+                case 1:
+                        setUp();
+                        ush.process_stage = i;
+                        ush.process_node = &node;
+                        TEST_ASSERT_FALSE(ush_autocomp_check_for_next(&ush));
+                        TEST_ASSERT_EQUAL(0, g_assert_call_count);
+                        TEST_ASSERT_EQUAL(0, ush.process_index_item);
+                        TEST_ASSERT_EQUAL(&node, ush.process_node);
+
+                        setUp();
+                        ush.process_stage = i;
+                        ush.process_node = &node;
+                        ush.process_index_item = 1;
+                        TEST_ASSERT_TRUE(ush_autocomp_check_for_next(&ush));
+                        TEST_ASSERT_EQUAL(0, g_assert_call_count);
+                        TEST_ASSERT_EQUAL(0, ush.process_index_item);
+                        TEST_ASSERT_EQUAL(NULL, ush.process_node);
+                        break;
+                case 2:
+                        TEST_ASSERT_FALSE(ush_autocomp_check_for_next(&ush));
+                        TEST_ASSERT_EQUAL(0, g_assert_call_count);
+                        break;
+                default:
+                        TEST_ASSERT_FALSE(ush_autocomp_check_for_next(&ush));
+                        TEST_ASSERT_EQUAL(1, g_assert_call_count);
+                        break;
+                }
+        }
+}
+
 int main(int argc, char *argv[])
 {
         (void)argc;
@@ -268,6 +328,7 @@ int main(int argc, char *argv[])
         RUN_TEST(test_ush_autocomp_prepare_candidates);
         RUN_TEST(test_ush_autocomp_optimize_continue);
         RUN_TEST(test_ush_autocomp_check_for_finish);
+        RUN_TEST(test_ush_autocomp_check_for_next);
 
         return UNITY_END();
 }

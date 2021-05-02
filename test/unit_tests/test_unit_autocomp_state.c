@@ -21,6 +21,9 @@ int ush_write_pointer_call_count;
 int ush_autocomp_prepare_candidates_call_count;
 int ush_autocomp_optimize_continue_call_count;
 int ush_autocomp_check_for_finish_call_count;
+int ush_autocomp_check_for_next_call_count;
+
+bool ush_autocomp_check_for_next_return_val;
 
 void setUp(void)
 {
@@ -36,6 +39,9 @@ void setUp(void)
         ush_autocomp_prepare_candidates_call_count = 0;
         ush_autocomp_optimize_continue_call_count = 0;
         ush_autocomp_check_for_finish_call_count = 0;
+        ush_autocomp_check_for_next_call_count = 0;
+        
+        ush_autocomp_check_for_next_return_val = false;
 
         g_assert_call_count = 0;
 }
@@ -74,6 +80,15 @@ void ush_autocomp_check_for_finish(struct ush_object *self)
         TEST_ASSERT_EQUAL(&ush, self);
 
         ush_autocomp_check_for_finish_call_count++;
+}
+
+bool ush_autocomp_check_for_next(struct ush_object *self)
+{
+        TEST_ASSERT_EQUAL(&ush, self);
+
+        ush_autocomp_check_for_next_call_count++;
+
+        return ush_autocomp_check_for_next_return_val;
 }
 
 void test_ush_autocomp_state_recall_suffix(void)
