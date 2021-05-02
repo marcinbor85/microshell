@@ -121,10 +121,8 @@ void ush_autocomp_state_candidates_finish(struct ush_object *self)
 {
         if (self->autocomp_prev_state == USH_STATE_AUTOCOMP_CANDIDATES_PRINT) {
                 self->state = USH_STATE_AUTOCOMP_PROMPT;
-                return;
-        }
-
-        if (self->autocomp_prev_state == USH_STATE_AUTOCOMP_CANDIDATES_COUNT) {
+                
+        } else if (self->autocomp_prev_state == USH_STATE_AUTOCOMP_CANDIDATES_COUNT) {
                 switch (self->autocomp_count) {
                 case 0:
                         self->state = USH_STATE_READ_CHAR;
