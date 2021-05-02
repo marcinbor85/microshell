@@ -42,6 +42,8 @@ void ush_autocomp_prepare_candidates(struct ush_object *self);
 void ush_autocomp_optimize_continue(struct ush_object *self);
 void ush_autocomp_check_for_finish(struct ush_object *self);
 bool ush_autocomp_check_for_next(struct ush_object *self);
+void ush_autocomp_process_file_index(struct ush_object *self, const struct ush_file_descriptor *file);
+bool ush_autocomp_process_file_prepare(struct ush_object *self, struct ush_file_descriptor const **file);
 void ush_autocomp_state_prepare(struct ush_object *self);
 void ush_autocomp_state_candidates_start(struct ush_object *self);
 void ush_autocomp_state_candidates_process(struct ush_object *self);

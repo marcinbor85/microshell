@@ -99,4 +99,71 @@ bool ush_autocomp_check_for_next(struct ush_object *self)
         return ret;
 }
 
+void ush_autocomp_process_file_index(struct ush_object *self, const struct ush_file_descriptor *file)
+{
+        switch (self->process_index) {
+        case 0:
+                if ((self->process_stage == 0) || (self->process_stage == 1)) {
+                        if (self->state == USH_STATE_AUTOCOMP_CANDIDATES_PRINT)
+                                ush_write_pointer(self, (char*)file->name, self->state);
+                        self->process_index = 1;
+                        self->autocomp_count++;
+                        self->autocomp_candidate_name = (char*)file->name;
+                } else if (self->process_stage == 2) {
+                        if (self->state == USH_STATE_AUTOCOMP_CANDIDATES_PRINT)
+                                ush_write_pointer(self, self->autocomp_name, self->state);
+                        self->process_index = 1;
+                        self->autocomp_count++;
+                        self->autocomp_candidate_name = self->autocomp_name;
+                } else {
+                        USH_ASSERT(false);
+                }               
+                break;
+        case 1:
+                if (self->state == USH_STATE_AUTOCOMP_CANDIDATES_PRINT)
+                        ush_write_pointer(self, "\r\n", self->state);
+                self->process_index = 2;
+                break;
+        case 2:
+                if ((self->process_stage == 0) || (self->process_stage == 1)) {
+                        self->process_index_item++;
+                        self->process_index = 0;
+                } else if (self->process_stage == 2) {
+                        self->process_node = self->process_node->next;
+                        self->process_index = 0;
+                } else {
+                        USH_ASSERT(false);
+                }                        
+                break;
+        default:
+                USH_ASSERT(false);
+                break;
+        }
+}
+
+bool ush_autocomp_process_file_prepare(struct ush_object *self, struct ush_file_descriptor const **file)
+{
+        bool ret = false;
+
+        if ((self->process_stage == 0) || (self->process_stage == 1)) {
+                *file = &self->process_node->file_list[self->process_index_item];
+                if (ush_utils_startswith((char*)((*file)->name), self->autocomp_input) == false) {
+                        self->process_index_item++;
+                        self->process_index = 0;
+                        ret = true;
+                }
+        } else if (self->process_stage == 2) {
+                ush_utils_path_last(self->process_node->path, &self->autocomp_name);
+                if (ush_utils_startswith(self->autocomp_name, self->autocomp_input) == false) {
+                        self->process_node = self->process_node->next;
+                        self->process_index = 0;
+                        ret = true;
+                }
+        } else {
+                USH_ASSERT(false);
+        }
+
+        return ret;
+}
+
 #endif /* USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE */

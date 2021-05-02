@@ -22,8 +22,14 @@ int ush_autocomp_prepare_candidates_call_count;
 int ush_autocomp_optimize_continue_call_count;
 int ush_autocomp_check_for_finish_call_count;
 int ush_autocomp_check_for_next_call_count;
+int ush_autocomp_process_file_index_call_count;
+int ush_autocomp_process_file_prepare_call_count;
 
 bool ush_autocomp_check_for_next_return_val;
+struct ush_file_descriptor *ush_autocomp_process_file_index_file;
+bool ush_autocomp_process_file_prepare_return_val;
+struct ush_file_descriptor *ush_autocomp_process_file_prepare_file_in;
+struct ush_file_descriptor *ush_autocomp_process_file_prepare_file_out;
 
 void setUp(void)
 {
@@ -40,8 +46,15 @@ void setUp(void)
         ush_autocomp_optimize_continue_call_count = 0;
         ush_autocomp_check_for_finish_call_count = 0;
         ush_autocomp_check_for_next_call_count = 0;
+        ush_autocomp_process_file_index_call_count = 0;
+        ush_autocomp_process_file_prepare_call_count = 0;
         
         ush_autocomp_check_for_next_return_val = false;
+        ush_autocomp_process_file_index_file = NULL;
+
+        ush_autocomp_process_file_prepare_return_val = false;
+        ush_autocomp_process_file_prepare_file_in = NULL;
+        ush_autocomp_process_file_prepare_file_out = NULL;
 
         g_assert_call_count = 0;
 }
@@ -91,6 +104,25 @@ bool ush_autocomp_check_for_next(struct ush_object *self)
         return ush_autocomp_check_for_next_return_val;
 }
 
+void ush_autocomp_process_file_index(struct ush_object *self, const struct ush_file_descriptor *file)
+{
+        TEST_ASSERT_EQUAL(&ush, self);
+        TEST_ASSERT_EQUAL(ush_autocomp_process_file_index_file, file);
+
+        ush_autocomp_process_file_index_call_count++;
+}
+
+bool ush_autocomp_process_file_prepare(struct ush_object *self, struct ush_file_descriptor const **file)
+{
+        TEST_ASSERT_EQUAL(&ush, self);
+        TEST_ASSERT_EQUAL(ush_autocomp_process_file_prepare_file_in, *file);
+        *file = ush_autocomp_process_file_prepare_file_out;
+
+        ush_autocomp_process_file_prepare_call_count++;
+
+        return ush_autocomp_process_file_prepare_return_val;
+}
+
 void test_ush_autocomp_state_recall_suffix(void)
 {
         setUp();
@@ -99,10 +131,14 @@ void test_ush_autocomp_state_recall_suffix(void)
         ush_write_pointer_state = USH_STATE_READ_CHAR;
         ush_write_pointer_text = "est";
         ush_autocomp_state_recall_suffix(&ush);
+        TEST_ASSERT_EQUAL(0, g_assert_call_count);
         TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
         TEST_ASSERT_EQUAL(0, ush_autocomp_prepare_candidates_call_count);
         TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
         TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_next_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_prepare_call_count);
 
         setUp();
         ush.autocomp_input = "test";
@@ -110,10 +146,14 @@ void test_ush_autocomp_state_recall_suffix(void)
         ush_write_pointer_state = USH_STATE_AUTOCOMP_CANDIDATES_PRINT;
         ush_write_pointer_text = "\r\n";
         ush_autocomp_state_recall_suffix(&ush);
+        TEST_ASSERT_EQUAL(0, g_assert_call_count);
         TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
         TEST_ASSERT_EQUAL(1, ush_autocomp_prepare_candidates_call_count);
         TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
         TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_next_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_prepare_call_count);
 }
 
 void test_ush_autocomp_state_prepare(void)
@@ -124,10 +164,14 @@ void test_ush_autocomp_state_prepare(void)
         ush_autocomp_state_prepare(&ush);
         TEST_ASSERT_EQUAL_STRING("", ush.autocomp_input);
         TEST_ASSERT_EQUAL(USH_STATE_AUTOCOMP_CANDIDATES_START, ush.state);
+        TEST_ASSERT_EQUAL(0, g_assert_call_count);
         TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
         TEST_ASSERT_EQUAL(0, ush_autocomp_prepare_candidates_call_count);
         TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
         TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_next_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_prepare_call_count);
 
         setUp();
         strcpy(input_buf, "test abc qwerty");
@@ -135,10 +179,14 @@ void test_ush_autocomp_state_prepare(void)
         ush_autocomp_state_prepare(&ush);
         TEST_ASSERT_EQUAL_STRING("qwerty", ush.autocomp_input);
         TEST_ASSERT_EQUAL(USH_STATE_AUTOCOMP_CANDIDATES_START, ush.state);
+        TEST_ASSERT_EQUAL(0, g_assert_call_count);
         TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
         TEST_ASSERT_EQUAL(0, ush_autocomp_prepare_candidates_call_count);
         TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
         TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_next_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_prepare_call_count);
 }
 
 void test_ush_autocomp_state_candidates_start(void)
@@ -149,10 +197,14 @@ void test_ush_autocomp_state_candidates_start(void)
         TEST_ASSERT_EQUAL(0, ush.autocomp_prev_count);
         TEST_ASSERT_EQUAL(0, ush.autocomp_suffix_len);
         TEST_ASSERT_EQUAL(USH_STATE_AUTOCOMP_CANDIDATES_COUNT, ush.state);
+        TEST_ASSERT_EQUAL(0, g_assert_call_count);
         TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
         TEST_ASSERT_EQUAL(1, ush_autocomp_prepare_candidates_call_count);
         TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
         TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_next_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_prepare_call_count);        
 }
 
 void test_ush_autocomp_state_candidates_finish(void)
@@ -168,8 +220,13 @@ void test_ush_autocomp_state_candidates_finish(void)
                 case USH_STATE_AUTOCOMP_CANDIDATES_PRINT:
                         ush_autocomp_state_candidates_finish(&ush);
                         TEST_ASSERT_EQUAL(0, g_assert_call_count);
-                        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
                         TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_prepare_candidates_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_next_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_prepare_call_count);
                         TEST_ASSERT_EQUAL(USH_STATE_AUTOCOMP_PROMPT, ush.state);
                         break;
                 case USH_STATE_AUTOCOMP_CANDIDATES_COUNT:
@@ -183,8 +240,13 @@ void test_ush_autocomp_state_candidates_finish(void)
                                 case 0:
                                         ush_autocomp_state_candidates_finish(&ush);
                                         TEST_ASSERT_EQUAL(0, g_assert_call_count);
-                                        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
                                         TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_prepare_candidates_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_next_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_prepare_call_count);
                                         TEST_ASSERT_EQUAL(USH_STATE_READ_CHAR, ush.state);
                                         break;
                                 case 1:
@@ -195,18 +257,27 @@ void test_ush_autocomp_state_candidates_finish(void)
                                         ush_write_pointer_state = USH_STATE_READ_CHAR;
                                         ush_autocomp_state_candidates_finish(&ush);
                                         TEST_ASSERT_EQUAL(0, g_assert_call_count);
-                                        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
                                         TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_prepare_candidates_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_next_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_prepare_call_count);
                                         TEST_ASSERT_EQUAL(USH_STATE__TOTAL_NUM, ush.state);
                                         TEST_ASSERT_EQUAL(6, ush.in_pos);
                                         break;
                                 default:
                                         ush.autocomp_suffix_len = 10;
                                         ush_autocomp_state_candidates_finish(&ush);
-                                        TEST_ASSERT_EQUAL(0, ush.autocomp_suffix_len);
                                         TEST_ASSERT_EQUAL(0, g_assert_call_count);
-                                        TEST_ASSERT_EQUAL(1, ush_autocomp_optimize_continue_call_count);
                                         TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_prepare_candidates_call_count);
+                                        TEST_ASSERT_EQUAL(1, ush_autocomp_optimize_continue_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_next_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+                                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_prepare_call_count);
                                         TEST_ASSERT_EQUAL(USH_STATE__TOTAL_NUM, ush.state);
                                         break;
                                 }
@@ -218,8 +289,13 @@ void test_ush_autocomp_state_candidates_finish(void)
                         ush.state = USH_STATE__TOTAL_NUM;
                         ush_autocomp_state_candidates_finish(&ush);
                         TEST_ASSERT_EQUAL(0, g_assert_call_count);
-                        TEST_ASSERT_EQUAL(1, ush_autocomp_optimize_continue_call_count);
                         TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_prepare_candidates_call_count);
+                        TEST_ASSERT_EQUAL(1, ush_autocomp_optimize_continue_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_next_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_prepare_call_count);
                         TEST_ASSERT_EQUAL(USH_STATE__TOTAL_NUM, ush.state);
 
                         setUp();
@@ -232,8 +308,13 @@ void test_ush_autocomp_state_candidates_finish(void)
                         input_buf[1] = '\xFF';
                         ush_autocomp_state_candidates_finish(&ush);
                         TEST_ASSERT_EQUAL(0, g_assert_call_count);
-                        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
                         TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_prepare_candidates_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_next_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_prepare_call_count);
                         TEST_ASSERT_EQUAL(1, ush.autocomp_suffix_len);
                         TEST_ASSERT_EQUAL(1, ush.in_pos);
                         TEST_ASSERT_EQUAL('\xFF', input_buf[0]);
@@ -250,8 +331,13 @@ void test_ush_autocomp_state_candidates_finish(void)
                         input_buf[1] = '\xFF';
                         ush_autocomp_state_candidates_finish(&ush);
                         TEST_ASSERT_EQUAL(0, g_assert_call_count);
-                        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
                         TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_prepare_candidates_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_next_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_prepare_call_count);
                         TEST_ASSERT_EQUAL(0, ush.autocomp_suffix_len);
                         TEST_ASSERT_EQUAL(0, ush.in_pos);
                         TEST_ASSERT_EQUAL('\0', input_buf[0]);
@@ -261,12 +347,75 @@ void test_ush_autocomp_state_candidates_finish(void)
                 default:
                         ush_autocomp_state_candidates_finish(&ush);
                         TEST_ASSERT_EQUAL(1, g_assert_call_count);
-                        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
                         TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_prepare_candidates_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_next_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_prepare_call_count);
                         TEST_ASSERT_EQUAL(USH_STATE__TOTAL_NUM, ush.state);
                         break;
                 }
         }
+}
+
+void test_ush_autocomp_state_candidates_process(void)
+{
+        setUp();
+        ush.process_node = NULL;
+        ush_autocomp_state_candidates_process(&ush);
+        TEST_ASSERT_EQUAL(0, g_assert_call_count);
+        TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_prepare_candidates_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
+        TEST_ASSERT_EQUAL(1, ush_autocomp_check_for_finish_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_next_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_prepare_call_count);
+
+        setUp();
+        ush.process_node = (struct ush_node_object*)1234;
+        ush_autocomp_check_for_next_return_val = true;
+        ush_autocomp_state_candidates_process(&ush);
+        TEST_ASSERT_EQUAL(0, g_assert_call_count);
+        TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_prepare_candidates_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+        TEST_ASSERT_EQUAL(1, ush_autocomp_check_for_next_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_prepare_call_count);
+
+        setUp();
+        ush.process_node = (struct ush_node_object*)1234;
+        ush_autocomp_process_file_prepare_file_in = NULL;
+        ush_autocomp_process_file_prepare_file_out = (struct ush_file_descriptor*)5678;
+        ush_autocomp_process_file_prepare_return_val = true;
+        ush_autocomp_state_candidates_process(&ush);
+        TEST_ASSERT_EQUAL(0, g_assert_call_count);
+        TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_prepare_candidates_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+        TEST_ASSERT_EQUAL(1, ush_autocomp_check_for_next_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_process_file_index_call_count);
+        TEST_ASSERT_EQUAL(1, ush_autocomp_process_file_prepare_call_count);
+
+        setUp();
+        ush.process_node = (struct ush_node_object*)1234;
+        ush_autocomp_process_file_prepare_file_in = NULL;
+        ush_autocomp_process_file_prepare_file_out = (struct ush_file_descriptor*)5678;
+        ush_autocomp_process_file_index_file = (struct ush_file_descriptor*)5678;
+        ush_autocomp_state_candidates_process(&ush);
+        TEST_ASSERT_EQUAL(0, g_assert_call_count);
+        TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_prepare_candidates_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_optimize_continue_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_check_for_finish_call_count);
+        TEST_ASSERT_EQUAL(1, ush_autocomp_check_for_next_call_count);
+        TEST_ASSERT_EQUAL(1, ush_autocomp_process_file_index_call_count);
+        TEST_ASSERT_EQUAL(1, ush_autocomp_process_file_prepare_call_count);
 }
 
 int main(int argc, char *argv[])
@@ -279,6 +428,7 @@ int main(int argc, char *argv[])
         RUN_TEST(test_ush_autocomp_state_recall_suffix);
         RUN_TEST(test_ush_autocomp_state_prepare);
         RUN_TEST(test_ush_autocomp_state_candidates_start);
+        RUN_TEST(test_ush_autocomp_state_candidates_process);
         RUN_TEST(test_ush_autocomp_state_candidates_finish);
 
         return UNITY_END();

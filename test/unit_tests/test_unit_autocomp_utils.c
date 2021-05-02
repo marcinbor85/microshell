@@ -22,6 +22,10 @@ char *ush_node_get_parent_by_path_path;
 int ush_node_get_parent_by_path_call_count;
 struct ush_node_object *ush_node_get_parent_by_path_return_val;
 
+int ush_write_pointer_call_count;
+char *ush_write_pointer_text;
+ush_state_t ush_write_pointer_state;
+
 void setUp(void)
 {
         memset((uint8_t*)&ush, 0, sizeof(ush));
@@ -37,12 +41,25 @@ void setUp(void)
         ush_node_get_parent_by_path_call_count = 0;
         ush_node_get_parent_by_path_return_val = NULL;
 
+        ush_write_pointer_call_count = 0;
+        ush_write_pointer_text = NULL;
+        ush_write_pointer_state = USH_STATE__TOTAL_NUM;
+
         g_assert_call_count = 0;
 }
 
 void tearDown(void)
 {
 
+}
+
+void ush_write_pointer(struct ush_object *self, char *text, ush_state_t state)
+{
+        TEST_ASSERT_EQUAL(&ush, self);
+        TEST_ASSERT_EQUAL_STRING(ush_write_pointer_text, text);
+        TEST_ASSERT_EQUAL(ush_write_pointer_state, state);
+
+        ush_write_pointer_call_count++;
 }
 
 void ush_node_get_absolute_path(struct ush_object *self, const char *in_path, char *out_path)
