@@ -8,8 +8,6 @@ ush_status_t ush_node_mount(struct ush_object *self, const char *path, struct us
         USH_ASSERT(self != NULL);
         USH_ASSERT(node != NULL);
         USH_ASSERT(path != NULL);
-        USH_ASSERT(file_list != NULL);
-        USH_ASSERT(file_list_size > 0);
 
         for (size_t i = 0; i < file_list_size; i++) {
                 USH_ASSERT(file_list[i].name != NULL);
