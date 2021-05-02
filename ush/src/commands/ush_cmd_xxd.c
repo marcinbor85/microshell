@@ -73,7 +73,7 @@ bool ush_buildin_cmd_xxd_service(struct ush_object *self, struct ush_file_descri
                         self->process_index = 2;
                         break;
                 }
-                case 2:{
+                case 2: {
                         self->desc->output_buffer[0] = '\0';
                         for (size_t i = 0; i < USH_CMD_XXD_COLUMNS; i++) {
                                 size_t offset = self->process_index_item;
