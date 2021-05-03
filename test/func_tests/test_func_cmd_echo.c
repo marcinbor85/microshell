@@ -78,6 +78,7 @@ void test_cmd_echo_help(void)
                 "\tPrint string to file.\r\n"
                 "      echo [string] \r\n"
                 "\tPrint string to console.\r\n"
+                "      [string] can be ascii-hex encoded with \\\\xNN format.\r\n"
                 "[test /]$ "
         );
 }

@@ -19,7 +19,7 @@ char* ush_utils_get_last_arg(const char *input);
 
 bool ush_utils_startswith(char *input, char *prefix);
 bool ush_utils_is_printable(uint8_t ch);
-void ush_utils_decode_ascii(char *input, uint8_t *output, size_t max_size);
+size_t ush_utils_decode_ascii(char *input, uint8_t *output, size_t max_size);
 
 const char* ush_utils_get_status_string(ush_status_t status);
 

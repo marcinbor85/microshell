@@ -82,6 +82,7 @@ create_unit_test( test_unit_cmd_pwd
 create_unit_test( test_unit_cmd_echo
     ${CMAKE_CURRENT_SOURCE_DIR}/test_unit_cmd_echo.c
     ${PROJECT_SOURCE_DIR}/ush/src/commands/ush_cmd_echo.c
+    ${PROJECT_SOURCE_DIR}/ush/src/ush_utils.c
 )
 
 create_unit_test( test_unit_cmd_cat

@@ -29,6 +29,7 @@ extern void ush_buildin_cmd_echo_callback(struct ush_object *self, struct ush_fi
 void setUp(void)
 {
         memset((uint8_t*)&ush, 0, sizeof(ush));
+        ush.state = USH_STATE__TOTAL_NUM;
 
         ush_print_status_status = USH_STATUS__TOTAL_NUM;
         ush_print_status_call_count = 0;
@@ -166,16 +167,19 @@ void test_ush_buildin_cmd_echo_callback_pos(void)
 {
         char *argv[6] = {0};
         struct ush_file_descriptor file = {0};
+        char buf[128];
 
-        ush_print_buf = "";
+        ush_print_buf = NULL;
         ush_buildin_cmd_echo_callback(&ush, NULL, 1, argv);
-        TEST_ASSERT_EQUAL(1, ush_print_call_count);
+        TEST_ASSERT_EQUAL(0, ush_print_call_count);
         TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
         TEST_ASSERT_EQUAL(0, ush_file_find_by_name_call_count);
+        TEST_ASSERT_EQUAL(USH_STATE_RESET, ush.state);
 
         setUp();
 
-        argv[1] = "test";
+        sprintf(buf, "test");
+        argv[1] = buf;
         ush_print_buf = "test";
         ush_buildin_cmd_echo_callback(&ush, NULL, 2, argv);
         TEST_ASSERT_EQUAL(1, ush_print_call_count);
@@ -184,15 +188,43 @@ void test_ush_buildin_cmd_echo_callback_pos(void)
 
         setUp();
 
-        argv[1] = "test2";
+        sprintf(buf, "abc\\x00""test");
+        argv[1] = buf;
+        ush_print_buf = "abc";
+        ush_buildin_cmd_echo_callback(&ush, NULL, 2, argv);
+        TEST_ASSERT_EQUAL(1, ush_print_call_count);
+        TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
+        TEST_ASSERT_EQUAL(0, ush_file_find_by_name_call_count);
+
+        setUp();
+
+        sprintf(buf, "test2");
+        argv[1] = buf;
         argv[2] = ">";
         argv[3] = "test_file";
-        ush_print_buf = "test2";
         ush_file_find_by_name_name = "test_file";
         ush_file_find_by_name_return_val = &file;
         file.set_data = set_data;
         set_data_data = "test2";
         set_data_size = 5;
+        set_data_file = &file;
+        ush_buildin_cmd_echo_callback(&ush, NULL, 4, argv);
+        TEST_ASSERT_EQUAL(0, ush_print_call_count);
+        TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
+        TEST_ASSERT_EQUAL(1, ush_file_find_by_name_call_count);
+        TEST_ASSERT_EQUAL(1, set_data_call_count);
+
+        setUp();
+
+        sprintf(buf, "a\\xA1\\x00""b");
+        argv[1] = buf;
+        argv[2] = ">";
+        argv[3] = "test_file";
+        ush_file_find_by_name_name = "test_file";
+        ush_file_find_by_name_return_val = &file;
+        file.set_data = set_data;
+        set_data_data = "a\xA1\x00""b";
+        set_data_size = 4;
         set_data_file = &file;
         ush_buildin_cmd_echo_callback(&ush, NULL, 4, argv);
         TEST_ASSERT_EQUAL(0, ush_print_call_count);

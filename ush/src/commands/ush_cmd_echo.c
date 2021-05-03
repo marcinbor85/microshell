@@ -1,5 +1,6 @@
 #include "ush.h"
 #include "ush_internal.h"
+#include "ush_utils.h"
 
 #include <string.h>
 
@@ -13,7 +14,8 @@ void ush_buildin_cmd_echo_callback(struct ush_object *self, struct ush_file_desc
         (void)file;
 
         struct ush_file_descriptor const *f = NULL;
-        char *data = "";
+        uint8_t *data = NULL;
+        size_t data_size = 0;
 
         switch (argc) {
         
@@ -32,14 +34,22 @@ void ush_buildin_cmd_echo_callback(struct ush_object *self, struct ush_file_desc
                         break;
                 }
                 /* fallthrough */
-        case 2:
-                data = argv[1];
+        case 2: {
+                char *data_in = argv[1];
+                size_t max_size = strlen(data_in);
+                data_size = ush_utils_decode_ascii(data_in, (uint8_t*)data_in, max_size);
+                data = (uint8_t*)data_in;
+        }
                 /* fallthrough */
         case 1:
                 if (f != NULL) {
-                        f->set_data(self, f, (uint8_t*)data, strlen(data));
+                        f->set_data(self, f, data, data_size);
                 } else {
-                        ush_print(self, data);
+                        if (data != NULL) {
+                                ush_print(self, (char*)data);
+                        } else {
+                                self->state = USH_STATE_RESET;
+                        }
                 }
                 break;
         default:

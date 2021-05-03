@@ -95,7 +95,8 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
                 .name = "echo",
                 .description = "print string to file",
                 .help = "echo: echo [string] > [file]\r\n\tPrint string to file.\r\n"
-                        "      echo [string] \r\n\tPrint string to console.\r\n",
+                        "      echo [string] \r\n\tPrint string to console.\r\n"
+                        "      [string] can be ascii-hex encoded with \\\\xNN format.\r\n",
                 .exec = ush_buildin_cmd_echo_callback,
         },
 #endif /* USH_CONFIG_ENABLE_COMMAND_ECHO */

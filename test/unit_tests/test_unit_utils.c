@@ -245,10 +245,10 @@ void test_ush_utils_get_status_string(void)
 
 #define TEST_UINT8_PROCESS_ARGS(expected, expected_size, input, func) { \
         memset(out, 0, sizeof(out)); \
-        func(input, out, sizeof(out)); \
+        size_t ret_size = func(input, out, sizeof(out)); \
         TEST_ASSERT_EQUAL_UINT8_ARRAY(expected, out, expected_size); \
+        TEST_ASSERT_EQUAL(expected_size, ret_size); \
 }
-
 
 void test_ush_utils_decode_ascii(void)
 {

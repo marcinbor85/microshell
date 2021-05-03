@@ -250,13 +250,14 @@ static uint8_t hex_to_dec(char ch)
         return 0;
 }
 
-void ush_utils_decode_ascii(char *input, uint8_t *output, size_t max_size)
+size_t ush_utils_decode_ascii(char *input, uint8_t *output, size_t max_size)
 {
         char ch;
         int state = 0;
         uint8_t val;
+        size_t ret_size = 0;
 
-        while ((*input != '\0') && (max_size > 0)) {
+        while ((*input != '\0') && (ret_size < max_size)) {
                 ch = *input;
 
                 if (state == 0) {
@@ -266,7 +267,7 @@ void ush_utils_decode_ascii(char *input, uint8_t *output, size_t max_size)
                                 break;
                         default:
                                 *output++ = ch;
-                                max_size--;
+                                ret_size++;
                                 break;
                         }
                 } else if (state == 1) {
@@ -276,7 +277,7 @@ void ush_utils_decode_ascii(char *input, uint8_t *output, size_t max_size)
                                 break;
                         default:
                                 *output++ = ch;
-                                max_size--;
+                                ret_size++;
                                 state = 0;
                                 break;
                         }
@@ -286,10 +287,12 @@ void ush_utils_decode_ascii(char *input, uint8_t *output, size_t max_size)
                 } else if (state == 3) {
                         val |= hex_to_dec(ch);
                         *output++ = val;
-                        max_size--;
+                        ret_size++;
                         state = 0;
                 }
                 
                 input++;                
         }
+
+        return ret_size;
 }
