@@ -5,7 +5,7 @@
 #include "ush.h"
 #include "test_func.h"
 
-struct ush_node_object node = {0};
+static struct ush_node_object node = {0};
 
 void setUp(void)
 {

@@ -63,3 +63,8 @@ create_func_test( test_func_reset
     ${CMAKE_CURRENT_SOURCE_DIR}/test_func_reset.c
     ${CMAKE_CURRENT_SOURCE_DIR}/test_func.c
 )
+
+create_func_test( test_func_commands
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_func_commands.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_func.c
+)
