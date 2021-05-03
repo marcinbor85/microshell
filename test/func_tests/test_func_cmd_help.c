@@ -12,7 +12,7 @@ void setUp(void)
 
 void tearDown(void)
 {
-
+        test_func_deinit();
 }
 
 void test_cmd_help_self(void)
