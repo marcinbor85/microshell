@@ -1,4 +1,5 @@
 #include "ush.h"
+#include "ush_const.h"
 #include "test_func.h"
 
 char g_read_buf[TEST_FUNC_IO_BUFFER_SIZE];
@@ -199,7 +200,7 @@ void test_func_init(void)
 
         test_func_read_all();
         TEST_ASSERT_EQUAL_STRING(
-                "uShell 0.1.0\r\n"
+                USH_NAME " " USH_VERSION "\r\n"
                 "[test /]$ ",
                 g_write_buf
         );
