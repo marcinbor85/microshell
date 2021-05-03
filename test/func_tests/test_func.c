@@ -114,36 +114,30 @@ static struct ush_node_object g_path_data;
 static const struct ush_file_descriptor g_path_data_desc[] = {
         {
                 .name = "text",
-                .description = "text file",
                 .exec = NULL,
         },
         {
                 .name = "text_file1",
-                .description = "text file 1",
                 .exec = NULL,
         },
         {
                 .name = "text_file2",
-                .description = "text file 2",
                 .exec = NULL,
         },
         {
                 .name = "null",
-                .description = "null file",
                 .exec = NULL,
                 .get_data = file_null_data_getter,
                 .set_data = file_null_data_setter,
         },
         {
                 .name = "buffer",
-                .description = "buffer file",
                 .exec = NULL,
                 .get_data = file_buffer_data_getter,
                 .set_data = file_buffer_data_setter,
         },
         {
                 .name = "binary",
-                .description = "binary file",
                 .exec = NULL,
         },
 };
