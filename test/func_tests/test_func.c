@@ -106,13 +106,13 @@ void test_func_init(void)
         ush_node_mount(&g_ush, "/dir", &g_path_dir, NULL, 0);
         ush_node_mount(&g_ush, "/dir/1", &g_path_dir1, NULL, 0);
         ush_node_mount(&g_ush, "/dir/2", &g_path_dir2, NULL, 0);
-        ush_node_mount(&g_ush, "/dir/1/1", &g_path_dir11, NULL, 0);
-        ush_node_mount(&g_ush, "/dir/1/1/1", &g_path_dir111, NULL, 0);
-        ush_node_mount(&g_ush, "/dir/1/2", &g_path_dir12, NULL, 0);
-        ush_node_mount(&g_ush, "/dir/1/3", &g_path_dir13, NULL, 0);
-        ush_node_mount(&g_ush, "/dir/2/1", &g_path_dir21, NULL, 0);
-        ush_node_mount(&g_ush, "/dir/2/1/1", &g_path_dir211, NULL, 0);
-        ush_node_mount(&g_ush, "/dir/2/1/2", &g_path_dir212, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/1/11", &g_path_dir11, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/1/11/111", &g_path_dir111, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/1/12", &g_path_dir12, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/1/13", &g_path_dir13, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/2/21", &g_path_dir21, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/2/21/211", &g_path_dir211, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/2/21/212", &g_path_dir212, NULL, 0);
         
         ush_node_set_current_dir(&g_ush, "/");
 

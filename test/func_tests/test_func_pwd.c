@@ -32,12 +32,12 @@ void test_pwd_misc(void)
                 "/data\r\n"
                 "[test data]$ "
         );
-        test_func_ask("cd /dir/1/1/1",
-                "[test 1]$ "
+        test_func_ask("cd /dir/1/11/111",
+                "[test 111]$ "
         );
         test_func_ask("pwd",
-                "/dir/1/1/1\r\n"
-                "[test 1]$ "
+                "/dir/1/11/111\r\n"
+                "[test 111]$ "
         );
 }
 
