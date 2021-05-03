@@ -100,23 +100,25 @@ void test_autocomp_unknown(void)
 
 void test_autocomp_args(void)
 {
-        test_func_write("cd d\t");
+        test_func_write("abcd d\t");
         test_func_read_all();
         TEST_ASSERT_EQUAL_STRING(
-                "cd d\r\n"
+                "abcd d\r\n"
                 "dir\r\n"
                 "data\r\n"
-                "[test /]$ cd d",
+                "[test /]$ abcd d",
                 g_write_buf
         );
 
-        test_func_write("i\t\n");
+        test_func_write("i\t");
         test_func_read_all();
         TEST_ASSERT_EQUAL_STRING(
-                "ir\n"
-                "[test dir]$ ",
+                "ir",
                 g_write_buf
         );
+
+        setUp();
+        ush_node_set_current_dir(&g_ush, "/dir");
 
         test_func_write("\t");
         test_func_read_all();
@@ -135,10 +137,10 @@ void test_autocomp_args(void)
                 g_write_buf
         );
 
-        test_func_write("pwd pwd   pw\t");
+        test_func_write("qwe qwe   pw\t");
         test_func_read_all();
         TEST_ASSERT_EQUAL_STRING(
-                "pwd pwd   pwd",
+                "qwe qwe   pwd",
                 g_write_buf
         );
         
@@ -162,17 +164,14 @@ void test_autocomp_args(void)
                 "echo\r\n"
                 "2\r\n"
                 "1\r\n"
-                "[test dir]$ pwd pwd   pwd ",
+                "[test dir]$ qwe qwe   pwd ",
                 g_write_buf
         );
 }
 
 void test_autocomp_complex(void)
 {
-        test_func_ask(
-                "cd data",
-                "[test data]$ "
-        );
+        ush_node_set_current_dir(&g_ush, "/data");
 
         test_func_write("te\t");
         test_func_read_all();

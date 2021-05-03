@@ -19,6 +19,8 @@ extern char g_read_buf[];
 
 extern uint8_t g_file_buffer_buf[];
 
+extern struct ush_object g_ush;
+
 void test_func_init(void);
 void test_func_write(const char *text);
 void test_func_read_all(void);
