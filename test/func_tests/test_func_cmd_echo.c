@@ -108,6 +108,12 @@ void test_cmd_echo_redirect(void)
                 "[test data]$ "
         );
         TEST_ASSERT_EQUAL_UINT8_ARRAY("qwe rty\0", g_file_buffer_buf, 7);
+
+        TEST_ASSERT_EQUAL_UINT8_ARRAY("qwe rty\0", g_file_buffer_buf, 7);
+        TEST_FUNC_ASK("echo \"\\\\x00a cd\\\\x00\\\\xAA\" > ./buffer",
+                "[test data]$ "
+        );
+        TEST_ASSERT_EQUAL_UINT8_ARRAY("\0a cd\0\xAA", g_file_buffer_buf, 7);
 }
 
 int main(int argc, char *argv[])
