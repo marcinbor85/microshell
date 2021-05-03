@@ -15,7 +15,7 @@ void tearDown(void)
 
 }
 
-void test_pwd_root(void)
+void test_cmd_pwd_root(void)
 {
         test_func_ask("pwd",
                 "/\r\n"
@@ -23,7 +23,7 @@ void test_pwd_root(void)
         );
 }
 
-void test_pwd_misc(void)
+void test_cmd_pwd_misc(void)
 {
         test_func_ask("cd data",
                 "[test data]$ "
@@ -41,7 +41,7 @@ void test_pwd_misc(void)
         );
 }
 
-void test_pwd_error(void)
+void test_cmd_pwd_error(void)
 {
         test_func_ask("pwd 1",
                 "error: wrong arguments\r\n"
@@ -49,7 +49,7 @@ void test_pwd_error(void)
         );
 }
 
-void test_pwd_help(void)
+void test_cmd_pwd_help(void)
 {
         test_func_ask("help pwd",
                 "pwd: pwd\r\n"
@@ -65,10 +65,10 @@ int main(int argc, char *argv[])
 
         UNITY_BEGIN();
 
-        RUN_TEST(test_pwd_root);
-        RUN_TEST(test_pwd_error);
-        RUN_TEST(test_pwd_help);
-        RUN_TEST(test_pwd_misc);
+        RUN_TEST(test_cmd_pwd_root);
+        RUN_TEST(test_cmd_pwd_error);
+        RUN_TEST(test_cmd_pwd_help);
+        RUN_TEST(test_cmd_pwd_misc);
 
         return UNITY_END();
 }

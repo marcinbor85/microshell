@@ -15,7 +15,7 @@ void tearDown(void)
 
 }
 
-void test_cd_abs(void)
+void test_cmd_cd_abs(void)
 {
         test_func_ask("cd /data",
                 "[test data]$ "
@@ -38,7 +38,7 @@ void test_cd_abs(void)
         );
 }
 
-void test_cd_rel(void)
+void test_cmd_cd_rel(void)
 {
         test_func_ask("cd data",
                 "[test data]$ "
@@ -65,7 +65,7 @@ void test_cd_rel(void)
         );
 }
 
-void test_cd_error(void)
+void test_cmd_cd_error(void)
 {
         test_func_ask("cd",
                 "error: wrong arguments\r\n"
@@ -78,7 +78,7 @@ void test_cd_error(void)
         );
 }
 
-void test_cd_not_exist(void)
+void test_cmd_cd_not_exist(void)
 {
         test_func_ask("cd test",
                 "error: directory not found\r\n"
@@ -98,10 +98,10 @@ int main(int argc, char *argv[])
 
         UNITY_BEGIN();
 
-        RUN_TEST(test_cd_abs);
-        RUN_TEST(test_cd_rel);
-        RUN_TEST(test_cd_error);
-        RUN_TEST(test_cd_not_exist);
+        RUN_TEST(test_cmd_cd_abs);
+        RUN_TEST(test_cmd_cd_rel);
+        RUN_TEST(test_cmd_cd_error);
+        RUN_TEST(test_cmd_cd_not_exist);
 
         return UNITY_END();
 }

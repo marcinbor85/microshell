@@ -15,7 +15,7 @@ void tearDown(void)
 
 }
 
-void test_help_self(void)
+void test_cmd_help_self(void)
 {
         test_func_ask("help",
                 "help            - list available commands\r\n"
@@ -29,7 +29,7 @@ void test_help_self(void)
         );
 }
 
-void test_help_help(void)
+void test_cmd_help_help(void)
 {
         test_func_ask("help help",
                 "help: help [file]\r\n"
@@ -40,7 +40,7 @@ void test_help_help(void)
         );
 }
 
-void test_help_error(void)
+void test_cmd_help_error(void)
 {
         test_func_ask("help help abc",
                 "error: wrong arguments\r\n"
@@ -60,9 +60,9 @@ int main(int argc, char *argv[])
 
         UNITY_BEGIN();
 
-        RUN_TEST(test_help_self);
-        RUN_TEST(test_help_help);
-        RUN_TEST(test_help_error);
+        RUN_TEST(test_cmd_help_self);
+        RUN_TEST(test_cmd_help_help);
+        RUN_TEST(test_cmd_help_error);
 
         return UNITY_END();
 }
