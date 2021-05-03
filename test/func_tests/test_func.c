@@ -119,7 +119,7 @@ size_t file_binary_data_getter(struct ush_object *self, struct ush_file_descript
         static uint8_t buf[256];
 
         for (size_t i = 0; i < sizeof(buf); i++)
-                buf[i] = (i == 0) ? 0xFF : i;
+                buf[i] = i;
 
         *data = buf;   
         return sizeof(buf);
