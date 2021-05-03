@@ -44,6 +44,12 @@ set(
     PARENT_SCOPE
 )
 
+set(
+    USH_SRC_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    PARENT_SCOPE
+)
+
 function( build_ush TARGET )
     add_library(
         ${TARGET}

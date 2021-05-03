@@ -10,7 +10,7 @@ build_ush ( ${USH_TARGET}
 function(create_unit_test TARGET)
     add_executable( ${TARGET} ${ARGV} )
     target_include_directories( ${TARGET} PUBLIC
-        ${PROJECT_SOURCE_DIR}/test/unit_tests
+        ${PROJECT_SOURCE_DIR}/tests/unit_tests
         ${USH_INC_DIRS}
     )
     target_link_libraries( ${TARGET} PUBLIC ${UNITY_TARGET})
@@ -21,7 +21,7 @@ endfunction()
 function(create_func_test TARGET)
     add_executable( ${TARGET} ${ARGV} )
     target_include_directories( ${TARGET} PUBLIC
-        ${PROJECT_SOURCE_DIR}/test/func_tests
+        ${PROJECT_SOURCE_DIR}/tests/func_tests
     )
     target_link_libraries( ${TARGET} PUBLIC ${UNITY_TARGET} ${USH_TARGET})
     target_compile_options( ${TARGET} PRIVATE -Werror -Wall -Wextra  -g -O0)
