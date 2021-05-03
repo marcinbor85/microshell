@@ -187,6 +187,28 @@ void test_ush_node_get_absolute_path(void)
         TEST_STRING_PROCESS_ARGS("/1/2/9/8/7", &ush, "9/8/7", ush_node_get_absolute_path);
 }
 
+void test_ush_node_deinit_recursive(void)
+{
+        struct ush_node_object node = {0};
+        struct ush_node_object node2 = {0};
+        struct ush_node_object node3 = {0};
+
+        memset((uint8_t*)&node, 0xFF, sizeof(struct ush_node_object));
+        node.childs = NULL;
+        node.next = &node2;
+        memset((uint8_t*)&node2, 0xFF, sizeof(struct ush_node_object));
+        node2.childs = &node3;
+        node2.next = NULL;
+        memset((uint8_t*)&node3, 0xFF, sizeof(struct ush_node_object));
+        node3.childs = NULL;
+        node3.next = NULL;
+
+        ush_node_deinit_recursive(&ush, &node);
+        TEST_ASSERT_EACH_EQUAL_UINT8(0, (uint8_t*)&node, sizeof(struct ush_node_object));
+        TEST_ASSERT_EACH_EQUAL_UINT8(0, (uint8_t*)&node2, sizeof(struct ush_node_object));
+        TEST_ASSERT_EACH_EQUAL_UINT8(0, (uint8_t*)&node3, sizeof(struct ush_node_object));
+}
+
 int main(int argc, char *argv[])
 {
         (void)argc;
@@ -198,6 +220,7 @@ int main(int argc, char *argv[])
         RUN_TEST(test_ush_node_get_by_path_exist);
         RUN_TEST(test_ush_node_get_by_path_not_exist);
         RUN_TEST(test_ush_node_get_absolute_path);
+        RUN_TEST(test_ush_node_deinit_recursive);
 
         return UNITY_END();
 }
