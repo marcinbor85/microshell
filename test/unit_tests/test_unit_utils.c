@@ -243,6 +243,48 @@ void test_ush_utils_get_status_string(void)
         TEST_ASSERT_EQUAL_STRING(USH_CONFIG_TRANSLATION_ERROR, ush_utils_get_status_string(-1));
 }
 
+#define TEST_UINT8_PROCESS_ARGS(expected, expected_size, input, func) { \
+        memset(out, 0, sizeof(out)); \
+        func(input, out, sizeof(out)); \
+        TEST_ASSERT_EQUAL_UINT8_ARRAY(expected, out, expected_size); \
+}
+
+
+void test_ush_utils_decode_ascii(void)
+{
+        uint8_t out[8] = {0};
+
+        TEST_UINT8_PROCESS_ARGS("abc", 3, "abc", ush_utils_decode_ascii);
+        TEST_UINT8_PROCESS_ARGS("abc", 3, "\\a\\b\\c", ush_utils_decode_ascii);
+        TEST_UINT8_PROCESS_ARGS("\x01""a\xFF", 3, "\\x01a\\xFF", ush_utils_decode_ascii);
+        TEST_UINT8_PROCESS_ARGS("abcd\x00\x01\x02\x03", 8, "abcd\\x00\\x01\\x02\\x03", ush_utils_decode_ascii);
+        TEST_UINT8_PROCESS_ARGS("\xde\xad\xbe\xef", 4, "\\xde\\xad\\xbe\\xef", ush_utils_decode_ascii);
+        TEST_UINT8_PROCESS_ARGS("abcdqwert", 8, "abcdqwertyuiop", ush_utils_decode_ascii);
+
+        for (int i = 0; i < 256; i++) {
+                char in[32];
+                sprintf(in, "\\x%02X\\x%02x", i, i);
+                char exp[2];
+                exp[0] = i;
+                exp[1] = i;
+                TEST_UINT8_PROCESS_ARGS(exp, 2, in, ush_utils_decode_ascii);
+        }
+
+        for (int i = 0; i < 256; i++) {
+                char in[32];
+                if ((i >= '0' && i <= '9') || (i >= 'A' && i <= 'F') || (i >= 'a' && i <= 'f') || (i == '\0'))
+                        continue;
+                
+                for (int n = 0; n < 16; n++) {
+                        sprintf(in, "\\x%c%1X\\x%1X%c", i, n, n, i);
+                        char exp[2];
+                        exp[0] = n;
+                        exp[1] = n << 4;
+                        TEST_UINT8_PROCESS_ARGS(exp, 2, in, ush_utils_decode_ascii);
+                }                
+        }
+}
+
 int main(int argc, char *argv[])
 {
         (void)argc;
@@ -260,6 +302,7 @@ int main(int argc, char *argv[])
         RUN_TEST(test_ush_utils_startswith);
         RUN_TEST(test_ush_utils_is_printable);
         RUN_TEST(test_ush_utils_get_status_string);
+        RUN_TEST(test_ush_utils_decode_ascii);
 
         return UNITY_END();
 }

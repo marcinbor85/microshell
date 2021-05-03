@@ -237,3 +237,59 @@ bool ush_utils_is_printable(uint8_t ch)
 {
         return ((ch >= 0x20) && (ch <= 0x7E));
 }
+
+static uint8_t hex_to_dec(char ch)
+{
+        if (ch >= '0' && ch <= '9') {
+                return (uint8_t)(ch - '0');
+        } else if (ch >= 'A' && ch <= 'F') {
+                return (uint8_t)(ch - 'A') + 10;
+        } else if (ch >= 'a' && ch <= 'f') {
+                return (uint8_t)(ch - 'a') + 10;
+        }
+        return 0;
+}
+
+void ush_utils_decode_ascii(char *input, uint8_t *output, size_t max_size)
+{
+        char ch;
+        int state = 0;
+        uint8_t val;
+
+        while ((*input != '\0') && (max_size > 0)) {
+                ch = *input;
+
+                if (state == 0) {
+                        switch (ch) {
+                        case '\\':
+                                state = 1;
+                                break;
+                        default:
+                                *output++ = ch;
+                                max_size--;
+                                break;
+                        }
+                } else if (state == 1) {
+                        switch (ch) {
+                        case 'x':
+                                state = 2;
+                                break;
+                        default:
+                                *output++ = ch;
+                                max_size--;
+                                state = 0;
+                                break;
+                        }
+                } else if (state == 2) {
+                        val = hex_to_dec(ch) << 4;
+                        state = 3;
+                } else if (state == 3) {
+                        val |= hex_to_dec(ch);
+                        *output++ = val;
+                        max_size--;
+                        state = 0;
+                }
+                
+                input++;                
+        }
+}
