@@ -78,6 +78,15 @@ void test_cmd_cd_error(void)
         );
 }
 
+void test_cmd_cd_help(void)
+{
+        test_func_ask("help cd",
+                "cd: cd [path]\r\n"
+                "\tChange current working directory.\r\n"
+                "[test /]$ "
+        );
+}
+
 void test_cmd_cd_not_exist(void)
 {
         test_func_ask("cd test",
@@ -101,6 +110,7 @@ int main(int argc, char *argv[])
         RUN_TEST(test_cmd_cd_abs);
         RUN_TEST(test_cmd_cd_rel);
         RUN_TEST(test_cmd_cd_error);
+        RUN_TEST(test_cmd_cd_help);
         RUN_TEST(test_cmd_cd_not_exist);
 
         return UNITY_END();
