@@ -208,20 +208,7 @@ void test_func_init(void)
 
 void test_func_deinit(void)
 {
-        /* TODO: change to ush_deinit(&g_ush); */
-        
-        memset((uint8_t*)&g_path_root, 0, sizeof(g_path_root));
-        memset((uint8_t*)&g_path_data, 0, sizeof(g_path_data));
-        memset((uint8_t*)&g_path_dir, 0, sizeof(g_path_dir));
-        memset((uint8_t*)&g_path_dir1, 0, sizeof(g_path_dir1));
-        memset((uint8_t*)&g_path_dir2, 0, sizeof(g_path_dir2));
-        memset((uint8_t*)&g_path_dir11, 0, sizeof(g_path_dir11));
-        memset((uint8_t*)&g_path_dir111, 0, sizeof(g_path_dir111));
-        memset((uint8_t*)&g_path_dir12, 0, sizeof(g_path_dir12));
-        memset((uint8_t*)&g_path_dir13, 0, sizeof(g_path_dir13));
-        memset((uint8_t*)&g_path_dir21, 0, sizeof(g_path_dir21));
-        memset((uint8_t*)&g_path_dir211, 0, sizeof(g_path_dir211));
-        memset((uint8_t*)&g_path_dir212, 0, sizeof(g_path_dir212));
+        ush_deinit(&g_ush);
 }
 
 void test_func_write(const char *text)

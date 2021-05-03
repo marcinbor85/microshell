@@ -26,6 +26,9 @@ ush_status_t ush_utils_get_status_string_status;
 char *ush_utils_get_status_string_return_val;
 int ush_utils_get_status_string_call_count;
 
+struct ush_node_object *ush_node_deinit_recursive_node;
+int ush_node_deinit_recursive_call_count;
+
 int ush_reset_service_call_count;
 int ush_prompt_service_call_count;
 int ush_read_service_call_count;
@@ -60,6 +63,9 @@ void setUp(void)
         ush_utils_get_status_string_status = USH_STATUS__TOTAL_NUM;
         ush_utils_get_status_string_return_val = NULL;
         ush_utils_get_status_string_call_count = 0;
+
+        ush_node_deinit_recursive_node = NULL;
+        ush_node_deinit_recursive_call_count = 0;
 
         ush_reset_service_call_count = 0;
         ush_prompt_service_call_count = 0;
@@ -121,6 +127,14 @@ const char* ush_utils_get_status_string(ush_status_t status)
         ush_utils_get_status_string_call_count++;
 
         return ush_utils_get_status_string_return_val;
+}
+
+void ush_node_deinit_recursive(struct ush_object *self, struct ush_node_object *node)
+{
+        TEST_ASSERT_EQUAL(&ush, self);
+        TEST_ASSERT_EQUAL(ush_node_deinit_recursive_node, node);
+
+        ush_node_deinit_recursive_call_count++;
 }
 
 bool ush_reset_service(struct ush_object *self)
@@ -199,6 +213,7 @@ void test_ush_init(void)
                         TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
                         TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
                         TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
                         break;
                 default:
                         TEST_ASSERT_EQUAL(&ush_desc, ush.desc);
@@ -215,9 +230,31 @@ void test_ush_init(void)
                         TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
                         TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
                         TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
                         break;
                 }
         }
+}
+
+void test_ush_deinit(void)
+{
+        memset((uint8_t*)&ush, 0xFF, sizeof(ush));
+        ush.root = (struct ush_node_object*)1234;
+        ush_node_deinit_recursive_node = (struct ush_node_object*)1234;
+        ush_deinit(&ush);
+        TEST_ASSERT_EACH_EQUAL_UINT8(0, (uint8_t*)&ush, sizeof(ush));
+        TEST_ASSERT_EQUAL(1, ush_node_deinit_recursive_call_count);
+        TEST_ASSERT_EQUAL(0, ush_commands_add_call_count);
+        TEST_ASSERT_EQUAL(0, ush_reset_call_count);
+        TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
+        TEST_ASSERT_EQUAL(0, ush_utils_get_status_string_call_count);
+        TEST_ASSERT_EQUAL(0, ush_reset_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_prompt_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_read_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_autocomp_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
 }
 
 void test_ush_service_none(void)
@@ -242,6 +279,7 @@ void test_ush_service_none(void)
         TEST_ASSERT_EQUAL(1, ush_parse_service_call_count);
         TEST_ASSERT_EQUAL(1, ush_write_service_call_count);
         TEST_ASSERT_EQUAL(1, ush_process_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
 }
 
 void test_ush_service_all(void)
@@ -266,6 +304,7 @@ void test_ush_service_all(void)
         TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
         TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
         TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
 }
 
 void test_ush_service_reset(void)
@@ -290,6 +329,7 @@ void test_ush_service_reset(void)
         TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
         TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
         TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
 }
 
 void test_ush_service_prompt(void)
@@ -314,6 +354,7 @@ void test_ush_service_prompt(void)
         TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
         TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
         TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
 }
 
 void test_ush_service_read(void)
@@ -338,6 +379,7 @@ void test_ush_service_read(void)
         TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
         TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
         TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
 
         setUp();
 
@@ -361,6 +403,7 @@ void test_ush_service_read(void)
         TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
         TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
         TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
 }
 
 void test_ush_service_autocomp(void)
@@ -385,6 +428,7 @@ void test_ush_service_autocomp(void)
         TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
         TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
         TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
 }
 
 void test_ush_service_parse(void)
@@ -409,6 +453,7 @@ void test_ush_service_parse(void)
         TEST_ASSERT_EQUAL(1, ush_parse_service_call_count);
         TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
         TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
 }
 
 void test_ush_service_write(void)
@@ -433,6 +478,7 @@ void test_ush_service_write(void)
         TEST_ASSERT_EQUAL(1, ush_parse_service_call_count);
         TEST_ASSERT_EQUAL(1, ush_write_service_call_count);
         TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
 }
 
 void test_ush_service_process(void)
@@ -457,6 +503,7 @@ void test_ush_service_process(void)
         TEST_ASSERT_EQUAL(1, ush_parse_service_call_count);
         TEST_ASSERT_EQUAL(1, ush_write_service_call_count);
         TEST_ASSERT_EQUAL(1, ush_process_service_call_count);
+        TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
 }
 
 void test_ush_print_status(void)
@@ -486,6 +533,7 @@ void test_ush_print_status(void)
                         TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
                         TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
                         TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+                        TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
                 }
         }
 }
@@ -512,6 +560,7 @@ void test_ush_print(void)
                 TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
                 TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
                 TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+                TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
         }
 }
 
@@ -537,6 +586,7 @@ void test_ush_print_no_newline(void)
                 TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
                 TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
                 TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+                TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
         }
 }
 
@@ -548,6 +598,7 @@ int main(int argc, char *argv[])
         UNITY_BEGIN();
 
         RUN_TEST(test_ush_init);
+        RUN_TEST(test_ush_deinit);
         RUN_TEST(test_ush_service_none);
         RUN_TEST(test_ush_service_all);
         RUN_TEST(test_ush_service_reset);

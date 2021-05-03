@@ -1,4 +1,5 @@
 #include "ush.h"
+#include "ush_node.h"
 #include "ush_internal.h"
 #include "ush_shell.h"
 
@@ -20,8 +21,6 @@ void ush_init(struct ush_object *self, const struct ush_descriptor *desc)
 
         USH_ASSERT(desc->hostname != NULL);
 
-        memset(self, 0, sizeof(struct ush_object));
-
         self->desc = desc;
         self->root = NULL;
 
@@ -33,6 +32,14 @@ void ush_init(struct ush_object *self, const struct ush_descriptor *desc)
 #endif /* USH_CONFIG_ENABLE_FEATURE_COMMANDS */
 
         ush_reset(self);
+}
+
+void ush_deinit(struct ush_object *self)
+{
+        USH_ASSERT(self != NULL);
+
+        ush_node_deinit_recursive(self, self->root);
+        memset(self, 0, sizeof(struct ush_object));
 }
 
 bool ush_service(struct ush_object *self)

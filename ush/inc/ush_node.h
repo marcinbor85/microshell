@@ -12,6 +12,7 @@ ush_status_t ush_node_unmount(struct ush_object *self, const char *path);
 ush_status_t ush_node_set_current_dir(struct ush_object *self, const char *path);
 
 void ush_node_get_absolute_path(struct ush_object *self, const char *in_path, char *abs_path);
+void ush_node_deinit_recursive(struct ush_object *self, struct ush_node_object *node);
 
 struct ush_node_object* ush_node_get_parent_by_path(struct ush_object *self, const char *path);
 struct ush_node_object* ush_node_get_by_path(struct ush_object *self, const char *path);

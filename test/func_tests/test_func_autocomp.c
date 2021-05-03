@@ -58,6 +58,7 @@ void test_autocomp_finish(void)
                 g_write_buf
         );
 
+        tearDown();
         setUp();
 
         test_func_write("h\t");
@@ -67,6 +68,7 @@ void test_autocomp_finish(void)
                 g_write_buf
         );
 
+        tearDown();
         setUp();
 
         test_func_write("di\t");
@@ -76,6 +78,7 @@ void test_autocomp_finish(void)
                 g_write_buf
         );
 
+        tearDown();
         setUp();
 
         test_func_write("p\t\n");
@@ -117,7 +120,9 @@ void test_autocomp_args(void)
                 g_write_buf
         );
 
+        tearDown();
         setUp();
+        
         ush_node_set_current_dir(&g_ush, "/dir");
 
         test_func_write("\t");

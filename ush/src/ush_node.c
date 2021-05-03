@@ -66,3 +66,25 @@ void ush_node_get_absolute_path(struct ush_object *self, const char *in_path, ch
 
         ush_utils_get_collapse_path(abs_path, out_path);
 }
+
+void ush_node_deinit_recursive(struct ush_object *self, struct ush_node_object *node)
+{
+        USH_ASSERT(self != NULL);
+
+        struct ush_node_object *curr = node;
+
+        while (curr != NULL) {
+                if (curr->childs != NULL)
+                        ush_node_deinit_recursive(self, curr->childs);
+                
+                curr->childs = NULL;
+                curr->file_list = NULL;
+                curr->file_list_size = 0;
+                curr->parent = NULL;
+                curr->path = NULL;
+
+                struct ush_node_object *tmp = curr->next;
+                curr->next = NULL;
+                curr = tmp;
+        }
+}

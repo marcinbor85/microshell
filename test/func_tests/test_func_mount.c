@@ -5,6 +5,8 @@
 #include "ush.h"
 #include "test_func.h"
 
+struct ush_node_object node = {0};
+
 void setUp(void)
 {
         test_func_init();
@@ -17,8 +19,6 @@ void tearDown(void)
 
 void test_mount(void)
 {
-        struct ush_node_object node = {0};
-
         TEST_ASSERT_EQUAL(USH_STATUS_ERROR_NODE_NOT_FOUND, ush_node_set_current_dir(&g_ush, "/abc"));
         TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_mount(&g_ush, "/abc", &node, NULL, 0));
         TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_set_current_dir(&g_ush, "/abc"));
@@ -26,8 +26,6 @@ void test_mount(void)
 
 void test_mount_error(void)
 {
-        struct ush_node_object node = {0};
-
         TEST_ASSERT_EQUAL(USH_STATUS_ERROR_NODE_ALREADY_MOUNTED, ush_node_mount(&g_ush, "/dir", &node, NULL, 0));
         TEST_ASSERT_EQUAL(USH_STATUS_ERROR_NODE_WITHOUT_PARENT, ush_node_mount(&g_ush, "/test/abc", &node, NULL, 0));
         TEST_ASSERT_EQUAL(USH_STATUS_ERROR_NODE_NOT_FOUND, ush_node_unmount(&g_ush, "/test"));
