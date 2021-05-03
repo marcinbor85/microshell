@@ -35,7 +35,7 @@ void test_cmd_ls_current(void)
                 "---- text_file2      \r\n"
                 "-rw- null            \r\n"
                 "-rw- buffer          \r\n"
-                "---- binary          \r\n"
+                "-r-- binary          \r\n"
                 "[test data]$ "
         );
 
@@ -149,7 +149,7 @@ void test_cmd_ls_rel(void)
                 "---- text_file2      \r\n"
                 "-rw- null            \r\n"
                 "-rw- buffer          \r\n"
-                "---- binary          \r\n"
+                "-r-- binary          \r\n"
                 "[test 111]$ "
         );
 }
@@ -158,6 +158,16 @@ void test_cmd_ls_error(void)
 {
         TEST_FUNC_ASK("ls 1 2",
                 "error: wrong arguments\r\n"
+                "[test /]$ "
+        );
+
+        TEST_FUNC_ASK("ls /test",
+                "error: directory not found\r\n"
+                "[test /]$ "
+        );
+
+        TEST_FUNC_ASK("ls di",
+                "error: directory not found\r\n"
                 "[test /]$ "
         );
 }
@@ -169,19 +179,6 @@ void test_cmd_ls_help(void)
                 "\tList directory content.\r\n"
                 "    ls\r\n"
                 "\tList current directory content.\r\n"
-                "[test /]$ "
-        );
-}
-
-void test_cmd_ls_not_exist(void)
-{
-        TEST_FUNC_ASK("ls /test",
-                "error: directory not found\r\n"
-                "[test /]$ "
-        );
-
-        TEST_FUNC_ASK("ls di",
-                "error: directory not found\r\n"
                 "[test /]$ "
         );
 }
@@ -198,7 +195,6 @@ int main(int argc, char *argv[])
         RUN_TEST(test_cmd_ls_rel);
         RUN_TEST(test_cmd_ls_error);
         RUN_TEST(test_cmd_ls_help);
-        RUN_TEST(test_cmd_ls_not_exist);
 
         return UNITY_END();
 }

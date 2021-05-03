@@ -147,7 +147,7 @@ void test_ush_buildin_cmd_xxd_callback(void)
                         file.get_data = NULL;
                         ush_file_find_by_name_name[0] = "test2";
                         ush_file_find_by_name_return_val[0] = &file;
-                        ush_print_status_status = USH_STATUS_ERROR_FILE_NO_DATA;
+                        ush_print_status_status = USH_STATUS_ERROR_FILE_NOT_READABLE;
                         ush_buildin_cmd_xxd_callback(&ush, NULL, i, argv);
                         TEST_ASSERT_EQUAL(0, g_assert_call_count);
                         TEST_ASSERT_EQUAL(1, ush_print_status_call_count);

@@ -21,7 +21,7 @@ void ush_buildin_cmd_cat_callback(struct ush_object *self, struct ush_file_descr
                         return;
                 }
                 if (f->get_data == NULL) {
-                        ush_print_status(self, USH_STATUS_ERROR_FILE_NO_DATA);
+                        ush_print_status(self, USH_STATUS_ERROR_FILE_NOT_READABLE);
                         return;
                 }
         }

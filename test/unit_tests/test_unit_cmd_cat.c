@@ -204,7 +204,7 @@ void test_ush_buildin_cmd_cat_callback_neg_filenodata(void)
         ush_file_find_by_name_name[0] = "test";
         file0.get_data = NULL;
         ush_file_find_by_name_return_val[0] = &file0;
-        ush_print_status_status = USH_STATUS_ERROR_FILE_NO_DATA;
+        ush_print_status_status = USH_STATUS_ERROR_FILE_NOT_READABLE;
         ush_buildin_cmd_cat_callback(&ush, NULL, 2, argv);
         TEST_ASSERT_EQUAL(1, ush_print_status_call_count);
         TEST_ASSERT_EQUAL(1, ush_file_find_by_name_call_count);
@@ -223,7 +223,7 @@ void test_ush_buildin_cmd_cat_callback_neg_filenodata(void)
         file1.get_data = NULL;
         ush_file_find_by_name_return_val[0] = &file0;
         ush_file_find_by_name_return_val[1] = &file1;
-        ush_print_status_status = USH_STATUS_ERROR_FILE_NO_DATA;
+        ush_print_status_status = USH_STATUS_ERROR_FILE_NOT_READABLE;
         ush_buildin_cmd_cat_callback(&ush, NULL, 3, argv);
         TEST_ASSERT_EQUAL(1, ush_print_status_call_count);
         TEST_ASSERT_EQUAL(2, ush_file_find_by_name_call_count);
@@ -249,7 +249,7 @@ void test_ush_buildin_cmd_cat_callback_pos(void)
         ush_file_find_by_name_return_val[0] = &file0;
         ush_file_find_by_name_return_val[1] = &file1;
         ush_process_start_file = &cat_cmd;
-        ush_print_status_status = USH_STATUS_ERROR_FILE_NO_DATA;
+        ush_print_status_status = USH_STATUS_ERROR_FILE_NOT_READABLE;
         ush_buildin_cmd_cat_callback(&ush, &cat_cmd, 3, argv);
         TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
         TEST_ASSERT_EQUAL(2, ush_file_find_by_name_call_count);

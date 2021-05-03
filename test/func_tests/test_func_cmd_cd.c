@@ -76,19 +76,7 @@ void test_cmd_cd_error(void)
                 "error: wrong arguments\r\n"
                 "[test /]$ "
         );
-}
 
-void test_cmd_cd_help(void)
-{
-        TEST_FUNC_ASK("help cd",
-                "cd: cd [path]\r\n"
-                "\tChange current working directory.\r\n"
-                "[test /]$ "
-        );
-}
-
-void test_cmd_cd_not_exist(void)
-{
         TEST_FUNC_ASK("cd test",
                 "error: directory not found\r\n"
                 "[test /]$ "
@@ -96,6 +84,15 @@ void test_cmd_cd_not_exist(void)
 
         TEST_FUNC_ASK("cd di",
                 "error: directory not found\r\n"
+                "[test /]$ "
+        );
+}
+
+void test_cmd_cd_help(void)
+{
+        TEST_FUNC_ASK("help cd",
+                "cd: cd [path]\r\n"
+                "\tChange current working directory.\r\n"
                 "[test /]$ "
         );
 }
@@ -111,7 +108,6 @@ int main(int argc, char *argv[])
         RUN_TEST(test_cmd_cd_rel);
         RUN_TEST(test_cmd_cd_error);
         RUN_TEST(test_cmd_cd_help);
-        RUN_TEST(test_cmd_cd_not_exist);
 
         return UNITY_END();
 }

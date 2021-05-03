@@ -9,6 +9,7 @@ int g_read_buf_index;
 int g_read_buf_size;
 
 uint8_t g_file_buffer_buf[128];
+size_t g_file_buffer_buf_size;
 
 static int write_char(struct ush_object *self, char ch)
 {
@@ -95,7 +96,7 @@ size_t file_buffer_data_getter(struct ush_object *self, struct ush_file_descript
         (void)file;
 
         *data = g_file_buffer_buf;        
-        return sizeof(g_file_buffer_buf);
+        return g_file_buffer_buf_size;
 }
 
 void file_buffer_data_setter(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t *data, size_t size)
@@ -108,6 +109,20 @@ void file_buffer_data_setter(struct ush_object *self, struct ush_file_descriptor
         memcpy(g_file_buffer_buf, data, size);
 
         return;
+}
+
+size_t file_binary_data_getter(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data)
+{
+        (void)self;
+        (void)file;
+
+        static uint8_t buf[256];
+
+        for (size_t i = 0; i < sizeof(buf); i++)
+                buf[i] = (i == 0) ? 0xFF : i;
+
+        *data = buf;   
+        return sizeof(buf);
 }
 
 static struct ush_node_object g_path_data;
@@ -139,6 +154,7 @@ static const struct ush_file_descriptor g_path_data_desc[] = {
         {
                 .name = "binary",
                 .exec = NULL,
+                .get_data = file_binary_data_getter,
         },
 };
 
@@ -156,6 +172,7 @@ static struct ush_node_object g_path_dir212;
 void test_func_init(void)
 {
         memset(g_file_buffer_buf, 0, sizeof(g_file_buffer_buf));
+        g_file_buffer_buf_size = 0;
         memset(g_input_buffer, 0, sizeof(g_input_buffer));
         memset(g_output_buffer, 0, sizeof(g_output_buffer));
 

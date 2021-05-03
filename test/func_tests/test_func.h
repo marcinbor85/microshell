@@ -18,6 +18,7 @@ extern char g_write_buf[];
 extern char g_read_buf[];
 
 extern uint8_t g_file_buffer_buf[];
+extern size_t g_file_buffer_buf_size;
 
 extern struct ush_object g_ush;
 
