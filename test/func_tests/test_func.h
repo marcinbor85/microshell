@@ -12,8 +12,12 @@ extern "C" {
 
 #include "unity.h"
 
+#define TEST_FUNC_IO_BUFFER_SIZE    1024
+
 extern char g_write_buf[];
 extern char g_read_buf[];
+
+extern uint8_t g_file_buffer_buf[];
 
 void test_func_init(void);
 void test_func_write(const char *text);

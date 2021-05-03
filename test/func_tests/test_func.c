@@ -1,12 +1,14 @@
 #include "ush.h"
 #include "test_func.h"
 
-char g_read_buf[1024];
-char g_write_buf[1024];
+char g_read_buf[TEST_FUNC_IO_BUFFER_SIZE];
+char g_write_buf[TEST_FUNC_IO_BUFFER_SIZE];
 
 int g_write_buf_index;
 int g_read_buf_index;
 int g_read_buf_size;
+
+uint8_t g_file_buffer_buf[128];
 
 static int write_char(struct ush_object *self, char ch)
 {
@@ -50,14 +52,63 @@ static const struct ush_descriptor g_ush_desc = {
         .hostname = g_hostname_data,
 };
 
+void file_root_test_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
+{
+        (void)argc;
+        (void)argv;
+        (void)file;
+
+        ush_print(self, "test_exec_callback");
+}
+
 static struct ush_node_object g_path_root;
 static const struct ush_file_descriptor g_path_root_desc[] = {
         {
                 .name = "test",
                 .description = "test file",
-                .exec = NULL,
+                .exec = file_root_test_callback,
         },
 };
+
+size_t file_null_data_getter(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data)
+{
+        (void)self;
+        (void)file;
+        (void)data;
+        
+        return 0;
+}
+
+void file_null_data_setter(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t *data, size_t size)
+{
+        (void)self;
+        (void)file;
+        (void)data;
+        (void)size;
+
+        return;
+}
+
+size_t file_buffer_data_getter(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data)
+{
+        (void)self;
+        (void)file;
+
+        *data = g_file_buffer_buf;        
+        return sizeof(g_file_buffer_buf);
+}
+
+void file_buffer_data_setter(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t *data, size_t size)
+{
+        (void)self;
+        (void)file;
+
+        if (size > sizeof(g_file_buffer_buf))
+                size = sizeof(g_file_buffer_buf);
+        memcpy(g_file_buffer_buf, data, size);
+
+        return;
+}
 
 static struct ush_node_object g_path_data;
 static const struct ush_file_descriptor g_path_data_desc[] = {
@@ -75,6 +126,20 @@ static const struct ush_file_descriptor g_path_data_desc[] = {
                 .name = "text_file2",
                 .description = "text file 2",
                 .exec = NULL,
+        },
+        {
+                .name = "null",
+                .description = "null file",
+                .exec = NULL,
+                .get_data = file_null_data_getter,
+                .set_data = file_null_data_setter,
+        },
+        {
+                .name = "buffer",
+                .description = "buffer file",
+                .exec = NULL,
+                .get_data = file_buffer_data_getter,
+                .set_data = file_buffer_data_setter,
         },
         {
                 .name = "binary",
@@ -96,6 +161,10 @@ static struct ush_node_object g_path_dir212;
 
 void test_func_init(void)
 {
+        memset(g_file_buffer_buf, 0, sizeof(g_file_buffer_buf));
+        memset(g_input_buffer, 0, sizeof(g_input_buffer));
+        memset(g_output_buffer, 0, sizeof(g_output_buffer));
+
         g_read_buf_size = 0;
         g_read_buf_index = 0;
         g_write_buf_index = 0;
@@ -140,8 +209,8 @@ void test_func_read_all(void)
 
 void test_func_ask(const char *request, const char *response)
 {
-        char buf[1024];
-        char buf_resp[1024];
+        char buf[TEST_FUNC_IO_BUFFER_SIZE];
+        char buf_resp[TEST_FUNC_IO_BUFFER_SIZE];
 
         sprintf(buf, "%s\n", request);
         sprintf(buf_resp, "%s\n%s", request, response);
