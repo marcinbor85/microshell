@@ -36,6 +36,7 @@ extern "C" {
 #define USH_CONFIG_TRANSLATION_SYNTAX_ERROR                     "syntax error"
 #define USH_CONFIG_TRANSLATION_WRONG_ARGUMENTS                  "wrong arguments"
 #define USH_CONFIG_TRANSLATION_FILE_NOT_EXECUTABLE              "file not executable"
+#define USH_CONFIG_TRANSLATION_FILE_NOT_WRITABLE                "file not writable"
 #define USH_CONFIG_TRANSLATION_NO_HELP_AVAILABLE                "no help available"
 #define USH_CONFIG_TRANSLATION_FILE_NOT_FOUND                   "file not found"
 #define USH_CONFIG_TRANSLATION_NO_DATA_AVAILABLE                "no data available"

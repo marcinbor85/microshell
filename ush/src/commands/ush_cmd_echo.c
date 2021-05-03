@@ -28,7 +28,7 @@ void ush_buildin_cmd_echo_callback(struct ush_object *self, struct ush_file_desc
                         break;
                 }
                 if (f->set_data == NULL) {
-                        ush_print_status(self, USH_STATUS_ERROR_FILE_READ_ONLY);
+                        ush_print_status(self, USH_STATUS_ERROR_FILE_NOT_WRITABLE);
                         break;
                 }
                 /* fallthrough */

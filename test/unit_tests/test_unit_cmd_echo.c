@@ -143,7 +143,7 @@ void test_ush_buildin_cmd_echo_callback_neg_filenotfound(void)
         TEST_ASSERT_EQUAL(1, ush_file_find_by_name_call_count);
 }
 
-void test_ush_buildin_cmd_echo_callback_neg_readonly(void)
+void test_ush_buildin_cmd_echo_callback_neg_not_writable(void)
 {
         char *argv[6] = {0};
         struct ush_file_descriptor file = {0};
@@ -155,7 +155,7 @@ void test_ush_buildin_cmd_echo_callback_neg_readonly(void)
 
         ush_file_find_by_name_name = "test";
         ush_file_find_by_name_return_val = &file;
-        ush_print_status_status = USH_STATUS_ERROR_FILE_READ_ONLY;
+        ush_print_status_status = USH_STATUS_ERROR_FILE_NOT_WRITABLE;
         ush_buildin_cmd_echo_callback(&ush, NULL, 4, argv);
         TEST_ASSERT_EQUAL(1, ush_print_status_call_count);
         TEST_ASSERT_EQUAL(0, ush_print_call_count);
@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
         RUN_TEST(test_ush_buildin_cmd_echo_callback_neg);
         RUN_TEST(test_ush_buildin_cmd_echo_callback_neg_redirect);
         RUN_TEST(test_ush_buildin_cmd_echo_callback_neg_filenotfound);
-        RUN_TEST(test_ush_buildin_cmd_echo_callback_neg_readonly);
+        RUN_TEST(test_ush_buildin_cmd_echo_callback_neg_not_writable);
         RUN_TEST(test_ush_buildin_cmd_echo_callback_pos);
 
         return UNITY_END();
