@@ -206,18 +206,3 @@ void test_func_read_all(void)
         while (ush_service(&g_ush) != false) {};
         g_write_buf[g_write_buf_index] = '\0';
 }
-
-void test_func_ask(const char *request, const char *response)
-{
-        char buf[TEST_FUNC_IO_BUFFER_SIZE];
-        char buf_resp[TEST_FUNC_IO_BUFFER_SIZE];
-
-        sprintf(buf, "%s\n", request);
-        sprintf(buf_resp, "%s\n%s", request, response);
-        test_func_write(buf);
-        test_func_read_all();
-        TEST_ASSERT_EQUAL_STRING(
-                buf_resp,
-                g_write_buf
-        );
-}

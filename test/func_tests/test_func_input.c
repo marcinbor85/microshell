@@ -17,14 +17,14 @@ void tearDown(void)
 
 void test_input_empty(void)
 {
-        test_func_ask("",
+        TEST_FUNC_ASK("",
                 "[test /]$ "
         );
 }
 
 void test_input_error(void)
 {
-        test_func_ask("abcd",
+        TEST_FUNC_ASK("abcd",
                 "error: syntax error\r\n"
                 "[test /]$ "
         );

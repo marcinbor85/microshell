@@ -17,62 +17,62 @@ void tearDown(void)
 
 void test_cmd_cd_abs(void)
 {
-        test_func_ask("cd /data",
+        TEST_FUNC_ASK("cd /data",
                 "[test data]$ "
         );
 
-        test_func_ask("cd /dir/1",
+        TEST_FUNC_ASK("cd /dir/1",
                 "[test 1]$ "
         );
 
-        test_func_ask("cd /dir/2/21",
+        TEST_FUNC_ASK("cd /dir/2/21",
                 "[test 21]$ "
         );
 
-        test_func_ask("cd /dir/../data",
+        TEST_FUNC_ASK("cd /dir/../data",
                 "[test data]$ "
         );
 
-        test_func_ask("cd /dir/../../../../../dir/1/12/../11",
+        TEST_FUNC_ASK("cd /dir/../../../../../dir/1/12/../11",
                 "[test 11]$ "
         );
 }
 
 void test_cmd_cd_rel(void)
 {
-        test_func_ask("cd data",
+        TEST_FUNC_ASK("cd data",
                 "[test data]$ "
         );
 
-        test_func_ask("cd .",
+        TEST_FUNC_ASK("cd .",
                 "[test data]$ "
         );
 
-        test_func_ask("cd ./../dir/2/21",
+        TEST_FUNC_ASK("cd ./../dir/2/21",
                 "[test 21]$ "
         );
 
-        test_func_ask("cd ../../../data",
+        TEST_FUNC_ASK("cd ../../../data",
                 "[test data]$ "
         );
 
-        test_func_ask("cd ../../../../../data",
+        TEST_FUNC_ASK("cd ../../../../../data",
                 "[test data]$ "
         );
 
-        test_func_ask("cd ././../../dir/1/12/../11",
+        TEST_FUNC_ASK("cd ././../../dir/1/12/../11",
                 "[test 11]$ "
         );
 }
 
 void test_cmd_cd_error(void)
 {
-        test_func_ask("cd",
+        TEST_FUNC_ASK("cd",
                 "error: wrong arguments\r\n"
                 "[test /]$ "
         );
 
-        test_func_ask("cd 1 2",
+        TEST_FUNC_ASK("cd 1 2",
                 "error: wrong arguments\r\n"
                 "[test /]$ "
         );
@@ -80,7 +80,7 @@ void test_cmd_cd_error(void)
 
 void test_cmd_cd_help(void)
 {
-        test_func_ask("help cd",
+        TEST_FUNC_ASK("help cd",
                 "cd: cd [path]\r\n"
                 "\tChange current working directory.\r\n"
                 "[test /]$ "
@@ -89,12 +89,12 @@ void test_cmd_cd_help(void)
 
 void test_cmd_cd_not_exist(void)
 {
-        test_func_ask("cd test",
+        TEST_FUNC_ASK("cd test",
                 "error: directory not found\r\n"
                 "[test /]$ "
         );
 
-        test_func_ask("cd di",
+        TEST_FUNC_ASK("cd di",
                 "error: directory not found\r\n"
                 "[test /]$ "
         );

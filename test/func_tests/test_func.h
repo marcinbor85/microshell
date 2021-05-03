@@ -24,7 +24,21 @@ extern struct ush_object g_ush;
 void test_func_init(void);
 void test_func_write(const char *text);
 void test_func_read_all(void);
-void test_func_ask(const char *request, const char *response);
+
+#define TEST_FUNC_ASK(request, response) \
+{\
+    char buf[TEST_FUNC_IO_BUFFER_SIZE];\
+    char buf_resp[TEST_FUNC_IO_BUFFER_SIZE];\
+\
+    sprintf(buf, "%s\n", request);\
+    sprintf(buf_resp, "%s\n%s", request, response);\
+    test_func_write(buf);\
+    test_func_read_all();\
+    TEST_ASSERT_EQUAL_STRING(\
+            buf_resp,\
+            g_write_buf\
+    );\
+}
 
 #ifdef __cplusplus
 }

@@ -17,7 +17,7 @@ void tearDown(void)
 
 void test_cmd_help_self(void)
 {
-        test_func_ask("help",
+        TEST_FUNC_ASK("help",
                 "help            - list available commands\r\n"
                 "ls              - list directory content\r\n"
                 "cd              - change current directory\r\n"
@@ -31,7 +31,7 @@ void test_cmd_help_self(void)
 
 void test_cmd_help_help(void)
 {
-        test_func_ask("help help",
+        TEST_FUNC_ASK("help help",
                 "help: help [file]\r\n"
                 "\tShow help information for file or command.\r\n"
                 "      help\r\n"
@@ -42,12 +42,12 @@ void test_cmd_help_help(void)
 
 void test_cmd_help_error(void)
 {
-        test_func_ask("help help abc",
+        TEST_FUNC_ASK("help help abc",
                 "error: wrong arguments\r\n"
                 "[test /]$ "
         );
 
-        test_func_ask("help hel",
+        TEST_FUNC_ASK("help hel",
                 "error: file not found\r\n"
                 "[test /]$ "
         );

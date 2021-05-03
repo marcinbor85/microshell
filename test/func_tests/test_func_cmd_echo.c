@@ -17,17 +17,17 @@ void tearDown(void)
 
 void test_cmd_echo_shell(void)
 {
-        test_func_ask("echo",
+        TEST_FUNC_ASK("echo",
                 "\r\n"
                 "[test /]$ "
         );
 
-        test_func_ask("echo abc",
+        TEST_FUNC_ASK("echo abc",
                 "abc\r\n"
                 "[test /]$ "
         );
 
-        test_func_ask("echo \"a b c\"",
+        TEST_FUNC_ASK("echo \"a b c\"",
                 "a b c\r\n"
                 "[test /]$ "
         );
@@ -35,37 +35,37 @@ void test_cmd_echo_shell(void)
 
 void test_cmd_echo_error(void)
 {
-        test_func_ask("echo 1 2",
+        TEST_FUNC_ASK("echo 1 2",
                 "error: wrong arguments\r\n"
                 "[test /]$ "
         );
 
-        test_func_ask("echo 1 2 3",
+        TEST_FUNC_ASK("echo 1 2 3",
                 "error: wrong arguments\r\n"
                 "[test /]$ "
         );
 
-        test_func_ask("echo 1 > 2 3",
+        TEST_FUNC_ASK("echo 1 > 2 3",
                 "error: wrong arguments\r\n"
                 "[test /]$ "
         );
 
-        test_func_ask("echo 1 > qwerty",
+        TEST_FUNC_ASK("echo 1 > qwerty",
                 "error: file not found\r\n"
                 "[test /]$ "
         );
 
-        test_func_ask("echo \"a b c\" > qwerty",
+        TEST_FUNC_ASK("echo \"a b c\" > qwerty",
                 "error: file not found\r\n"
                 "[test /]$ "
         );
 
-        test_func_ask("echo abc > /test",
+        TEST_FUNC_ASK("echo abc > /test",
                 "error: file not writable\r\n"
                 "[test /]$ "
         );
 
-        test_func_ask("echo abc > test",
+        TEST_FUNC_ASK("echo abc > test",
                 "error: file not writable\r\n"
                 "[test /]$ "
         );
@@ -73,7 +73,7 @@ void test_cmd_echo_error(void)
 
 void test_cmd_echo_help(void)
 {
-        test_func_ask("help echo",
+        TEST_FUNC_ASK("help echo",
                 "echo: echo [string] > [file]\r\n"
                 "\tPrint string to file.\r\n"
                 "      echo [string] \r\n"
@@ -84,12 +84,12 @@ void test_cmd_echo_help(void)
 
 void test_cmd_echo_redirect(void)
 {
-        test_func_ask("echo abc > /data/null",
+        TEST_FUNC_ASK("echo abc > /data/null",
                 "[test /]$ "
         );
 
         TEST_ASSERT_EQUAL_UINT8_ARRAY("\0\0\0\0", g_file_buffer_buf, 4);
-        test_func_ask("echo abc > /data/buffer",
+        TEST_FUNC_ASK("echo abc > /data/buffer",
                 "[test /]$ "
         );
         TEST_ASSERT_EQUAL_UINT8_ARRAY("abc\0", g_file_buffer_buf, 4);
@@ -97,13 +97,13 @@ void test_cmd_echo_redirect(void)
         ush_node_set_current_dir(&g_ush, "/data");
 
         TEST_ASSERT_EQUAL_UINT8_ARRAY("abc\0", g_file_buffer_buf, 4);
-        test_func_ask("echo \"xy\" > buffer",
+        TEST_FUNC_ASK("echo \"xy\" > buffer",
                 "[test data]$ "
         );
         TEST_ASSERT_EQUAL_UINT8_ARRAY("xyc\0", g_file_buffer_buf, 4);
 
         TEST_ASSERT_EQUAL_UINT8_ARRAY("xyc\0\0\0\0", g_file_buffer_buf, 7);
-        test_func_ask("echo \"qwe rty\" > ./buffer",
+        TEST_FUNC_ASK("echo \"qwe rty\" > ./buffer",
                 "[test data]$ "
         );
         TEST_ASSERT_EQUAL_UINT8_ARRAY("qwe rty\0", g_file_buffer_buf, 7);
