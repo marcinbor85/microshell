@@ -114,6 +114,14 @@ void test_cmd_echo_redirect(void)
                 "[test data]$ "
         );
         TEST_ASSERT_EQUAL_UINT8_ARRAY("\0a cd\0\xAA", g_file_buffer_buf, 7);
+
+        TEST_FUNC_ASK("echo "
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                "q > buffer",
+                "[test data]$ "
+        );
+        TEST_ASSERT_EACH_EQUAL_UINT8('a', g_file_buffer_buf, 128);
 }
 
 int main(int argc, char *argv[])
