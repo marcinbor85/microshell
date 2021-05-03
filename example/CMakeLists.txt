@@ -1,19 +1,9 @@
 
 set( EXAMPLE_BASIC_TARGET example_basic )
 
-set( USH_TARGET ush )
-
-add_library(
-    ${USH_TARGET}
-    STATIC
-    ${USH_SRC_FILES}
-)
-
-target_include_directories(
-    ${USH_TARGET}
-    PUBLIC
-    ${PROJECT_SOURCE_DIR}/ush/inc
-    ${PROJECT_SOURCE_DIR}/ush/port/posix
+set ( USH_TARGET ush_example )
+build_ush ( ${USH_TARGET}
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_executable( ${EXAMPLE_BASIC_TARGET} basic.c )

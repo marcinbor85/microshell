@@ -43,3 +43,24 @@ set(
     ${CMAKE_CURRENT_SOURCE_DIR}/inc
     PARENT_SCOPE
 )
+
+function( build_ush TARGET )
+    add_library(
+        ${TARGET}
+        STATIC
+        ${USH_SRC_FILES}
+    )
+
+    target_include_directories(
+        ${TARGET}
+        PUBLIC
+        ${ARGV}
+        ${USH_INC_DIRS}
+    )
+
+    target_compile_options(
+        ${TARGET}
+        PRIVATE
+        -Werror -Wall -Wextra  -g -O0
+    )
+endfunction()
