@@ -23,6 +23,7 @@ extern size_t g_file_buffer_buf_size;
 extern struct ush_object g_ush;
 
 void test_func_init(void);
+void test_func_deinit(void);
 void test_func_write(const char *text);
 void test_func_read_all(void);
 
