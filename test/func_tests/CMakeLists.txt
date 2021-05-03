@@ -53,3 +53,8 @@ create_func_test( test_func_mount
     ${CMAKE_CURRENT_SOURCE_DIR}/test_func_mount.c
     ${CMAKE_CURRENT_SOURCE_DIR}/test_func.c
 )
+
+create_func_test( test_func_print
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_func_print.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_func.c
+)
