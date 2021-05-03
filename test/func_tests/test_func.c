@@ -68,6 +68,7 @@ static const struct ush_file_descriptor g_path_root_desc[] = {
                 .name = "test",
                 .description = "test file",
                 .exec = file_root_test_callback,
+                .help = "nothing special\r\n",
         },
 };
 

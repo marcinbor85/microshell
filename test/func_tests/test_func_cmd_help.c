@@ -51,6 +51,19 @@ void test_cmd_help_error(void)
                 "error: file not found\r\n"
                 "[test /]$ "
         );
+
+        TEST_FUNC_ASK("help /data/binary",
+                "error: no help available\r\n"
+                "[test /]$ "
+        );
+}
+
+void test_cmd_help_file(void)
+{
+        TEST_FUNC_ASK("help ./test",
+                "nothing special\r\n"
+                "[test /]$ "
+        );
 }
 
 int main(int argc, char *argv[])
@@ -63,6 +76,7 @@ int main(int argc, char *argv[])
         RUN_TEST(test_cmd_help_self);
         RUN_TEST(test_cmd_help_help);
         RUN_TEST(test_cmd_help_error);
+        RUN_TEST(test_cmd_help_file);
 
         return UNITY_END();
 }
