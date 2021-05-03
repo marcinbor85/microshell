@@ -13,3 +13,8 @@ create_func_test( test_func_input
     ${CMAKE_CURRENT_SOURCE_DIR}/test_func_input.c
     ${CMAKE_CURRENT_SOURCE_DIR}/test_func.c
 )
+
+create_func_test( test_func_autocomp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_func_autocomp.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_func.c
+)

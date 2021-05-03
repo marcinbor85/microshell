@@ -67,6 +67,16 @@ static const struct ush_file_descriptor g_path_data_desc[] = {
                 .exec = NULL,
         },
         {
+                .name = "text_file1",
+                .description = "text file 1",
+                .exec = NULL,
+        },
+        {
+                .name = "text_file2",
+                .description = "text file 2",
+                .exec = NULL,
+        },
+        {
                 .name = "binary",
                 .description = "binary file",
                 .exec = NULL,
