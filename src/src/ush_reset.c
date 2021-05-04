@@ -15,6 +15,7 @@ void ush_reset(struct ush_object *self)
 {
         USH_ASSERT(self != NULL);
         
+        self->current_node = self->root;
         ush_write_pointer(self, USH_NAME " " USH_VERSION "\r\n", USH_STATE_RESET_PROMPT);
 }
 

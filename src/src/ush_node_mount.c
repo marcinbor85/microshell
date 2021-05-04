@@ -32,6 +32,7 @@ ush_status_t ush_node_mount(struct ush_object *self, const char *path, struct us
         if (strcmp(path, "/") == 0) {
                 node->next = NULL;
                 self->root = node;
+                self->current_node = self->root;
                 node->parent = NULL;
                 return USH_STATUS_OK;
         }
