@@ -102,7 +102,7 @@ void test_ush_utils_path_upper(void)
 
 #define TEST_STRING_PROCESS_PTR(expected, input, func) { \
         strcpy(in, input); \
-        func(in, &out); \
+        out = func(in); \
         TEST_ASSERT_EQUAL_STRING(expected, out); \
 }
 

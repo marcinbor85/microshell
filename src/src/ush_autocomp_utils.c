@@ -153,7 +153,7 @@ bool ush_autocomp_process_file_prepare(struct ush_object *self, struct ush_file_
                         ret = true;
                 }
         } else if (self->process_stage == 2) {
-                ush_utils_path_last(self->process_node->path, &self->autocomp_name);
+                self->autocomp_name = ush_utils_path_last(self->process_node->path);
                 if (ush_utils_startswith(self->autocomp_name, self->autocomp_input) == false) {
                         self->process_node = self->process_node->next;
                         self->process_index = 0;

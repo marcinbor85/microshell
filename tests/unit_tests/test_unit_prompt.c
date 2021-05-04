@@ -33,11 +33,12 @@ void tearDown(void)
 
 }
 
-void ush_utils_path_last(const char *in_path, char* *out_path)
+char* ush_utils_path_last(const char *in_path)
 {
         TEST_ASSERT_EQUAL_STRING("test_node_1", in_path);
-        *out_path = "test_node_2";
+
         ush_utils_path_last_call_count++;
+        return "test_node_2";
 }
 
 void ush_write_pointer(struct ush_object *self, char *text, ush_state_t state)

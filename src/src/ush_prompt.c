@@ -28,8 +28,7 @@ bool ush_prompt_service(struct ush_object *self)
                 ush_write_pointer(self, " ", USH_STATE_PROMPT_PATH);
                 break;
         case USH_STATE_PROMPT_PATH: {
-                char *path = NULL;
-                ush_utils_path_last(self->current_node->path, &path);
+                char *path = ush_utils_path_last(self->current_node->path);
                 ush_write_pointer(self, (char*)path, USH_STATE_PROMPT_SUFFIX);
                 break;
         }

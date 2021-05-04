@@ -144,27 +144,28 @@ void ush_utils_path_upper(char *path)
         }
 }
 
-void ush_utils_path_last(const char *in_path, char* *out_path)
+char* ush_utils_path_last(const char *in_path)
 {
         USH_ASSERT(in_path != NULL);
-        USH_ASSERT(out_path != NULL);
 
         size_t len = strlen(in_path);
         size_t i = len;
 
-        *out_path = (char*)in_path;
+        char *out = (char*)in_path;
 
         if (len == 1) 
-                return;
+                return out;
 
         while (i > 0) {
                 i--;
                 if (in_path[i] != '/')
                         continue;
 
-                *out_path = (char*)&in_path[i + 1];
+                out = (char*)&in_path[i + 1];
                 break;
         }
+
+        return out;
 }
 
 char* ush_utils_get_last_arg(const char *input)
@@ -190,7 +191,7 @@ char* ush_utils_get_last_arg(const char *input)
         return (char*)input;
 }
 
-bool ush_utils_startswith(char *input, char *prefix)
+bool ush_utils_startswith(const char *input, char *prefix)
 {       
         return (strncmp(prefix, input, strlen(prefix)) == 0) ? true : false;
 }

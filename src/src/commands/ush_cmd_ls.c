@@ -74,8 +74,7 @@ bool ush_buildin_cmd_ls_service(struct ush_object *self, struct ush_file_descrip
                         self->process_index = 1;
                         break;
                 case 1: {
-                        char *name;
-                        ush_utils_path_last(self->process_child_node->path, &name);
+                        char *name = ush_utils_path_last(self->process_child_node->path);
                         ush_write_pointer(self, name, self->state);
                         self->process_index = 2;
                         break;
