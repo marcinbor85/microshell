@@ -25,7 +25,7 @@ void test_cmd_ls_current(void)
                 "[test /]$ "
         );
 
-        ush_node_set_current_dir(&g_ush, "/data");
+        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_set_current_dir(&g_ush, "/data"));
 
         TEST_FUNC_ASK("ls",
                 "d--- .\r\n"
@@ -39,7 +39,7 @@ void test_cmd_ls_current(void)
                 "[test data]$ "
         );
 
-        ush_node_set_current_dir(&g_ush, "/dir");
+        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_set_current_dir(&g_ush, "/dir"));
 
         TEST_FUNC_ASK("ls",
                 "d--- .\r\n"
@@ -69,7 +69,7 @@ void test_cmd_ls_abs(void)
                 "[test /]$ "
         );
 
-        ush_node_set_current_dir(&g_ush, "/dir/1/1/1");
+        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_set_current_dir(&g_ush, "/dir/1/11/111"));
 
         TEST_FUNC_ASK("ls /dir/1",
                 "d--- .\r\n"
@@ -77,7 +77,7 @@ void test_cmd_ls_abs(void)
                 "d--- 13/\r\n"
                 "d--- 12/\r\n"
                 "d--- 11/\r\n"
-                "[test /]$ "
+                "[test 111]$ "
         );
 
         TEST_FUNC_ASK("ls /dir/../",
@@ -85,7 +85,7 @@ void test_cmd_ls_abs(void)
                 "d--- dir/\r\n"
                 "d--- data/\r\n"
                 "---x test            - test file\r\n"
-                "[test /]$ "
+                "[test 111]$ "
         );
 }
 
@@ -132,7 +132,7 @@ void test_cmd_ls_rel(void)
                 "[test /]$ "
         );
 
-        ush_node_set_current_dir(&g_ush, "/dir/1/11/111");
+        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_set_current_dir(&g_ush, "/dir/1/11/111"));
 
         TEST_FUNC_ASK("ls ..",
                 "d--- .\r\n"
@@ -150,6 +150,13 @@ void test_cmd_ls_rel(void)
                 "-rw- null            \r\n"
                 "-rw- buffer          \r\n"
                 "-r-- binary          \r\n"
+                "[test 111]$ "
+        );
+
+        TEST_FUNC_ASK("ls",
+                "d--- .\r\n"
+                "d--- ..\r\n"
+                "---- joke            \r\n"
                 "[test 111]$ "
         );
 }

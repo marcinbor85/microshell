@@ -48,7 +48,7 @@ void test_cmd_cat_multi_binary(void)
         char buf_req[TEST_FUNC_IO_BUFFER_SIZE];
         uint8_t buf_resp[TEST_FUNC_IO_BUFFER_SIZE];
 
-        ush_node_set_current_dir(&g_ush, "/data");
+        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_set_current_dir(&g_ush, "/data"));
 
         strcpy(buf_req, "cat /data/buffer ./binary\n");
 
@@ -68,7 +68,7 @@ void test_cmd_cat_multi_binary(void)
         test_func_read_all();
         TEST_ASSERT_EQUAL_UINT8_ARRAY(buf_resp, g_write_buf, (32 + 4 + 256 + 13));
 
-        ush_node_set_current_dir(&g_ush, "/dir");
+        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_set_current_dir(&g_ush, "/dir"));
         
         strcpy(buf_req, "cat /data/binary ../data/buffer\n");
 

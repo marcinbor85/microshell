@@ -25,19 +25,19 @@ void test_cmd_pwd_root(void)
 
 void test_cmd_pwd_misc(void)
 {
-        ush_node_set_current_dir(&g_ush, "/data");
+        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_set_current_dir(&g_ush, "/data"));
         TEST_FUNC_ASK("pwd",
                 "/data\r\n"
                 "[test data]$ "
         );
 
-        ush_node_set_current_dir(&g_ush, "/dir/1/11/111");
+        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_set_current_dir(&g_ush, "/dir/1/11/111"));
         TEST_FUNC_ASK("pwd",
                 "/dir/1/11/111\r\n"
                 "[test 111]$ "
         );
 
-        ush_node_set_current_dir(&g_ush, "/dir/2/21");
+        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_set_current_dir(&g_ush, "/dir/2/21"));
         TEST_FUNC_ASK("pwd",
                 "/dir/2/21\r\n"
                 "[test 21]$ "

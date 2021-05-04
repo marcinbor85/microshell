@@ -95,7 +95,7 @@ void test_cmd_echo_redirect(void)
         );
         TEST_ASSERT_EQUAL_UINT8_ARRAY("abc\0", g_file_buffer_buf, 4);
 
-        ush_node_set_current_dir(&g_ush, "/data");
+        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_set_current_dir(&g_ush, "/data"));
 
         TEST_ASSERT_EQUAL_UINT8_ARRAY("abc\0", g_file_buffer_buf, 4);
         TEST_FUNC_ASK("echo \"xy\" > buffer",

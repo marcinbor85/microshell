@@ -123,7 +123,7 @@ void test_autocomp_args(void)
         tearDown();
         setUp();
         
-        ush_node_set_current_dir(&g_ush, "/dir");
+        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_set_current_dir(&g_ush, "/dir"));
 
         test_func_write("\t");
         test_func_read_all();
@@ -176,7 +176,7 @@ void test_autocomp_args(void)
 
 void test_autocomp_complex(void)
 {
-        ush_node_set_current_dir(&g_ush, "/data");
+        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_set_current_dir(&g_ush, "/data"));
 
         test_func_write("te\t");
         test_func_read_all();

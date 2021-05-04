@@ -22,7 +22,7 @@ void test_exec_ok(void)
                 "[test /]$ "
         );
 
-        ush_node_set_current_dir(&g_ush, "/dir/2/21");
+        TEST_ASSERT_EQUAL(USH_STATUS_OK, ush_node_set_current_dir(&g_ush, "/dir/2/21"));
 
         TEST_FUNC_ASK("../../../test",
                 "test_exec_callback\r\n"
