@@ -46,7 +46,6 @@ bool ush_parse_service(struct ush_object *self)
         case USH_STATE_PARSE_SEARCH_ARG:
         case USH_STATE_PARSE_QUOTE_ARG:
         case USH_STATE_PARSE_STANDARD_ARG:
-        case USH_STATE_PARSE_SEARCH_STOP:
                 ush_parse_char(self);
                 break;
         default:
