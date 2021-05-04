@@ -38,8 +38,8 @@ static const struct ush_io_interface g_ush_io_interface = {
 };
 
 struct ush_object g_ush;
-static char g_input_buffer[256];
-static char g_output_buffer[256];
+static char g_input_buffer[TEST_FUNC_WORK_BUFFER_SIZE];
+static char g_output_buffer[TEST_FUNC_WORK_BUFFER_SIZE];
 
 static char g_hostname_data[16] = {
         "test"
@@ -63,8 +63,8 @@ void file_root_test_callback(struct ush_object *self, struct ush_file_descriptor
         ush_print(self, "test_exec_callback");
 }
 
-static struct ush_node_object g_path_root;
-static const struct ush_file_descriptor g_path_root_desc[] = {
+struct ush_node_object g_path_root;
+const struct ush_file_descriptor g_path_root_desc[] = {
         {
                 .name = "test",
                 .description = "test file",
@@ -127,8 +127,14 @@ size_t file_binary_data_getter(struct ush_object *self, struct ush_file_descript
         return sizeof(buf);
 }
 
-static struct ush_node_object g_path_data;
-static const struct ush_file_descriptor g_path_data_desc[] = {
+const struct ush_file_descriptor g_path_dir111_desc[] = {
+        {
+                .name = "joke",
+        },
+};
+
+struct ush_node_object g_path_data;
+const struct ush_file_descriptor g_path_data_desc[] = {
         {
                 .name = "text",
                 .exec = NULL,
@@ -160,11 +166,11 @@ static const struct ush_file_descriptor g_path_data_desc[] = {
         },
 };
 
-static struct ush_node_object g_path_dir;
+struct ush_node_object g_path_dir;
 static struct ush_node_object g_path_dir1;
 static struct ush_node_object g_path_dir2;
-static struct ush_node_object g_path_dir11;
-static struct ush_node_object g_path_dir111;
+struct ush_node_object g_path_dir11;
+struct ush_node_object g_path_dir111;
 static struct ush_node_object g_path_dir12;
 static struct ush_node_object g_path_dir13;
 static struct ush_node_object g_path_dir21;
@@ -189,14 +195,12 @@ void test_func_init(void)
         ush_node_mount(&g_ush, "/dir/1", &g_path_dir1, NULL, 0);
         ush_node_mount(&g_ush, "/dir/2", &g_path_dir2, NULL, 0);
         ush_node_mount(&g_ush, "/dir/1/11", &g_path_dir11, NULL, 0);
-        ush_node_mount(&g_ush, "/dir/1/11/111", &g_path_dir111, NULL, 0);
+        ush_node_mount(&g_ush, "/dir/1/11/111", &g_path_dir111, g_path_dir111_desc, sizeof(g_path_dir111_desc) / sizeof(g_path_dir111_desc[0]));
         ush_node_mount(&g_ush, "/dir/1/12", &g_path_dir12, NULL, 0);
         ush_node_mount(&g_ush, "/dir/1/13", &g_path_dir13, NULL, 0);
         ush_node_mount(&g_ush, "/dir/2/21", &g_path_dir21, NULL, 0);
         ush_node_mount(&g_ush, "/dir/2/21/211", &g_path_dir211, NULL, 0);
         ush_node_mount(&g_ush, "/dir/2/21/212", &g_path_dir212, NULL, 0);
-        
-        ush_node_set_current_dir(&g_ush, "/");
 
         test_func_read_all();
         TEST_ASSERT_EQUAL_STRING(

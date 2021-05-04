@@ -12,7 +12,8 @@ extern "C" {
 
 #include "unity.h"
 
-#define TEST_FUNC_IO_BUFFER_SIZE    2048
+#define TEST_FUNC_IO_BUFFER_SIZE        2048
+#define TEST_FUNC_WORK_BUFFER_SIZE      256
 
 extern char g_write_buf[];
 extern char g_read_buf[];
@@ -21,6 +22,16 @@ extern uint8_t g_file_buffer_buf[];
 extern size_t g_file_buffer_buf_size;
 
 extern struct ush_object g_ush;
+
+extern const struct ush_file_descriptor g_path_root_desc[];
+extern const struct ush_file_descriptor g_path_data_desc[];
+extern const struct ush_file_descriptor g_path_dir111_desc[];
+
+extern struct ush_node_object g_path_root;
+extern struct ush_node_object g_path_data;
+extern struct ush_node_object g_path_dir;
+extern struct ush_node_object g_path_dir11;
+extern struct ush_node_object g_path_dir111;
 
 void test_func_init(void);
 void test_func_deinit(void);
