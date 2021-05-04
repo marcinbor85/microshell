@@ -228,36 +228,6 @@ void test_ush_parse_finish(void)
         TEST_ASSERT_EQUAL(1, file_cmd_execute_callback_call_count);
 }
 
-/*
-void ush_parse_finish(struct ush_object *self)
-{
-        USH_ASSERT(self != NULL);
-
-        char *argv[self->args_count];
-        int argc;
-
-        argc = ush_parse_get_args(self, argv);
-        if (argc == 0)
-                return;
-        
-        if (self->desc->exec != NULL)
-                self->desc->exec(self, NULL, argc, argv);
-
-        struct ush_file_descriptor const *file = ush_file_find_by_name(self, argv[0]);
-        if (file == NULL) {
-                ush_print_status(self, USH_STATUS_ERROR_COMMAND_SYNTAX_ERROR);
-                return;
-        }
-
-        if (file->exec == NULL) {
-                ush_print_status(self, USH_STATUS_ERROR_FILE_NOT_EXECUTABLE);
-                return;
-        }
-        
-        file->exec(self, file, argc, argv);
-}
-*/
-
 void test_ush_parse_service(void)
 {
        for (int i = 0; i < USH_STATE__TOTAL_NUM; i++) {
@@ -278,7 +248,6 @@ void test_ush_parse_service(void)
                 case USH_STATE_PARSE_SEARCH_ARG:
                 case USH_STATE_PARSE_QUOTE_ARG:
                 case USH_STATE_PARSE_STANDARD_ARG:
-                case USH_STATE_PARSE_SEARCH_STOP:
                         TEST_ASSERT_TRUE(ush_parse_service(&ush));
                         TEST_ASSERT_EQUAL(0, ush_parse_start_call_count);
                         TEST_ASSERT_EQUAL(1, ush_parse_char_call_count);
