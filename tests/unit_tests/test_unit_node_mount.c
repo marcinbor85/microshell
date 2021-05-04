@@ -120,6 +120,7 @@ void test_ush_node_mount_root(void)
         TEST_ASSERT_EQUAL(1, ush_node_get_by_path_call_count);
         TEST_ASSERT_EQUAL(1, ush_node_get_parent_by_path_call_count);
         TEST_ASSERT_EQUAL(&node1, ush.root);
+        TEST_ASSERT_EQUAL(&node1, ush.current_node);
         TEST_ASSERT_NULL(node1.parent);
         TEST_ASSERT_NULL(node1.next);
         TEST_ASSERT_NULL(node1.childs);

@@ -56,7 +56,9 @@ void test_ush_reset(void)
 {
         ush_write_pointer_text = USH_NAME " " USH_VERSION "\r\n";
         ush_write_pointer_state = USH_STATE_RESET_PROMPT;
+        ush.root = (struct ush_node_object*)1234;
         ush_reset(&ush);
+        TEST_ASSERT_EQUAL((struct ush_node_object*)1234, ush.current_node);
         TEST_ASSERT_EQUAL(USH_STATE_RESET, ush.state);
         TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
         TEST_ASSERT_EQUAL(0, ush_prompt_start_call_count);
