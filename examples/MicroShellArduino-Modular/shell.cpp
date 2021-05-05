@@ -50,7 +50,7 @@ static const struct ush_io_interface ush_iface = {
 };
 
 // working buffers allocations (size could be customized)
-#if defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_AVR_MEGA2560)
+#if defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_AVR_MEGA2560) || defined(ARDUINO_ARCH_STM32)
     #define BUF_IN_SIZE    128
     #define BUF_OUT_SIZE   128
     #define PATH_MAX_SIZE  128
