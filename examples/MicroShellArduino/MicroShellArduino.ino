@@ -50,13 +50,17 @@ static const struct ush_io_interface ush_iface = {
 
 // working buffers allocations (size could be customized)
 #if defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_AVR_MEGA2560)
-    #define BUF_SIZE    256
+    #define BUF_IN_SIZE    128
+    #define BUF_OUT_SIZE   128
+    #define PATH_MAX_SIZE  128
 #else
-    #define BUF_SIZE    32
+    #define BUF_IN_SIZE    16
+    #define BUF_OUT_SIZE   32
+    #define PATH_MAX_SIZE  16
 #endif
 
-static char ush_in_buf[BUF_SIZE];
-static char ush_out_buf[BUF_SIZE];
+static char ush_in_buf[BUF_IN_SIZE];
+static char ush_out_buf[BUF_OUT_SIZE];
 
 // microshell instance handler
 static struct ush_object ush;
@@ -68,7 +72,7 @@ static const struct ush_descriptor ush_desc = {
     .input_buffer_size = sizeof(ush_in_buf),    // working input buffer size
     .output_buffer = ush_out_buf,               // working output buffer
     .output_buffer_size = sizeof(ush_out_buf),  // working output buffer size
-    .path_max_length = BUF_SIZE,                // path maximum length (stack)
+    .path_max_length = PATH_MAX_SIZE,           // path maximum length (stack)
     .hostname = "arduino",                      // hostname (in prompt)
 };
 
@@ -114,8 +118,8 @@ size_t info_get_data_callback(struct ush_object *self, struct ush_file_descripto
     return strlen(info);
 }
 
-// state file get data callback
-size_t state_get_data_callback(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data)
+// led file get data callback
+size_t led_get_data_callback(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data)
 {
     // read real led state
     bool state = digitalRead(LED_BUILTIN);
@@ -128,26 +132,7 @@ size_t state_get_data_callback(struct ush_object *self, struct ush_file_descript
 // root directory files descriptor
 static const struct ush_file_descriptor root_files[] = {
     {
-        .name = "toggle",                       // toogle file name
-        .description = "toggle led",            // optional file description
-        .help = "usage: toggle\r\n",            // optional help manual
-        .exec = toggle_exec_callback,           // optional execute callback
-    },
-    {
-        .name = "set",
-        .description = "set led",
-        .help = "usage: set {0,1}\r\n",
-        .exec = set_exec_callback
-    },
-    {
-        .name = "state",
-        .description = "current led state",
-        .help = NULL,
-        .exec = NULL,
-        .get_data = state_get_data_callback,    // optional data getter callback
-    },
-    {
-        .name = "info.txt",
+        .name = "info.txt",                     // info.txt file name
         .description = NULL,
         .help = NULL,
         .exec = NULL,
@@ -155,20 +140,44 @@ static const struct ush_file_descriptor root_files[] = {
     }
 };
 
+// bin directory files descriptor
+static const struct ush_file_descriptor bin_files[] = {
+    {
+        .name = "toggle",                       // toogle file name
+        .description = "toggle led",            // optional file description
+        .help = "usage: toggle\r\n",            // optional help manual
+        .exec = toggle_exec_callback,           // optional execute callback
+    },
+    {
+        .name = "set",                          // set file name
+        .description = "set led",
+        .help = "usage: set {0,1}\r\n",
+        .exec = set_exec_callback
+    },
+};
+
+// dev directory files descriptor
+static const struct ush_file_descriptor dev_files[] = {
+    {
+        .name = "led",
+        .description = NULL,
+        .help = NULL,
+        .exec = NULL,
+        .get_data = led_get_data_callback,    // optional data getter callback
+    }
+};
+
 // root directory handler
 static struct ush_node_object root;
-
-// customized serial port speed
-#if defined(ARDUINO_ARCH_ESP32)
-    #define SERIAL_BAUDRATE    115200UL
-#else
-    #define SERIAL_BAUDRATE    9600UL
-#endif
+// dev directory handler
+static struct ush_node_object dev;
+// bin directory handler
+static struct ush_node_object bin;
 
 void setup()
 {
     // initialize I/O interface
-    Serial.begin(SERIAL_BAUDRATE);
+    Serial.begin(115200UL);
 
     // initialize other hardware
     pinMode(LED_BUILTIN, OUTPUT);
@@ -178,6 +187,10 @@ void setup()
 
     // mount root directory
     ush_node_mount(&ush, "/", &root, root_files, sizeof(root_files) / sizeof(root_files[0]));
+    // mount dev directory
+    ush_node_mount(&ush, "/dev", &dev, dev_files, sizeof(dev_files) / sizeof(dev_files[0]));
+    // mount bin directory
+    ush_node_mount(&ush, "/bin", &bin, bin_files, sizeof(bin_files) / sizeof(bin_files[0]));
 }
 
 void loop()
