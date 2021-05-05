@@ -18,13 +18,13 @@ void tearDown(void)
 void test_cmd_help_self(void)
 {
         TEST_FUNC_ASK("help",
-                "help            - list available commands\r\n"
-                "ls              - list directory content\r\n"
-                "cd              - change current directory\r\n"
-                "pwd             - print current directory\r\n"
-                "cat             - print files content\r\n"
-                "xxd             - dump file hex content\r\n"
-                "echo            - print string to file\r\n"
+                "help             - list available commands\r\n"
+                "ls               - list directory content\r\n"
+                "cd               - change current directory\r\n"
+                "pwd              - print current directory\r\n"
+                "cat              - print files content\r\n"
+                "xxd              - dump file hex content\r\n"
+                "echo             - print string to file\r\n"
                 "[test /]$ "
         );
 }

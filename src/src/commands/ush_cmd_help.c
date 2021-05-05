@@ -63,24 +63,25 @@ bool ush_buildin_cmd_help_service(struct ush_object *self, struct ush_file_descr
                 struct ush_file_descriptor const *f = &self->process_node->file_list[self->process_index_item];
                 switch (self->process_index) {
                 case 0:        
-                        sprintf(self->desc->output_buffer, "%-" USH_STRING(USH_CONFIG_FILENAME_ALIGN_SPACE) "s", (char*)f->name);
+                        if (f->description != NULL) {
+                                sprintf(self->desc->output_buffer, "%-" USH_STRING(USH_CONFIG_FILENAME_ALIGN_SPACE) "s " USH_SHELL_FONT_COLOR_YELLOW "- " , (char*)f->name);
+                                self->process_index = 1;
+                        } else {
+                                sprintf(self->desc->output_buffer, "%s", (char*)f->name);
+                                self->process_index = 2;
+                        }
                         ush_write_pointer(self, self->desc->output_buffer, self->state);
-                        self->process_index = 1;
                         break;
                 case 1:
-                        if (f->description != NULL) {
-                                ush_write_pointer(self, "- ", self->state);
-                                self->process_index = 2;
-                                break;
-                        }
-                        self->process_index = 3;
+                        ush_write_pointer(self, (char*)f->description, self->state);
+                        self->process_index = 2;
                         break;
                 case 2:
-                        ush_write_pointer(self, (char*)f->description, self->state);
-                        self->process_index = 3;
-                        break;
-                case 3:
-                        ush_write_pointer(self, "\r\n", self->state);
+                        if (f->description != NULL) {
+                                ush_write_pointer(self, USH_SHELL_FONT_STYLE_RESET "\r\n", self->state);
+                        } else {
+                                ush_write_pointer(self, "\r\n", self->state);
+                        }
                         self->process_index = 0;
                         self->process_index_item++;
                         break;
