@@ -49,8 +49,14 @@ static const struct ush_io_interface ush_iface = {
 };
 
 // working buffers allocations (size could be customized)
-static char ush_in_buf[32];
-static char ush_out_buf[32];
+#if defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_AVR_MEGA2560)
+    #define BUF_SIZE    256
+#else
+    #define BUF_SIZE    32
+#endif
+
+static char ush_in_buf[BUF_SIZE];
+static char ush_out_buf[BUF_SIZE];
 
 // microshell instance handler
 static struct ush_object ush;
@@ -62,6 +68,7 @@ static const struct ush_descriptor ush_desc = {
     .input_buffer_size = sizeof(ush_in_buf),    // working input buffer size
     .output_buffer = ush_out_buf,               // working output buffer
     .output_buffer_size = sizeof(ush_out_buf),  // working output buffer size
+    .path_max_length = BUF_SIZE,                // path maximum length (stack)
     .hostname = "arduino",                      // hostname (in prompt)
 };
 
