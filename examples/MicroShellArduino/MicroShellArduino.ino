@@ -36,7 +36,7 @@ static int ush_read(struct ush_object *self, char *ch)
 }
 
 // non-blocking write interface
-int ush_write(struct ush_object *self, char ch)
+static int ush_write(struct ush_object *self, char ch)
 {
     // should be implemented as a FIFO
     return (Serial.write(ch) == 1);
