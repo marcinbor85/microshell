@@ -27,13 +27,18 @@ SOFTWARE.
 // non-blocking read interface
 static int ush_read(struct ush_object *self, char *ch)
 {
-    *ch = Serial.read();
-    return (*ch >= 0);
+    // should be implemented as a FIFO
+    if (Serial.available() > 0) {
+        *ch = Serial.read();
+        return 1;
+    }
+    return 0;
 }
 
 // non-blocking write interface
 int ush_write(struct ush_object *self, char ch)
 {
+    // should be implemented as a FIFO
     return (Serial.write(ch) == 1);
 }
 
@@ -43,7 +48,7 @@ static const struct ush_io_interface ush_iface = {
     .write = ush_write,
 };
 
-// working buffers allocations
+// working buffers allocations (size could be customized)
 static char ush_in_buf[32];
 static char ush_out_buf[32];
 
@@ -97,7 +102,7 @@ size_t info_get_data_callback(struct ush_object *self, struct ush_file_descripto
     static const char *info = "Use MicroShell and make fun!\r\n";
 
     // return pointer to data
-    *data = info;
+    *data = (uint8_t*)info;
     // return data size
     return strlen(info);
 }
