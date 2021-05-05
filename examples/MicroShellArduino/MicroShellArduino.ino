@@ -140,10 +140,17 @@ static const struct ush_file_descriptor root_files[] = {
 // root directory handler
 static struct ush_node_object root;
 
+// customized serial port speed
+#if defined(ARDUINO_ARCH_ESP32)
+    #define SERIAL_BAUDRATE    115200UL
+#else
+    #define SERIAL_BAUDRATE    9600UL
+#endif
+
 void setup()
 {
     // initialize I/O interface
-    Serial.begin(9600);
+    Serial.begin(SERIAL_BAUDRATE);
 
     // initialize other hardware
     pinMode(LED_BUILTIN, OUTPUT);
