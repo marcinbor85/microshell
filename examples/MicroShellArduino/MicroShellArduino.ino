@@ -114,26 +114,44 @@ size_t info_get_data_callback(struct ush_object *self, struct ush_file_descripto
     return strlen(info);
 }
 
+// state file get data callback
+size_t state_get_data_callback(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data)
+{
+    // read real led state
+    bool state = digitalRead(LED_BUILTIN);
+    // make data and return pointer
+    *data = (state) ? "1\r\n" : "0\r\n";
+    // return data size
+    return strlen(*data);
+}
+
 // root directory files descriptor
 static const struct ush_file_descriptor root_files[] = {
     {
-        .name = "toggle",                   // toogle file name
-        .description = "toggle led",        // optional file description
-        .help = "usage: toggle\r\n",        // optional help manual
-        .exec = toggle_exec_callback,       // optional execute callback
+        .name = "toggle",                       // toogle file name
+        .description = "toggle led",            // optional file description
+        .help = "usage: toggle\r\n",            // optional help manual
+        .exec = toggle_exec_callback,           // optional execute callback
     },
     {
-        .name = "set",                      // set file name
-        .description = "set led",           // optional file description
-        .help = "usage: set {0,1}\r\n",     // optional help manual
-        .exec = set_exec_callback,          // optional execute callback
+        .name = "set",
+        .description = "set led",
+        .help = "usage: set {0,1}\r\n",
+        .exec = set_exec_callback
     },
     {
-        .name = "info.txt",                 // info file name
+        .name = "state",
+        .description = "current led state",
+        .help = NULL,
+        .exec = NULL,
+        .get_data = state_get_data_callback,    // optional data getter callback
+    },
+    {
+        .name = "info.txt",
         .description = NULL,
         .help = NULL,
         .exec = NULL,
-        .get_data = info_get_data_callback, // optional data getter callback
+        .get_data = info_get_data_callback,
     }
 };
 

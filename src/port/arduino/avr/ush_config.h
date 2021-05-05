@@ -19,12 +19,12 @@ extern "C" {
 #elif defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO)
 
 #define USH_CONFIG_ENABLE_COMMAND_CAT                           1
-#define USH_CONFIG_ENABLE_COMMAND_CD                            0
-#define USH_CONFIG_ENABLE_COMMAND_ECHO                          0
+#define USH_CONFIG_ENABLE_COMMAND_CD                            1
+#define USH_CONFIG_ENABLE_COMMAND_ECHO                          1
 #define USH_CONFIG_ENABLE_COMMAND_HELP                          1
 #define USH_CONFIG_ENABLE_COMMAND_LS                            1
-#define USH_CONFIG_ENABLE_COMMAND_PWD                           0
-#define USH_CONFIG_ENABLE_COMMAND_XXD                           0
+#define USH_CONFIG_ENABLE_COMMAND_PWD                           1
+#define USH_CONFIG_ENABLE_COMMAND_XXD                           1
 
 #else
 
