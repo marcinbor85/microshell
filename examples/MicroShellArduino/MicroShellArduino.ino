@@ -121,10 +121,42 @@ size_t info_get_data_callback(struct ush_object *self, struct ush_file_descripto
 // led file get data callback
 size_t led_get_data_callback(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data)
 {
-    // read real led state
+    // read current led state
     bool state = digitalRead(LED_BUILTIN);
-    // make data and return pointer
-    *data = (state) ? "1\r\n" : "0\r\n";
+    // return pointer to data
+    *data = (state) ? "1" : "0";
+    // return data size
+    return strlen(*data);
+}
+
+// led file set data callback
+void led_set_data_callback(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t *data, size_t size)
+{
+    // data size validation
+    if (size < 1)
+        return;
+
+    // arguments validation
+    if (data[0] == '1') {
+        // turn led on
+        digitalWrite(LED_BUILTIN, HIGH);
+    } else if (data[0] == '0') {
+        // turn led off
+        digitalWrite(LED_BUILTIN, LOW);
+    }
+}
+
+// time file get data callback
+size_t time_get_data_callback(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data)
+{
+    static char time_buf[16];
+    // read current time
+    long current_time = millis();
+    // convert
+    snprintf(time_buf, sizeof(time_buf), "%ld\r\n", current_time);
+    time_buf[sizeof(time_buf) - 1] = 0;
+    // return pointer to data
+    *data = time_buf;
     // return data size
     return strlen(*data);
 }
@@ -163,8 +195,16 @@ static const struct ush_file_descriptor dev_files[] = {
         .description = NULL,
         .help = NULL,
         .exec = NULL,
-        .get_data = led_get_data_callback,    // optional data getter callback
-    }
+        .get_data = led_get_data_callback,      // optional data getter callback
+        .set_data = led_set_data_callback,      // optional data setter callback
+    },
+    {
+        .name = "time",
+        .description = NULL,
+        .help = NULL,
+        .exec = NULL,
+        .get_data = time_get_data_callback,     // optional data getter callback
+    },
 };
 
 // root directory handler
