@@ -137,9 +137,9 @@ size_t led_get_data_callback(struct ush_object *self, struct ush_file_descriptor
     // read current led state
     bool state = digitalRead(LED_BUILTIN);
     // return pointer to data
-    *data = (state) ? "1\r\n" : "0\r\n";
+    *data = (uint8_t*)((state) ? "1\r\n" : "0\r\n");
     // return data size
-    return strlen(*data);
+    return strlen((char*)(*data));
 }
 
 // led file set data callback
@@ -169,9 +169,9 @@ size_t time_get_data_callback(struct ush_object *self, struct ush_file_descripto
     snprintf(time_buf, sizeof(time_buf), "%ld\r\n", current_time);
     time_buf[sizeof(time_buf) - 1] = 0;
     // return pointer to data
-    *data = time_buf;
+    *data = (uint8_t*)time_buf;
     // return data size
-    return strlen(*data);
+    return strlen((char*)(*data));
 }
 
 // root directory files descriptor
@@ -254,7 +254,7 @@ void setup()
     // add custom commands
     ush_commands_add(&ush, &cmd, cmd_files, sizeof(cmd_files) / sizeof(cmd_files[0]));
 
-    // mount root directory
+    // mount root directory (root must be first)
     ush_node_mount(&ush, "/", &root, root_files, sizeof(root_files) / sizeof(root_files[0]));
     // mount dev directory
     ush_node_mount(&ush, "/dev", &dev, dev_files, sizeof(dev_files) / sizeof(dev_files[0]));
