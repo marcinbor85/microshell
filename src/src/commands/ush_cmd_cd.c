@@ -1,4 +1,4 @@
-#include "ush.h"
+#include "inc/ush.h"
 
 #if USH_CONFIG_ENABLE_FEATURE_COMMANDS == 1
 

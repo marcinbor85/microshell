@@ -32,8 +32,10 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-#include "ush_config.h"
+#include "ush_preconfig.h"
 
 /* Stringinize macros. */
 #define USH_STRING(s)   USH_STRING_(s)
@@ -166,9 +168,9 @@ struct ush_file_descriptor {
         char const *help;                               /**< Pointer to file help manual (optional) */
 
         ush_file_execute_callback exec;                 /**< File execute callback (optional) */
-        ush_file_process_service process;               /**< File process service callback (optional) */
         ush_file_data_getter get_data;                  /**< File data getter callback (optional) */
         ush_file_data_setter set_data;                  /**< File data setter callback (optional) */
+        ush_file_process_service process;               /**< File process service callback (optional) */
 };
 
 /**

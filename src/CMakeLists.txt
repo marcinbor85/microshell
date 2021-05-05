@@ -40,7 +40,7 @@ set(
 
 set(
     USH_INC_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}
     PARENT_SCOPE
 )
 

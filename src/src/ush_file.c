@@ -1,6 +1,6 @@
-#include "ush_file.h"
-#include "ush_utils.h"
-#include "ush_node.h"
+#include "inc/ush_file.h"
+#include "inc/ush_utils.h"
+#include "inc/ush_node.h"
 
 #include <string.h>
 

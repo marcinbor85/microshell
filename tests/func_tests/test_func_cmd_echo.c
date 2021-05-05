@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "ush.h"
+#include <microshell.h>
 #include "test_func.h"
 
 void setUp(void)

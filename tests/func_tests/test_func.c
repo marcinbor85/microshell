@@ -1,5 +1,5 @@
-#include "ush.h"
-#include "ush_const.h"
+#include <microshell.h>
+
 #include "test_func.h"
 
 char g_read_buf[TEST_FUNC_IO_BUFFER_SIZE];

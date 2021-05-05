@@ -30,7 +30,8 @@ extern "C" {
 #endif
 
 #include "ush_types.h"
-#include "ush_config.h"
+#include "ush_const.h"
+#include "ush_preconfig.h"
 #include "ush_shell.h"
 
 #include "ush_file.h"

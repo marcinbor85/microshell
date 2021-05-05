@@ -1,5 +1,5 @@
-#include "ush.h"
-#include "ush_internal.h"
+#include "inc/ush.h"
+#include "inc/ush_internal.h"
 
 #if USH_CONFIG_ENABLE_FEATURE_COMMANDS == 1
 

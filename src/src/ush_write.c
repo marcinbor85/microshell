@@ -1,5 +1,5 @@
-#include "ush_internal.h"
-#include "ush_config.h"
+#include "inc/ush_internal.h"
+#include "inc/ush_preconfig.h"
 
 #include <string.h>
 

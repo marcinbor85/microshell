@@ -3,7 +3,7 @@
 
 #include <unity.h>
 
-#include "ush.h"
+#include "inc/ush.h"
 
 int g_assert_call_count;
 

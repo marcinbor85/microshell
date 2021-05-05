@@ -1,7 +1,7 @@
-#include "ush_internal.h"
-#include "ush_config.h"
-#include "ush_utils.h"
-#include "ush_node.h"
+#include "inc/ush_internal.h"
+#include "inc/ush_preconfig.h"
+#include "inc/ush_utils.h"
+#include "inc/ush_node.h"
 
 #include <string.h>
 

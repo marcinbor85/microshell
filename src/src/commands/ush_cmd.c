@@ -1,5 +1,5 @@
-#include "ush_types.h"
-#include "ush_config.h"
+#include "inc/ush_types.h"
+#include "inc/ush_preconfig.h"
 
 #if USH_CONFIG_ENABLE_FEATURE_COMMANDS == 1
 

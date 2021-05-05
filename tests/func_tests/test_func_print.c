@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "ush.h"
-#include "ush_utils.h"
+#include <microshell.h>
+
 #include "test_func.h"
 
 void setUp(void)

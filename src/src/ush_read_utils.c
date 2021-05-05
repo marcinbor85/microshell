@@ -1,4 +1,4 @@
-#include "ush_internal.h"
+#include "inc/ush_internal.h"
 
 void ush_read_echo_service(struct ush_object *self, char ch)
 {

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "ush.h"
+#include <microshell.h>
 #include "test_func.h"
 
 static struct ush_node_object node = {0};

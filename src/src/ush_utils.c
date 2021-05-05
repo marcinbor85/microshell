@@ -1,6 +1,6 @@
-#include "ush_utils.h"
-#include "ush_config.h"
-#include "ush_types.h"
+#include "inc/ush_utils.h"
+#include "inc/ush_preconfig.h"
+#include "inc/ush_types.h"
 
 #include <string.h>
 

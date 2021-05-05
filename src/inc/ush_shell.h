@@ -29,7 +29,7 @@ SOFTWARE.
 extern "C" {
 #endif
 
-#include "ush_config.h"
+#include "ush_preconfig.h"
 
 /* Useful VT100 terminal escape sequences. */
 

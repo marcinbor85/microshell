@@ -1,6 +1,6 @@
-#include "ush_commands.h"
-#include "ush_types.h"
-#include "ush_config.h"
+#include "inc/ush_commands.h"
+#include "inc/ush_types.h"
+#include "inc/ush_preconfig.h"
 
 ush_status_t ush_commands_add(struct ush_object *self, struct ush_node_object *node, const struct ush_file_descriptor *file_list, size_t file_list_size)
 {

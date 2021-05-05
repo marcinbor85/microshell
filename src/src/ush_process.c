@@ -1,6 +1,6 @@
-#include "ush_internal.h"
-#include "ush_types.h"
-#include "ush_config.h"
+#include "inc/ush_internal.h"
+#include "inc/ush_types.h"
+#include "inc/ush_preconfig.h"
 
 void ush_process_start(struct ush_object *self, const struct ush_file_descriptor *file)
 {

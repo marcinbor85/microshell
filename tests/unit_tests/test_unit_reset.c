@@ -3,9 +3,9 @@
 
 #include <unity.h>
 
-#include "ush_internal.h"
-#include "ush_const.h"
-#include "ush.h"
+#include "inc/ush_internal.h"
+#include "inc/ush_const.h"
+#include "inc/ush.h"
 
 int g_assert_call_count;
 

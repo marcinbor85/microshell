@@ -1,5 +1,5 @@
-#include "ush_internal.h"
-#include "ush_config.h"
+#include "inc/ush_internal.h"
+#include "inc/ush_preconfig.h"
 
 void ush_write_pointer_bin(struct ush_object *self, uint8_t *data, size_t data_size, ush_state_t write_next_state)
 {
