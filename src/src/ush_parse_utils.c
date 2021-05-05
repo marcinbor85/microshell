@@ -55,6 +55,8 @@ void ush_parse_char_standard(struct ush_object *self, char ch)
                 break;
         case USH_STATE_PARSE_QUOTE_ARG:
                 if (self->escape_flag != false) {
+                        if (ch == 'x')
+                                self->desc->input_buffer[self->out_pos++] = '\\';
                         self->desc->input_buffer[self->out_pos++] = ch;
                         self->escape_flag = false;
                         break;
@@ -74,6 +76,8 @@ void ush_parse_char_standard(struct ush_object *self, char ch)
                 break;
         case USH_STATE_PARSE_STANDARD_ARG:
                 if (self->escape_flag != false) {
+                        if (ch == 'x')
+                                self->desc->input_buffer[self->out_pos++] = '\\';
                         self->desc->input_buffer[self->out_pos++] = ch;
                         self->escape_flag = false;
                         break;

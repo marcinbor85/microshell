@@ -202,11 +202,23 @@ void test_ush_parse_char_standard_quote(void)
                 input_buffer[1] = in_char;
                 ush_parse_char_standard(&ush, ch);
 
-                TEST_ASSERT_EQUAL(USH_STATE_PARSE_QUOTE_ARG, ush.state);
-                TEST_ASSERT_EQUAL(1, ush.args_count);
-                TEST_ASSERT_FALSE(ush.escape_flag);
-                TEST_ASSERT_EQUAL(2, ush.out_pos);
-                TEST_ASSERT_EQUAL(ch, input_buffer[1]);
+                switch (ch) {
+                case 'x':
+                        TEST_ASSERT_EQUAL(USH_STATE_PARSE_QUOTE_ARG, ush.state);
+                        TEST_ASSERT_EQUAL(1, ush.args_count);
+                        TEST_ASSERT_FALSE(ush.escape_flag);
+                        TEST_ASSERT_EQUAL(3, ush.out_pos);
+                        TEST_ASSERT_EQUAL('\\', input_buffer[1]);
+                        TEST_ASSERT_EQUAL(ch, input_buffer[2]);
+                        break;
+                default:
+                        TEST_ASSERT_EQUAL(USH_STATE_PARSE_QUOTE_ARG, ush.state);
+                        TEST_ASSERT_EQUAL(1, ush.args_count);
+                        TEST_ASSERT_FALSE(ush.escape_flag);
+                        TEST_ASSERT_EQUAL(2, ush.out_pos);
+                        TEST_ASSERT_EQUAL(ch, input_buffer[1]);
+                        break;
+                }
         }
 }
 
@@ -263,11 +275,23 @@ void test_ush_parse_char_standard_standard(void)
                 input_buffer[1] = in_char;
                 ush_parse_char_standard(&ush, ch);
 
-                TEST_ASSERT_EQUAL(USH_STATE_PARSE_STANDARD_ARG, ush.state);
-                TEST_ASSERT_EQUAL(1, ush.args_count);
-                TEST_ASSERT_FALSE(ush.escape_flag);
-                TEST_ASSERT_EQUAL(2, ush.out_pos);
-                TEST_ASSERT_EQUAL(ch, input_buffer[1]);
+                switch (ch) {
+                case 'x':
+                        TEST_ASSERT_EQUAL(USH_STATE_PARSE_STANDARD_ARG, ush.state);
+                        TEST_ASSERT_EQUAL(1, ush.args_count);
+                        TEST_ASSERT_FALSE(ush.escape_flag);
+                        TEST_ASSERT_EQUAL(3, ush.out_pos);
+                        TEST_ASSERT_EQUAL('\\', input_buffer[1]);
+                        TEST_ASSERT_EQUAL(ch, input_buffer[2]);
+                        break;
+                default:
+                        TEST_ASSERT_EQUAL(USH_STATE_PARSE_STANDARD_ARG, ush.state);
+                        TEST_ASSERT_EQUAL(1, ush.args_count);
+                        TEST_ASSERT_FALSE(ush.escape_flag);
+                        TEST_ASSERT_EQUAL(2, ush.out_pos);
+                        TEST_ASSERT_EQUAL(ch, input_buffer[1]);
+                        break;
+                }                
         }
 }
 

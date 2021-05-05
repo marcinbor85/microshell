@@ -78,7 +78,7 @@ void test_cmd_echo_help(void)
                 "\tPrint string to file.\r\n"
                 "      echo [string] \r\n"
                 "\tPrint string to console.\r\n"
-                "      [string] can be ascii-hex encoded with \\\\xNN format.\r\n"
+                "      [string] can be ascii-hex encoded with \\xNN format.\r\n"
                 "[test /]$ "
         );
 }
@@ -110,7 +110,7 @@ void test_cmd_echo_redirect(void)
         TEST_ASSERT_EQUAL_UINT8_ARRAY("qwe rty\0", g_file_buffer_buf, 7);
 
         TEST_ASSERT_EQUAL_UINT8_ARRAY("qwe rty\0", g_file_buffer_buf, 7);
-        TEST_FUNC_ASK("echo \"\\\\x00a cd\\\\x00\\\\xAA\" > ./buffer",
+        TEST_FUNC_ASK("echo \"\\x00a cd\\x00\\xAA\" > ./buffer",
                 "[test data]$ "
         );
         TEST_ASSERT_EQUAL_UINT8_ARRAY("\0a cd\0\xAA", g_file_buffer_buf, 7);
