@@ -20,6 +20,7 @@ void setUp(void)
         ush_current_node.path = "test_node_1";
 
         memset((uint8_t*)&ush, 0, sizeof(ush));
+        ush_desc.path_max_length = 256;
         ush.desc = &ush_desc;
         ush.current_node = &ush_current_node;
         ush.prompt_next_state = USH_STATE__TOTAL_NUM;

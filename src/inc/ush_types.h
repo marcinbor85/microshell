@@ -244,6 +244,7 @@ struct ush_descriptor {
         size_t input_buffer_size;                       /**< Input working buffer size */
         char *output_buffer;                            /**< Pointer to output working buffer (used to prepare and printing data) */
         size_t output_buffer_size;                      /**< Output working buffer size */
+        size_t path_max_length;                         /**< Path maximum length (stack allocated) */
         char *hostname;                                 /**< Pointer to host name (used in prompt) */
 
         ush_file_execute_callback exec;                 /**< General command execute callback (optional) */

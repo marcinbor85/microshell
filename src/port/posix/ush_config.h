@@ -9,7 +9,6 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 
-#define USH_CONFIG_PATH_MAX_LENGTH                              256
 #define USH_CONFIG_FILENAME_ALIGN_SPACE                         16
 #define USH_CONFIG_CMD_XXD_COLUMNS                              8
 

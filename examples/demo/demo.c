@@ -95,6 +95,7 @@ static const struct ush_descriptor g_ush_desc = {
         .input_buffer_size = sizeof(g_input_buffer),
         .output_buffer = g_output_buffer,
         .output_buffer_size = sizeof(g_output_buffer),
+        .path_max_length = 256,
         .hostname = g_hostname_data,
         // .exec = exec,
 };

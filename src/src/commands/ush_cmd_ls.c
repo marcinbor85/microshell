@@ -16,7 +16,7 @@ void ush_buildin_cmd_ls_callback(struct ush_object *self, struct ush_file_descri
                 self->process_node = self->current_node;
                 break;
         case 2: {
-                char abs_path[USH_CONFIG_PATH_MAX_LENGTH];
+                char abs_path[self->desc->path_max_length];
                 ush_node_get_absolute_path(self, argv[1], abs_path);
 
                 self->process_node = ush_node_get_by_path(self, abs_path);

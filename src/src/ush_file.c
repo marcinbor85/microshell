@@ -6,8 +6,8 @@
 
 struct ush_file_descriptor const* ush_file_find_by_name(struct ush_object *self, const char *name)
 {
-        char file_path[USH_CONFIG_PATH_MAX_LENGTH];
-        char abs_path[USH_CONFIG_PATH_MAX_LENGTH];
+        char file_path[self->desc->path_max_length];
+        char abs_path[self->desc->path_max_length];
 
         struct ush_node_object *curr;
         struct ush_file_descriptor const *file;

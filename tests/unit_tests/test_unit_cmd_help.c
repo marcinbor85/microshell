@@ -36,6 +36,8 @@ void setUp(void)
 {
         memset((uint8_t*)&ush, 0, sizeof(ush));
         ush_desc.output_buffer = output_buf;
+        ush_desc.output_buffer_size = sizeof(output_buf);
+        ush_desc.path_max_length = 256;
 
         ush.desc = &ush_desc;
 

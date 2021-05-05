@@ -20,6 +20,7 @@ void setUp(void)
 {
         ush_io_iface.write = write_callback;
         ush_desc.io = &ush_io_iface;
+        ush_desc.path_max_length = 256;
 
         memset((uint8_t*)&ush, 0, sizeof(ush));
 

@@ -11,7 +11,6 @@ extern "C" {
 
 #include <assert.h>
 
-#define USH_CONFIG_PATH_MAX_LENGTH                              128
 #define USH_CONFIG_FILENAME_ALIGN_SPACE                         16
 #define USH_CONFIG_CMD_XXD_COLUMNS                              8
 

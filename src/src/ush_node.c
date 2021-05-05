@@ -8,7 +8,7 @@ struct ush_node_object* ush_node_get_by_path(struct ush_object *self, const char
         USH_ASSERT(self != NULL);
         USH_ASSERT(path != NULL);
 
-        char level_path[USH_CONFIG_PATH_MAX_LENGTH];
+        char level_path[self->desc->path_max_length];
         
         size_t levels = ush_utils_get_path_levels_count(path);
 
@@ -45,7 +45,7 @@ struct ush_node_object* ush_node_get_by_path(struct ush_object *self, const char
 
 void ush_node_get_absolute_path(struct ush_object *self, const char *in_path, char *out_path)
 {
-        char abs_path[USH_CONFIG_PATH_MAX_LENGTH];
+        char abs_path[self->desc->path_max_length];
 
         USH_ASSERT(self != NULL);
         USH_ASSERT(in_path != NULL);

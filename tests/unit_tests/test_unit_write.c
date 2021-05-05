@@ -22,7 +22,7 @@ int write_callback(struct ush_object *self, char ch);
 void setUp(void)
 {
         memset((uint8_t*)&ush, 0, sizeof(ush));
-
+        ush_desc.path_max_length = 256;
         ush.desc = &ush_desc;
         ush.write_buf = "test_message";
 

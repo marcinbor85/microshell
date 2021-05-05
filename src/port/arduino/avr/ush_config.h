@@ -8,7 +8,6 @@ extern "C" {
 
 #if defined(ARDUINO_AVR_MEGA2560)
 
-#define USH_CONFIG_PATH_MAX_LENGTH                              128
 #define USH_CONFIG_ENABLE_COMMAND_CAT                           1
 #define USH_CONFIG_ENABLE_COMMAND_CD                            1
 #define USH_CONFIG_ENABLE_COMMAND_ECHO                          1
@@ -19,7 +18,6 @@ extern "C" {
 
 #elif defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO)
 
-#define USH_CONFIG_PATH_MAX_LENGTH                              32
 #define USH_CONFIG_ENABLE_COMMAND_CAT                           1
 #define USH_CONFIG_ENABLE_COMMAND_CD                            0
 #define USH_CONFIG_ENABLE_COMMAND_ECHO                          0

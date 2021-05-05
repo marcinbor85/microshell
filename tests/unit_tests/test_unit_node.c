@@ -10,6 +10,7 @@
 int g_assert_call_count;
 
 struct ush_object ush;
+struct ush_descriptor ush_desc;
 
 struct ush_node_object root;
 struct ush_node_object node1;
@@ -37,6 +38,8 @@ void setUp(void)
         memset((uint8_t*)&node311, 0, sizeof(struct ush_node_object));
         
         ush.root = &root;
+        ush_desc.path_max_length = 256;
+        ush.desc = &ush_desc;
         root.path = "/";
 
         root.childs = &node1;

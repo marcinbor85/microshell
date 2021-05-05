@@ -10,6 +10,7 @@
 int g_assert_call_count;
 
 struct ush_object ush;
+struct ush_descriptor ush_desc;
 
 int ush_utils_path_upper_call_count;
 char *ush_utils_path_upper_path_in;
@@ -38,6 +39,9 @@ void setUp(void)
         ush_node_get_absolute_path_in_path = NULL;
         ush_node_get_absolute_path_out_path = NULL;
         ush_node_get_absolute_path_call_count = 0;
+
+        ush_desc.path_max_length = 256;
+        ush.desc = &ush_desc;
 }
 
 void tearDown(void)

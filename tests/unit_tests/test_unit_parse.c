@@ -37,6 +37,7 @@ struct ush_file_descriptor ush_file;
 void setUp(void)
 {
         memset((uint8_t*)&ush, 0, sizeof(ush));
+        ush_desc.path_max_length = 256;
         ush.desc = &ush_desc;
 
         memset((uint8_t*)&ush_file, 0, sizeof(struct ush_file_descriptor));

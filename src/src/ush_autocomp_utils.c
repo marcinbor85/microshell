@@ -45,7 +45,7 @@ void ush_autocomp_optimize_continue(struct ush_object *self)
 
 void ush_autocomp_check_for_finish(struct ush_object *self)
 {
-        char abs_path[USH_CONFIG_PATH_MAX_LENGTH];
+        char abs_path[self->desc->path_max_length];
 
         if (self->process_stage == 0) {
                 self->process_node = self->current_node;
