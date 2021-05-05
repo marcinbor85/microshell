@@ -110,23 +110,20 @@ bool ush_buildin_cmd_ls_service(struct ush_object *self, struct ush_file_descrip
                         break;
                 }
                 case 1:
-                        sprintf(self->desc->output_buffer, "%-" USH_STRING(USH_CONFIG_FILENAME_ALIGN_SPACE) "s", (char*)f->name);
+                        if (f->description != NULL) {
+                                sprintf(self->desc->output_buffer, "%-" USH_STRING(USH_CONFIG_FILENAME_ALIGN_SPACE) "s - ", (char*)f->name);
+                                self->process_index = 2;
+                        } else {
+                                sprintf(self->desc->output_buffer, "%s", (char*)f->name);
+                                self->process_index = 3;
+                        }
                         ush_write_pointer(self, self->desc->output_buffer, self->state);
-                        self->process_index = 2;
                         break;
                 case 2:
-                        if (f->description != NULL) {
-                                ush_write_pointer(self, "- ", self->state);
-                                self->process_index = 3;
-                                break;
-                        }
-                        self->process_index = 4;
+                        ush_write_pointer(self, (char*)f->description, self->state);
+                        self->process_index = 3;
                         break;
                 case 3:
-                        ush_write_pointer(self, (char*)f->description, self->state);
-                        self->process_index = 4;
-                        break;
-                case 4:
                         ush_write_pointer(self, "\r\n", self->state);
                         self->process_index = 0;
                         self->process_index_item++;

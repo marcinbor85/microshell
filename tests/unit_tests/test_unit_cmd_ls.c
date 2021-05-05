@@ -452,10 +452,10 @@ void test_ush_buildin_cmd_ls_service_finish(void)
                         ush.process_node = &node;
                         ush.process_index = i;
                         ush.process_index_item = 0;
-                        ush_write_pointer_text = "test            ";
+                        ush_write_pointer_text = "test             - ";
                         ush_write_pointer_state = USH_STATE_PROCESS_FINISH;
                         TEST_ASSERT_TRUE(ush_buildin_cmd_ls_service(&ush, &file));
-                        TEST_ASSERT_EQUAL_STRING("test            ", output_buf);
+                        TEST_ASSERT_EQUAL_STRING("test             - ", output_buf);
                         TEST_ASSERT_EQUAL(0, g_assert_call_count);
                         TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
                         TEST_ASSERT_EQUAL(0, ush_process_start_call_count);
@@ -470,10 +470,10 @@ void test_ush_buildin_cmd_ls_service_finish(void)
                         ush.process_node = &node;
                         ush.process_index = i;
                         ush.process_index_item = 1;
-                        ush_write_pointer_text = "qwerty          ";
+                        ush_write_pointer_text = "qwerty";
                         ush_write_pointer_state = USH_STATE_PROCESS_FINISH;
                         TEST_ASSERT_TRUE(ush_buildin_cmd_ls_service(&ush, &file));
-                        TEST_ASSERT_EQUAL_STRING("qwerty          ", output_buf);
+                        TEST_ASSERT_EQUAL_STRING("qwerty", output_buf);
                         TEST_ASSERT_EQUAL(0, g_assert_call_count);
                         TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
                         TEST_ASSERT_EQUAL(0, ush_process_start_call_count);
@@ -481,42 +481,9 @@ void test_ush_buildin_cmd_ls_service_finish(void)
                         TEST_ASSERT_EQUAL(0, ush_node_get_absolute_path_call_count);
                         TEST_ASSERT_EQUAL(0, ush_node_get_by_path_call_count);
                         TEST_ASSERT_EQUAL(1, ush.process_index_item);
-                        TEST_ASSERT_EQUAL(2, ush.process_index);
+                        TEST_ASSERT_EQUAL(3, ush.process_index);
                         break;
                 case 2:
-                        setUp();
-                        ush.state = USH_STATE_PROCESS_FINISH;
-                        ush.process_node = &node;
-                        ush.process_index = i;
-                        ush.process_index_item = 0;
-                        ush_write_pointer_text = "- ";
-                        ush_write_pointer_state = USH_STATE_PROCESS_FINISH;
-                        TEST_ASSERT_TRUE(ush_buildin_cmd_ls_service(&ush, &file));
-                        TEST_ASSERT_EQUAL(0, g_assert_call_count);
-                        TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
-                        TEST_ASSERT_EQUAL(0, ush_process_start_call_count);
-                        TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
-                        TEST_ASSERT_EQUAL(0, ush_node_get_absolute_path_call_count);
-                        TEST_ASSERT_EQUAL(0, ush_node_get_by_path_call_count);
-                        TEST_ASSERT_EQUAL(0, ush.process_index_item);
-                        TEST_ASSERT_EQUAL(3, ush.process_index);
-
-                        setUp();
-                        ush.state = USH_STATE_PROCESS_FINISH;
-                        ush.process_node = &node;
-                        ush.process_index = i;
-                        ush.process_index_item = 1;
-                        TEST_ASSERT_TRUE(ush_buildin_cmd_ls_service(&ush, &file));
-                        TEST_ASSERT_EQUAL(0, g_assert_call_count);
-                        TEST_ASSERT_EQUAL(0, ush_print_status_call_count);
-                        TEST_ASSERT_EQUAL(0, ush_process_start_call_count);
-                        TEST_ASSERT_EQUAL(0, ush_write_pointer_call_count);
-                        TEST_ASSERT_EQUAL(0, ush_node_get_absolute_path_call_count);
-                        TEST_ASSERT_EQUAL(0, ush_node_get_by_path_call_count);
-                        TEST_ASSERT_EQUAL(1, ush.process_index_item);
-                        TEST_ASSERT_EQUAL(4, ush.process_index);
-                        break;
-                case 3:
                         ush_write_pointer_text = "test_desc";
                         ush_write_pointer_state = USH_STATE_PROCESS_FINISH;
                         TEST_ASSERT_TRUE(ush_buildin_cmd_ls_service(&ush, &file));
@@ -527,9 +494,9 @@ void test_ush_buildin_cmd_ls_service_finish(void)
                         TEST_ASSERT_EQUAL(0, ush_node_get_absolute_path_call_count);
                         TEST_ASSERT_EQUAL(0, ush_node_get_by_path_call_count);
                         TEST_ASSERT_EQUAL(0, ush.process_index_item);
-                        TEST_ASSERT_EQUAL(4, ush.process_index);
+                        TEST_ASSERT_EQUAL(3, ush.process_index);
                         break;
-                case 4:
+                case 3:
                         ush_write_pointer_text = "\r\n";
                         ush_write_pointer_state = USH_STATE_PROCESS_FINISH;
                         TEST_ASSERT_TRUE(ush_buildin_cmd_ls_service(&ush, &file));

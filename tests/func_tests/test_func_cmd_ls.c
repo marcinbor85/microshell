@@ -21,7 +21,7 @@ void test_cmd_ls_current(void)
                 "d--- .\r\n"
                 "d--- dir/\r\n"
                 "d--- data/\r\n"
-                "---x test            - test file\r\n"
+                "---x test             - test file\r\n"
                 "[test /]$ "
         );
 
@@ -30,12 +30,12 @@ void test_cmd_ls_current(void)
         TEST_FUNC_ASK("ls",
                 "d--- .\r\n"
                 "d--- ..\r\n"
-                "---- text            \r\n"
-                "---- text_file1      \r\n"
-                "---- text_file2      \r\n"
-                "-rw- null            \r\n"
-                "-rw- buffer          \r\n"
-                "-r-- binary          \r\n"
+                "---- text\r\n"
+                "---- text_file1\r\n"
+                "---- text_file2\r\n"
+                "-rw- null\r\n"
+                "-rw- buffer\r\n"
+                "-r-- binary\r\n"
                 "[test data]$ "
         );
 
@@ -65,7 +65,7 @@ void test_cmd_ls_abs(void)
                 "d--- .\r\n"
                 "d--- dir/\r\n"
                 "d--- data/\r\n"
-                "---x test            - test file\r\n"
+                "---x test             - test file\r\n"
                 "[test /]$ "
         );
 
@@ -84,7 +84,7 @@ void test_cmd_ls_abs(void)
                 "d--- .\r\n"
                 "d--- dir/\r\n"
                 "d--- data/\r\n"
-                "---x test            - test file\r\n"
+                "---x test             - test file\r\n"
                 "[test 111]$ "
         );
 }
@@ -95,7 +95,7 @@ void test_cmd_ls_rel(void)
                 "d--- .\r\n"
                 "d--- dir/\r\n"
                 "d--- data/\r\n"
-                "---x test            - test file\r\n"
+                "---x test             - test file\r\n"
                 "[test /]$ "
         );
 
@@ -103,7 +103,7 @@ void test_cmd_ls_rel(void)
                 "d--- .\r\n"
                 "d--- dir/\r\n"
                 "d--- data/\r\n"
-                "---x test            - test file\r\n"
+                "---x test             - test file\r\n"
                 "[test /]$ "
         );
 
@@ -111,7 +111,7 @@ void test_cmd_ls_rel(void)
                 "d--- .\r\n"
                 "d--- dir/\r\n"
                 "d--- data/\r\n"
-                "---x test            - test file\r\n"
+                "---x test             - test file\r\n"
                 "[test /]$ "
         );
 
@@ -119,7 +119,7 @@ void test_cmd_ls_rel(void)
                 "d--- .\r\n"
                 "d--- dir/\r\n"
                 "d--- data/\r\n"
-                "---x test            - test file\r\n"
+                "---x test             - test file\r\n"
                 "[test /]$ "
         );
 
@@ -144,19 +144,19 @@ void test_cmd_ls_rel(void)
         TEST_FUNC_ASK("ls ../../../../data",
                 "d--- .\r\n"
                 "d--- ..\r\n"
-                "---- text            \r\n"
-                "---- text_file1      \r\n"
-                "---- text_file2      \r\n"
-                "-rw- null            \r\n"
-                "-rw- buffer          \r\n"
-                "-r-- binary          \r\n"
+                "---- text\r\n"
+                "---- text_file1\r\n"
+                "---- text_file2\r\n"
+                "-rw- null\r\n"
+                "-rw- buffer\r\n"
+                "-r-- binary\r\n"
                 "[test 111]$ "
         );
 
         TEST_FUNC_ASK("ls",
                 "d--- .\r\n"
                 "d--- ..\r\n"
-                "---- joke            \r\n"
+                "---- joke\r\n"
                 "[test 111]$ "
         );
 }
