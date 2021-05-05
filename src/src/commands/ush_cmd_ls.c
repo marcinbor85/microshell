@@ -47,13 +47,13 @@ bool ush_buildin_cmd_ls_service(struct ush_object *self, struct ush_file_descrip
         case USH_STATE_PROCESS_START:
                 if (self->process_node->parent != NULL) {
                         ush_write_pointer(self, 
-                                "d--- " USH_SHELL_FONT_COLOR_GREEN "." USH_SHELL_FONT_STYLE_RESET "\r\n"
-                                "d--- " USH_SHELL_FONT_COLOR_GREEN ".." USH_SHELL_FONT_STYLE_RESET "\r\n" ,
+                                "d---- " USH_SHELL_FONT_COLOR_GREEN "." USH_SHELL_FONT_STYLE_RESET "\r\n"
+                                "d---- " USH_SHELL_FONT_COLOR_GREEN ".." USH_SHELL_FONT_STYLE_RESET "\r\n" ,
                                 USH_STATE_PROCESS_SERVICE
                         );
                 } else {
                         ush_write_pointer(self,
-                                "d--- " USH_SHELL_FONT_COLOR_GREEN "." USH_SHELL_FONT_STYLE_RESET "\r\n",
+                                "d---- " USH_SHELL_FONT_COLOR_GREEN "." USH_SHELL_FONT_STYLE_RESET "\r\n",
                                 USH_STATE_PROCESS_SERVICE
                         );
                 }
@@ -70,7 +70,7 @@ bool ush_buildin_cmd_ls_service(struct ush_object *self, struct ush_file_descrip
 
                 switch (self->process_index) {
                 case 0:
-                        ush_write_pointer(self, "d--- " USH_SHELL_FONT_COLOR_GREEN, self->state);
+                        ush_write_pointer(self, "d---- " USH_SHELL_FONT_COLOR_GREEN, self->state);
                         self->process_index = 1;
                         break;
                 case 1: {
@@ -104,7 +104,8 @@ bool ush_buildin_cmd_ls_service(struct ush_object *self, struct ush_file_descrip
                         char is_read = (f->get_data != NULL) ? 'r' : '-';
                         char is_write = (f->set_data != NULL) ? 'w' : '-';
                         char is_exec = (f->exec != NULL) ? 'x' : '-';
-                        sprintf(self->desc->output_buffer, "-%c%c%c ", is_read, is_write, is_exec);
+                        char is_help = (f->help != NULL) ? 'h' : '-';
+                        sprintf(self->desc->output_buffer, "-%c%c%c%c ", is_read, is_write, is_exec, is_help);
                         ush_write_pointer(self, self->desc->output_buffer, self->state);
                         self->process_index = 1;
                         break;

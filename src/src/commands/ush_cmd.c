@@ -40,8 +40,7 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
         {
                 .name = "help",
                 .description = "list available commands",
-                .help = "help: help [file]\r\n\tShow help information for file or command.\r\n"
-                        "      help\r\n\tShow available commands.\r\n",
+                .help = "usage: help [file]\r\n",
                 .exec = ush_buildin_cmd_help_callback,
                 .process = ush_buildin_cmd_help_service,
         },
@@ -50,8 +49,7 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
         {
                 .name = "ls",
                 .description = "list directory content",
-                .help = "ls: ls [path]\r\n\tList directory content.\r\n"
-                        "    ls\r\n\tList current directory content.\r\n",
+                .help = "usage: ls [path]\r\n",
                 .exec = ush_buildin_cmd_ls_callback,
                 .process = ush_buildin_cmd_ls_service,
         },
@@ -60,7 +58,7 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
         {
                 .name = "cd",
                 .description = "change current directory",
-                .help = "cd: cd [path]\r\n\tChange current working directory.\r\n",
+                .help = "usage: cd <path>\r\n",
                 .exec = ush_buildin_cmd_cd_callback,
         },
 #endif /* USH_CONFIG_ENABLE_COMMAND_CD */
@@ -68,7 +66,7 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
         {
                 .name = "pwd",
                 .description = "print current directory",
-                .help = "pwd: pwd\r\n\tPrint current working directory path.\r\n",
+                .help = "usage: pwd\r\n",
                 .exec = ush_buildin_cmd_pwd_callback,
         },
 #endif /* USH_CONFIG_ENABLE_COMMAND_PWD */
@@ -76,7 +74,7 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
         {
                 .name = "cat",
                 .description = "print files content",
-                .help = "cat: cat [file...]\r\n\tPrint concatenate text files content.\r\n",
+                .help = "usage: cat <files...>\r\n",
                 .exec = ush_buildin_cmd_cat_callback,
                 .process = ush_buildin_cmd_cat_service,
         },
@@ -85,7 +83,7 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
         {
                 .name = "xxd",
                 .description = "dump file hex content",
-                .help = "xxd: xxd [file]\r\n\tShow file hex content.\r\n",
+                .help = "usage: xxd <file>\r\n",
                 .exec = ush_buildin_cmd_xxd_callback,
                 .process = ush_buildin_cmd_xxd_service,
         },
@@ -94,9 +92,9 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
         {
                 .name = "echo",
                 .description = "print string to file",
-                .help = "echo: echo [string] > [file]\r\n\tPrint string to file.\r\n"
-                        "      echo [string] \r\n\tPrint string to console.\r\n"
-                        "      [string] can be ascii-hex encoded with \\xNN format.\r\n",
+                .help = "usage: echo [string] > [file]\r\n"
+                        "       echo [string]\r\n"
+                        "       * can be ascii-hex encoded string with \\xNN format.\r\n",
                 .exec = ush_buildin_cmd_echo_callback,
         },
 #endif /* USH_CONFIG_ENABLE_COMMAND_ECHO */

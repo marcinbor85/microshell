@@ -54,9 +54,9 @@ static const struct ush_io_interface ush_iface = {
     #define BUF_OUT_SIZE   128
     #define PATH_MAX_SIZE  128
 #else
-    #define BUF_IN_SIZE    16
+    #define BUF_IN_SIZE    32
     #define BUF_OUT_SIZE   32
-    #define PATH_MAX_SIZE  16
+    #define PATH_MAX_SIZE  32
 #endif
 
 static char ush_in_buf[BUF_IN_SIZE];
@@ -124,7 +124,7 @@ size_t led_get_data_callback(struct ush_object *self, struct ush_file_descriptor
     // read current led state
     bool state = digitalRead(LED_BUILTIN);
     // return pointer to data
-    *data = (state) ? "1" : "0";
+    *data = (state) ? "1\r\n" : "0\r\n";
     // return data size
     return strlen(*data);
 }
