@@ -83,6 +83,19 @@ static void toggle_exec_callback(struct ush_object *self, struct ush_file_descri
     digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
 }
 
+// reboot cmd file execute callback
+static void reboot_exec_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
+{
+#if defined(ARDUINO_ARCH_ESP32)
+    ESP.restart();
+#elif defined(ARDUINO_ARCH_AVR)
+    void (*reset)(void) = 0;
+    reset();
+#else
+    ush_print(self, "error: reboot not supported...");
+#endif
+}
+
 // set file execute callback
 static void set_exec_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
@@ -203,7 +216,17 @@ static const struct ush_file_descriptor dev_files[] = {
         .description = NULL,
         .help = NULL,
         .exec = NULL,
-        .get_data = time_get_data_callback,     // optional data getter callback
+        .get_data = time_get_data_callback,
+    },
+};
+
+// cmd files descriptor
+static const struct ush_file_descriptor cmd_files[] = {
+    {
+        .name = "reboot",
+        .description = "reboot device",
+        .help = NULL,
+        .exec = reboot_exec_callback,
     },
 };
 
@@ -213,6 +236,9 @@ static struct ush_node_object root;
 static struct ush_node_object dev;
 // bin directory handler
 static struct ush_node_object bin;
+
+// cmd commands handler
+static struct ush_node_object cmd;
 
 void setup()
 {
@@ -224,6 +250,9 @@ void setup()
 
     // initialize microshell instance
     ush_init(&ush, &ush_desc);
+
+    // add custom commands
+    ush_commands_add(&ush, &cmd, cmd_files, sizeof(cmd_files) / sizeof(cmd_files[0]));
 
     // mount root directory
     ush_node_mount(&ush, "/", &root, root_files, sizeof(root_files) / sizeof(root_files[0]));
