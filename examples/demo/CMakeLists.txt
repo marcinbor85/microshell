@@ -8,7 +8,7 @@ build_ush ( ${USH_TARGET}
 target_compile_definitions(
     ${USH_TARGET}
     PUBLIC
-    USH_CONFIG_PORT_POSIX
+    USH_CONFIG_PLATFORM_POSIX
 )
 
 add_executable( ${EXAMPLE_DEMO_TARGET} demo.c )

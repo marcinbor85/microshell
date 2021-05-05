@@ -30,7 +30,7 @@ extern "C" {
 #endif
 
 #if !defined(USH_CONFIG_CUSTOM_FILE)
-        #include "port/ush_port.h"
+        #include "config/ush_config_platform.h"
 #else
         #include USH_CONFIG_CUSTOM_FILE
 #endif

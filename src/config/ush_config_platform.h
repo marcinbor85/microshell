@@ -22,23 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef USH_PORT_H
-#define USH_PORT_H
+#ifndef USH_CONFIG_PLATFORM_H
+#define USH_CONFIG_PLATFORM_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #if defined(ARDUINO)
-        #if defined(ARDUINO_ARCH_AVR)
-                #include "port/arduino/avr/ush_config.h"
-        #elif defined(ARDUINO_ARCH_ESP32)
-                #include "port/arduino/esp32/ush_config.h"
-        #else
-                #error "Unsupported ARDUINO_ARCH"
-        #endif
-#elif defined(USH_CONFIG_PORT_POSIX)
-        #include "port/posix/ush_config.h"
+        #include "config/arduino/ush_config.h"
+#elif defined(USH_CONFIG_PLATFORM_POSIX)
+        #include "config/posix/ush_config.h"
 #else
         #include "ush_config.h"
 #endif
@@ -47,4 +41,4 @@ extern "C" {
 }
 #endif
 
-#endif /* USH_PORT_H */
+#endif /* USH_CONFIG_PLATFORM_H */
