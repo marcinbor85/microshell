@@ -118,6 +118,15 @@ void ush_print_no_newline(struct ush_object *self, char *buf);
  */
 void ush_print(struct ush_object *self, char *buf);
 
+/**
+ * @brief Flush output buffer.
+ * 
+ * Function to print output buffer content to shell output interface.
+ * 
+ * @param self - pointer to master ush object
+ */
+void ush_flush(struct ush_object *self);
+
 #ifdef __cplusplus
 }
 #endif

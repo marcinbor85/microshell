@@ -117,3 +117,10 @@ void ush_print_no_newline(struct ush_object *self, char *buf)
 
         ush_write_pointer(self, buf, USH_STATE_RESET_PROMPT);
 }
+
+void ush_flush(struct ush_object *self)
+{
+        USH_ASSERT(self != NULL);
+
+        ush_write_pointer(self, self->desc->output_buffer, USH_STATE_RESET_PROMPT);
+}

@@ -52,12 +52,11 @@ static void uptime_exec_callback(struct ush_object *self, struct ush_file_descri
                 return;
         }
 
-        static char buf[32];
         time_t uptime = time(NULL) - start_time;
-        snprintf(buf, sizeof(buf), "time: %lus", uptime);
-        buf[sizeof(buf) - 1] = 0;
+        snprintf(self->desc->output_buffer, self->desc->output_buffer_size, "time: %lus\r\n", uptime);
+        self->desc->output_buffer[self->desc->output_buffer_size - 1] = 0;
 
-        ush_print(self, buf);
+        ush_flush(self);
 }
 
 static const struct ush_file_descriptor g_bin_desc[] = {

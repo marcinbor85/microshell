@@ -58,7 +58,7 @@ static size_t random_data_getter(struct ush_object *self, struct ush_file_descri
         static int r;
         r = rand();
         *data = (uint8_t*)&r;
-        return 1;
+        return sizeof(r);
 }
 
 static const struct ush_file_descriptor g_dev_desc[] = {
