@@ -31,6 +31,8 @@ SOFTWARE.
 
 int g_assert_call_count;
 
+char output_buffer[256];
+
 struct ush_io_interface ush_io_iface;
 struct ush_descriptor ush_desc;
 struct ush_object ush;
@@ -615,6 +617,36 @@ void test_ush_print_no_newline(void)
         }
 }
 
+void test_ush_flush(void)
+{
+        for (int i = 0; i < USH_STATE__TOTAL_NUM; i++) {
+                setUp();
+
+                ush_state_t state = (ush_state_t)i;
+                ush.state = state;
+                ush_desc.output_buffer = output_buffer;
+                ush_desc.output_buffer_size = sizeof(output_buffer);
+                ush.desc = &ush_desc;
+
+                strcpy(output_buffer, "test");
+                ush_write_pointer_text = "test";
+                ush_write_pointer_state = USH_STATE_RESET_PROMPT;
+                ush_flush(&ush);
+                TEST_ASSERT_EQUAL(0, ush_commands_add_call_count);
+                TEST_ASSERT_EQUAL(0, ush_reset_call_count);
+                TEST_ASSERT_EQUAL(1, ush_write_pointer_call_count);
+                TEST_ASSERT_EQUAL(0, ush_utils_get_status_string_call_count);
+                TEST_ASSERT_EQUAL(0, ush_reset_service_call_count);
+                TEST_ASSERT_EQUAL(0, ush_prompt_service_call_count);
+                TEST_ASSERT_EQUAL(0, ush_read_service_call_count);
+                TEST_ASSERT_EQUAL(0, ush_autocomp_service_call_count);
+                TEST_ASSERT_EQUAL(0, ush_parse_service_call_count);
+                TEST_ASSERT_EQUAL(0, ush_write_service_call_count);
+                TEST_ASSERT_EQUAL(0, ush_process_service_call_count);
+                TEST_ASSERT_EQUAL(0, ush_node_deinit_recursive_call_count);
+        }
+}
+
 int main(int argc, char *argv[])
 {
         (void)argc;
@@ -636,6 +668,7 @@ int main(int argc, char *argv[])
         RUN_TEST(test_ush_print_status);
         RUN_TEST(test_ush_print);
         RUN_TEST(test_ush_print_no_newline);
+        RUN_TEST(test_ush_flush);
 
         return UNITY_END();
 }

@@ -70,6 +70,14 @@ void test_print_no_newline(void)
         TEST_ASSERT_EQUAL_STRING("test[test /]$ ", g_write_buf);
 }
 
+void test_flush(void)
+{
+        strcpy(g_ush.desc->output_buffer, "test123\r\n");
+        ush_flush(&g_ush);
+        test_func_read_all();
+        TEST_ASSERT_EQUAL_STRING("test123\r\n[test /]$ ", g_write_buf);
+}
+
 int main(int argc, char *argv[])
 {
         (void)argc;
@@ -80,6 +88,7 @@ int main(int argc, char *argv[])
         RUN_TEST(test_print);
         RUN_TEST(test_print_status);
         RUN_TEST(test_print_no_newline);
+        RUN_TEST(test_flush);
 
         return UNITY_END();
 }
