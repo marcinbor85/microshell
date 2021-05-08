@@ -1,9 +1,9 @@
 [![Build Status](https://travis-ci.org/marcinbor85/microshell.svg?branch=main)](https://travis-ci.org/marcinbor85/microshell)
-# microshell
-Lightweight pure C implementation of virtual shell, compatible with VT100 terminal.\
-Support root tree, run-time mounting paths, global commands, and much more.\
-Works out-of-the-box on Arduino-compatible boards.\
-Dedicated for bare-metal embedded systems.\
+# MicroShell
+Lightweight pure C implementation of virtual shell, compatible with VT100 terminal.
+Support root tree, run-time mounting paths, global commands, and much more.
+Works out-of-the-box on Arduino-compatible boards.
+Dedicated for bare-metal embedded systems.
 
 [Project Homepage](https://microshell.pl/)\
 [LIVE DEMO](https://microshell.pl/demo)
@@ -130,8 +130,8 @@ void loop()
 }
 ```
 
-## Contribute
+## Contribution
 
 If You want to contribute this project - excellent! Fork it, make bugs, and send a PR :)\
-If You want to support me in developing this project - please donate.\
+If You want to support me in developing this project - please donate!\
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EQJAX25PAQKCS)
