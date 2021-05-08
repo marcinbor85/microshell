@@ -1,6 +1,16 @@
 
 set( UNITY_TARGET unity )
-add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/Unity )
+
+add_library(
+    ${UNITY_TARGET}
+    STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/Unity/src/unity.c
+)
+target_include_directories(
+    ${UNITY_TARGET}
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/Unity/src
+)
 
 set ( USH_TARGET ush_testfunc )
 build_ush ( ${USH_TARGET}
