@@ -83,6 +83,9 @@ void setup()
 
     // mount root directory (root must be first)
     ush_node_mount(&ush, "/", &root, NULL, 0);
+
+    // mount other directories here
+    // ...
 }
 
 void loop()
