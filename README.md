@@ -1,9 +1,6 @@
 [![Build Status](https://travis-ci.org/marcinbor85/microshell.svg?branch=main)](https://travis-ci.org/marcinbor85/microshell)
 # MicroShell
-Lightweight pure C implementation of virtual shell, compatible with VT100 terminal.
-Support root tree, run-time mounting paths, global commands, and much more.
-Works out-of-the-box on Arduino-compatible boards.
-Dedicated for bare-metal embedded systems.
+Lightweight pure C implementation of virtual shell, compatible with VT100 terminal. Support root tree, run-time mounting paths, global commands, and much more. Works out-of-the-box on Arduino-compatible boards. Dedicated for bare-metal embedded systems. Thanks to the asynchronous architecture it does not block operations and can be easily implemented even on small microcontrollers with relatively small resources.
 
 [Project Homepage](https://microshell.pl/)\
 [LIVE DEMO](https://microshell.pl/demo)
