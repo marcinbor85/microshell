@@ -39,6 +39,7 @@ cmake -Bbuild .
 cd build
 make
 make test
+make coverage
 ./bin/demo
 ```
 
