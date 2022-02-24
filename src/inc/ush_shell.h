@@ -33,7 +33,7 @@ extern "C" {
 
 /* Useful VT100 terminal escape sequences. */
 
-#if USH_CONFIG_ENABLE_FEATURE_SHELL_STYLES == 1
+#ifdef USH_CONFIG_ENABLE_FEATURE_SHELL_STYLES
 
 #define USH_SHELL_FONT_STYLE_RESET             "\x1B[0m"
 #define USH_SHELL_FONT_STYLE_BOLD              "\x1B[1m"

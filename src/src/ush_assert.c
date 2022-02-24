@@ -22,17 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef USH_PRECONFIG_H
-#define USH_PRECONFIG_H
+#include "inc/ush_assert.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "config/ush_config_platform.h"
-
-#ifdef __cplusplus
+void ush_assert(const char * restrict file, int line)
+{
+        (void)file;
+        (void)line;
 }
-#endif
-
-#endif /* USH_PRECONFIG_H */

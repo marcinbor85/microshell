@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "inc/ush_assert.h"
 #include "inc/ush_internal.h"
 #include "inc/ush_preconfig.h"
 #include "inc/ush_utils.h"
@@ -29,7 +30,7 @@ SOFTWARE.
 
 #include <string.h>
 
-#if USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE == 1
+#ifdef USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE
 
 bool ush_autocomp_service(struct ush_object *self)
 {

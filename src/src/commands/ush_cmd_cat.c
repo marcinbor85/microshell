@@ -25,9 +25,9 @@ SOFTWARE.
 #include "inc/ush.h"
 #include "inc/ush_internal.h"
 
-#if USH_CONFIG_ENABLE_FEATURE_COMMANDS == 1
+#ifdef USH_CONFIG_ENABLE_FEATURE_COMMANDS
 
-#if USH_CONFIG_ENABLE_COMMAND_CAT == 1
+#ifdef USH_CONFIG_ENABLE_COMMAND_CAT
 
 void ush_buildin_cmd_cat_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {

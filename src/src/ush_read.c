@@ -1,3 +1,4 @@
+#include "inc/ush_assert.h"
 #include "inc/ush_internal.h"
 
 bool ush_read_service(struct ush_object *self, bool *read)
