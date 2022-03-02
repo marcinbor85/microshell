@@ -124,8 +124,7 @@ foreach option_key, option_value : translation_map
 endforeach
 
 if get_option('buildtype').startswith('debug')
-  add_project_arguments('-DDEBUG', language: 'c')
-  add_project_arguments('-ggdb3', language: 'c')
+  add_project_arguments('-g', language: 'c')
 endif
 
 # Target
