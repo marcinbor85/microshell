@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "inc/ush_assert.h"
 #include "inc/ush_internal.h"
 #include "inc/ush_preconfig.h"
 
@@ -53,7 +54,7 @@ bool ush_read_char(struct ush_object *self)
                 break;
         case '\x09':
                 /* tab */
-#if USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE == 1      
+#ifdef USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE
                 ush_autocomp_start(self);
 #endif /* USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE */
                 echo = false;

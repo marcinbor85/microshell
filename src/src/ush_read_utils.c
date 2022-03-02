@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "inc/ush_assert.h"
 #include "inc/ush_internal.h"
 
 void ush_read_echo_service(struct ush_object *self, char ch)

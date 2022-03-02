@@ -29,6 +29,8 @@ SOFTWARE.
 extern "C" {
 #endif
 
+#include "ush_assert.h"
+
 #include "ush_types.h"
 #include "ush_const.h"
 #include "ush_preconfig.h"

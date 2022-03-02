@@ -84,7 +84,7 @@ typedef enum {
         USH_STATE_PROCESS_SERVICE,                      /**< Shared service substate used by commands processing */
         USH_STATE_PROCESS_FINISH,                       /**< Shared finish substate used by commands processing */
 
-#if USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE == 1
+#ifdef USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE
         USH_STATE_AUTOCOMP_PREPARE,                     /**< Autocompletation prepare state */
         USH_STATE_AUTOCOMP_CANDIDATES_START,            /**< Start searching candidates state */
         USH_STATE_AUTOCOMP_CANDIDATES_COUNT,            /**< Count candidates state */
@@ -290,7 +290,7 @@ struct ush_object {
         size_t process_data_size;                       /**< Shared processed data size */
         int process_stage;                              /**< Shared processed stage number */
 
-#if USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE == 1
+#ifdef USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE
         ush_state_t autocomp_prev_state;                /**< Previous autocompletation FSM state */
 
         char *autocomp_input;                           /**< Pointer to input autocompletation data */

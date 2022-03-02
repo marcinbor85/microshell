@@ -25,42 +25,42 @@ SOFTWARE.
 #include "inc/ush_types.h"
 #include "inc/ush_preconfig.h"
 
-#if USH_CONFIG_ENABLE_FEATURE_COMMANDS == 1
+#ifdef USH_CONFIG_ENABLE_FEATURE_COMMANDS
 
-#if USH_CONFIG_ENABLE_COMMAND_HELP == 1
+#ifdef USH_CONFIG_ENABLE_COMMAND_HELP
 extern void ush_buildin_cmd_help_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
 extern void ush_buildin_cmd_help_service(struct ush_object *self, struct ush_file_descriptor const *file);
 #endif /* USH_CONFIG_ENABLE_COMMAND_HELP */
 
-#if USH_CONFIG_ENABLE_COMMAND_LS == 1
+#ifdef USH_CONFIG_ENABLE_COMMAND_LS
 extern void ush_buildin_cmd_ls_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
 extern void ush_buildin_cmd_ls_service(struct ush_object *self, struct ush_file_descriptor const *file);
 #endif /* USH_CONFIG_ENABLE_COMMAND_LS */
 
-#if USH_CONFIG_ENABLE_COMMAND_CD == 1
+#ifdef USH_CONFIG_ENABLE_COMMAND_CD
 extern void ush_buildin_cmd_cd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
 #endif /* USH_CONFIG_ENABLE_COMMAND_CD */
 
-#if USH_CONFIG_ENABLE_COMMAND_PWD == 1
+#ifdef USH_CONFIG_ENABLE_COMMAND_PWD
 extern void ush_buildin_cmd_pwd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
 #endif /* USH_CONFIG_ENABLE_COMMAND_PWD */
 
-#if USH_CONFIG_ENABLE_COMMAND_CAT == 1
+#ifdef USH_CONFIG_ENABLE_COMMAND_CAT
 extern void ush_buildin_cmd_cat_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
 extern void ush_buildin_cmd_cat_service(struct ush_object *self, struct ush_file_descriptor const *file);
 #endif /* USH_CONFIG_ENABLE_COMMAND_CAT */
 
-#if USH_CONFIG_ENABLE_COMMAND_XXD == 1
+#ifdef USH_CONFIG_ENABLE_COMMAND_XXD
 extern void ush_buildin_cmd_xxd_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
 extern void ush_buildin_cmd_xxd_service(struct ush_object *self, struct ush_file_descriptor const *file);
 #endif /* USH_CONFIG_ENABLE_COMMAND_XXD */
 
-#if USH_CONFIG_ENABLE_COMMAND_ECHO == 1
+#ifdef USH_CONFIG_ENABLE_COMMAND_ECHO
 extern void ush_buildin_cmd_echo_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[]);
 #endif /* USH_CONFIG_ENABLE_COMMAND_ECHO */
 
 const struct ush_file_descriptor g_ush_buildin_commands[] = {
-#if USH_CONFIG_ENABLE_COMMAND_HELP == 1
+#ifdef USH_CONFIG_ENABLE_COMMAND_HELP
         {
                 .name = "help",
                 .description = "list available commands",
@@ -69,7 +69,7 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
                 .process = ush_buildin_cmd_help_service,
         },
 #endif /* USH_CONFIG_ENABLE_COMMAND_HELP */
-#if USH_CONFIG_ENABLE_COMMAND_LS == 1
+#ifdef USH_CONFIG_ENABLE_COMMAND_LS
         {
                 .name = "ls",
                 .description = "list directory content",
@@ -78,7 +78,7 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
                 .process = ush_buildin_cmd_ls_service,
         },
 #endif /* USH_CONFIG_ENABLE_COMMAND_LS */
-#if USH_CONFIG_ENABLE_COMMAND_CD == 1
+#ifdef USH_CONFIG_ENABLE_COMMAND_CD
         {
                 .name = "cd",
                 .description = "change current directory",
@@ -86,7 +86,7 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
                 .exec = ush_buildin_cmd_cd_callback,
         },
 #endif /* USH_CONFIG_ENABLE_COMMAND_CD */
-#if USH_CONFIG_ENABLE_COMMAND_PWD == 1
+#ifdef USH_CONFIG_ENABLE_COMMAND_PWD
         {
                 .name = "pwd",
                 .description = "print current directory",
@@ -94,7 +94,7 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
                 .exec = ush_buildin_cmd_pwd_callback,
         },
 #endif /* USH_CONFIG_ENABLE_COMMAND_PWD */
-#if USH_CONFIG_ENABLE_COMMAND_CAT == 1
+#ifdef USH_CONFIG_ENABLE_COMMAND_CAT
         {
                 .name = "cat",
                 .description = "print files content",
@@ -103,7 +103,7 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
                 .process = ush_buildin_cmd_cat_service,
         },
 #endif /* USH_CONFIG_ENABLE_COMMAND_CAT */
-#if USH_CONFIG_ENABLE_COMMAND_XXD == 1
+#ifdef USH_CONFIG_ENABLE_COMMAND_XXD
         {
                 .name = "xxd",
                 .description = "dump file hex content",
@@ -112,7 +112,7 @@ const struct ush_file_descriptor g_ush_buildin_commands[] = {
                 .process = ush_buildin_cmd_xxd_service,
         },
 #endif /* USH_CONFIG_ENABLE_COMMAND_XXD */
-#if USH_CONFIG_ENABLE_COMMAND_ECHO == 1
+#ifdef USH_CONFIG_ENABLE_COMMAND_ECHO
         {
                 .name = "echo",
                 .description = "print string to file",

@@ -48,7 +48,7 @@ void ush_init(struct ush_object *self, const struct ush_descriptor *desc)
         self->desc = desc;
         self->root = NULL;
 
-#if USH_CONFIG_ENABLE_FEATURE_COMMANDS == 1
+#ifdef USH_CONFIG_ENABLE_FEATURE_COMMANDS
         ush_status_t stat = ush_commands_add(self, &self->buildin_commands, g_ush_buildin_commands, g_ush_buildin_commands_num);
         if (stat != USH_STATUS_OK) {
                 USH_ASSERT(false);
@@ -79,7 +79,7 @@ bool ush_service(struct ush_object *self)
                 return true;        
         if (ush_read_service(self, &busy) != false)
                 return busy;
-#if USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE == 1
+#ifdef USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE
         if (ush_autocomp_service(self) != false)
                 return true;
 #endif /* USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE */

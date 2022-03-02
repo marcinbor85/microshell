@@ -61,7 +61,7 @@ bool ush_prompt_service(struct ush_object *self);
 void ush_process_start(struct ush_object *self, const struct ush_file_descriptor *file);
 bool ush_process_service(struct ush_object *self);
 
-#if USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE == 1      
+#ifdef USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE
 
 void ush_autocomp_start(struct ush_object *self);
 bool ush_autocomp_service(struct ush_object *self);
