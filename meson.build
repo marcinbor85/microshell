@@ -116,7 +116,7 @@ foreach option_key, option_value : feature_map
   if get_option(option_key)
     add_project_arguments(option_value, language: 'c')
   endif
-  summary(option_key, get_option(option_key), section: 'Enabled Features')
+  summary(option_key, get_option(option_key), section: 'Enabled Features', bool_yn: true)
 endforeach
 
 foreach option_key, option_value : translation_map
