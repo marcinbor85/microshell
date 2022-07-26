@@ -32,6 +32,12 @@ Lightweight pure C implementation of virtual shell, compatible with VT100 termin
 
 ## Build
 
+In case you didn't use git clone --recursive you'll need to manually pull in additional submodules with:
+
+```sh
+git submodule update --init
+```
+
 Build, test and run DEMO:
 
 ```sh
