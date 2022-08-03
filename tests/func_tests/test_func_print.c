@@ -47,6 +47,43 @@ void test_print(void)
         TEST_ASSERT_EQUAL_STRING("test\r\n[test /]$ ", g_write_buf);
 }
 
+void test_printf(void)
+{      
+        // Test with formatting options
+        ush_printf(&g_ush, "test%s%d\r\n", "string", 0);
+        test_func_read_all();
+        TEST_ASSERT_EQUAL_STRING("teststring0\r\n[test /]$ ", g_write_buf);
+
+        // Continue with test using longest possible string
+        char test_string[TEST_FUNC_WORK_BUFFER_SIZE];
+        memset(test_string, 'T', sizeof(test_string));
+        test_string[sizeof(test_string) - 1] = 0x00;
+        unsigned int test_string_len = strlen(test_string);
+        ush_printf(&g_ush, "%s", test_string);
+        test_func_read_all();
+        TEST_ASSERT_EQUAL_STRING_LEN(test_string, g_write_buf, test_string_len);
+        TEST_ASSERT_EQUAL_STRING("[test /]$ ", &g_write_buf[test_string_len]);
+}
+
+void test_printf_format_error(void)
+{
+        // Test with invalid formatting options
+        ush_printf(&g_ush, "%lc", 0xffffffff);
+        test_func_read_all();
+        TEST_ASSERT_EQUAL_STRING("...format error\r\n[test /]$ ", g_write_buf);
+}
+
+void test_printf_overflow_error(void)
+{
+        // Test with one character to much
+        char test_string[TEST_FUNC_WORK_BUFFER_SIZE + 1];
+        memset(test_string, 'T', sizeof(test_string));
+        test_string[sizeof(test_string) - 1] = 0x00;    
+        ush_printf(&g_ush, "%s", test_string);
+        test_func_read_all();
+        TEST_ASSERT_EQUAL_STRING("...overflow error\r\n[test /]$ ", g_write_buf);
+}
+
 void test_print_status(void)
 {
         char resp_buf[TEST_FUNC_IO_BUFFER_SIZE];
@@ -86,6 +123,9 @@ int main(int argc, char *argv[])
         UNITY_BEGIN();
 
         RUN_TEST(test_print);
+        RUN_TEST(test_printf);
+        RUN_TEST(test_printf_format_error);
+        RUN_TEST(test_printf_overflow_error);
         RUN_TEST(test_print_status);
         RUN_TEST(test_print_no_newline);
         RUN_TEST(test_flush);
