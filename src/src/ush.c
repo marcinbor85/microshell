@@ -119,10 +119,15 @@ void ush_printf(struct ush_object *self, const char *format, ...)
         // Make sure that the the default output_buffer always is used
         if (self->write_buf != self->desc->output_buffer)
         {
-                self->write_pos = 0;
-                self->write_size = 0;
-                self->write_buf = self->desc->output_buffer;
-                self->write_buf[0] = '\0';                 
+                // Reset to output_buffer to start position
+                self->desc->output_buffer[0] = '\0';
+                ush_write_pointer(self, self->desc->output_buffer, USH_STATE_RESET_PROMPT);
+        }
+        else
+        {
+                // Allow concatenation to output_buffer  
+                self->state = USH_STATE_WRITE_CHAR;
+                self->write_next_state = USH_STATE_RESET_PROMPT;
         }
 
         // An va_list can only be used by ONE vsnprintf() call with some toolchains  
@@ -159,9 +164,6 @@ void ush_printf(struct ush_object *self, const char *format, ...)
                 (void)snprintf(&self->write_buf[end_pos], sizeof(error_str), "%s", error_str);
                 self->write_size += strlen(&self->write_buf[end_pos]);
         }
-
-        self->state = USH_STATE_WRITE_CHAR;
-        self->write_next_state = USH_STATE_RESET_PROMPT;
 
         va_end(arg_copy);
         va_end(arg_original);
