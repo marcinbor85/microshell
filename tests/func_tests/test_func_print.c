@@ -30,6 +30,13 @@ SOFTWARE.
 
 #include "test_func.h"
 
+static size_t fill_string(char *string, int len)
+{
+        memset(string, 'T', len);
+        string[len - 1] = '\0';
+        return strlen(string);
+}
+
 void setUp(void)
 {
         test_func_init();
@@ -49,16 +56,18 @@ void test_print(void)
 
 void test_printf(void)
 {      
-        // Test with formatting options
-        ush_printf(&g_ush, "test%s%d\r\n", "string", 0);
-        test_func_read_all();
-        TEST_ASSERT_EQUAL_STRING("teststring0\r\n[test /]$ ", g_write_buf);
+        // Test with formatting options and concatenation
+        ush_printf(&g_ush, "line%s%d\r\n", "string", 0);
+        test_func_read(true, 4);
+        ush_printf(&g_ush, "line%s%d\r\n", "string", 1);
+        test_func_read(false, INT_MAX);
+        TEST_ASSERT_EQUAL_STRING("linestring0\r\n" \
+                                 "linestring1\r\n" \
+                                 "[test /]$ ", g_write_buf);
 
-        // Continue with test using longest possible string
+        // Test with longest possible string
         char test_string[TEST_FUNC_WORK_BUFFER_SIZE];
-        memset(test_string, 'T', sizeof(test_string));
-        test_string[sizeof(test_string) - 1] = 0x00;
-        unsigned int test_string_len = strlen(test_string);
+        size_t test_string_len = fill_string(test_string, sizeof(test_string));
         ush_printf(&g_ush, "%s", test_string);
         test_func_read_all();
         TEST_ASSERT_EQUAL_STRING_LEN(test_string, g_write_buf, test_string_len);
@@ -70,18 +79,31 @@ void test_printf_format_error(void)
         // Test with invalid formatting options
         ush_printf(&g_ush, "%lc", 0xffffffff);
         test_func_read_all();
-        TEST_ASSERT_EQUAL_STRING("...format error\r\n[test /]$ ", g_write_buf);
+        TEST_ASSERT_EQUAL_STRING("...format error\r\n" \
+                                 "[test /]$ ", g_write_buf);
 }
 
 void test_printf_overflow_error(void)
 {
-        // Test with one character to much
-        char test_string[TEST_FUNC_WORK_BUFFER_SIZE + 1];
-        memset(test_string, 'T', sizeof(test_string));
-        test_string[sizeof(test_string) - 1] = 0x00;    
-        ush_printf(&g_ush, "%s", test_string);
+        // Test with one character to much where overflow message fits buffer
+        char test_string1[TEST_FUNC_WORK_BUFFER_SIZE + 1];
+        (void)fill_string(test_string1, sizeof(test_string1));
+        ush_printf(&g_ush, "%s", test_string1);
         test_func_read_all();
-        TEST_ASSERT_EQUAL_STRING("...overflow error\r\n[test /]$ ", g_write_buf);
+        TEST_ASSERT_EQUAL_STRING("...overflow error\r\n" \
+                                 "[test /]$ ", g_write_buf);
+
+        // Test with concatenation of overflow_string where overflow message does NOT fit buffer
+        const char overflow_string[] = "0123456789ABCDEF";
+        char test_string2[TEST_FUNC_WORK_BUFFER_SIZE - strlen(overflow_string) + 1];
+        (void)fill_string(test_string2, sizeof(test_string2));
+        ush_printf(&g_ush, "%s", test_string2);
+        ush_printf(&g_ush, "%s", overflow_string);
+        test_func_read_all();
+        char *overflow_msg_start = strchr(g_write_buf, '.');
+        TEST_ASSERT_LESS_THAN_size_t(TEST_FUNC_WORK_BUFFER_SIZE, strlen(g_write_buf));
+        TEST_ASSERT_EQUAL_STRING("...overflow error\r\n", overflow_msg_start);     
+        TEST_ASSERT_EQUAL_STRING_LEN(test_string2, g_write_buf, overflow_msg_start - g_write_buf);
 }
 
 void test_print_status(void)

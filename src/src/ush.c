@@ -146,22 +146,27 @@ void ush_printf(struct ush_object *self, const char *format, ...)
                 (void)vsnprintf(&self->write_buf[insert_pos], max_cat_size + 1, format, arg_copy);
                 self->write_size += strlen(&self->write_buf[insert_pos]);
         }
-        else if (num_char < 0)
-        {
-                // Format string error
-                const char error_str[] = "...format error\r\n";
-                size_t end_pos = max_cat_size >= strlen(error_str) ? insert_pos :
-                                 self->desc->output_buffer_size - sizeof(error_str);
-                (void)snprintf(&self->write_buf[end_pos], sizeof(error_str), "%s", error_str);
-                self->write_size += strlen(&self->write_buf[end_pos]);
-        }
         else
         {
-                // Format string larger than available buffer
-                const char error_str[] = "...overflow error\r\n";
-                size_t end_pos = max_cat_size >= strlen(error_str) ? insert_pos :
-                                 self->desc->output_buffer_size - sizeof(error_str);
-                (void)snprintf(&self->write_buf[end_pos], sizeof(error_str), "%s", error_str);
+                int error_msg_size;
+                const char *error_msg;
+                const char error_format[] = "...format error\r\n";
+                const char error_overflow[] = "...overflow error\r\n";
+
+                if (num_char < 0)
+                {
+                        error_msg = error_format;
+                        error_msg_size = sizeof(error_format);
+                }
+                else
+                {
+                        error_msg = error_overflow;
+                        error_msg_size = sizeof(error_overflow);
+                }  
+
+                size_t end_pos = max_cat_size >= strlen(error_msg) ? insert_pos :
+                                 self->desc->output_buffer_size - error_msg_size;
+                (void)snprintf(&self->write_buf[end_pos], error_msg_size, "%s", error_msg);
                 self->write_size += strlen(&self->write_buf[end_pos]);
         }
 

@@ -247,6 +247,23 @@ void test_func_write(const char *text)
         strcpy(g_read_buf, text);
 }
 
+void test_func_read(bool reset_g_write_buf_index, int ush_service_loops)
+{
+        if (reset_g_write_buf_index)
+        {
+                g_write_buf_index = 0;
+        }
+
+        for (int i = 0; i < ush_service_loops; i++)
+        {
+                if (!ush_service(&g_ush))
+                {
+                        break;
+                }
+        }
+        g_write_buf[g_write_buf_index] = '\0';
+}
+
 void test_func_read_all(void)
 {
         g_write_buf_index = 0;

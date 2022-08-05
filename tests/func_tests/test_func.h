@@ -59,6 +59,7 @@ extern struct ush_node_object g_path_dir111;
 void test_func_init(void);
 void test_func_deinit(void);
 void test_func_write(const char *text);
+void test_func_read(bool reset_g_write_buf_index, int ush_service_loops);
 void test_func_read_all(void);
 
 #define TEST_FUNC_ASK(request, response) \
