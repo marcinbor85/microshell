@@ -75,9 +75,9 @@ bool ush_service(struct ush_object *self)
         bool busy = false;
 
         if (ush_reset_service(self) != false)
-                return true;        
+                return true;
         if (ush_prompt_service(self) != false)
-                return true;        
+                return true;
         if (ush_read_service(self, &busy) != false)
                 return busy;
 #if USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE == 1
@@ -85,7 +85,7 @@ bool ush_service(struct ush_object *self)
                 return true;
 #endif /* USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE */
         if (ush_parse_service(self) != false)
-                return true;        
+                return true;
         if (ush_write_service(self) != false)
                 return true;
         if (ush_process_service(self) != false)
@@ -116,44 +116,41 @@ void ush_printf(struct ush_object *self, const char *format, ...)
         USH_ASSERT(self != NULL);
         USH_ASSERT(format != NULL);
 
-        // Make sure that the the default output_buffer always is used
+        // An va_list can only be used by ONE vsnprintf() call with some toolchains
+        va_list arg_list;
+        va_start(arg_list, format);
+
+        // Make sure that the default output_buffer always is used
         if (self->write_buf != self->desc->output_buffer)
         {
-                // Reset to output_buffer to start position
+                // Reset output_buffer to start position
                 self->desc->output_buffer[0] = '\0';
                 ush_write_pointer(self, self->desc->output_buffer, USH_STATE_RESET_PROMPT);
         }
         else
         {
-                // Allow concatenation to output_buffer  
+                // Allow concatenation to output_buffer
                 self->state = USH_STATE_WRITE_CHAR;
                 self->write_next_state = USH_STATE_RESET_PROMPT;
         }
 
-        // An va_list can only be used by ONE vsnprintf() call with some toolchains  
-        va_list arg_original;
-        va_list arg_copy;
-        va_start(arg_original, format);
-        va_copy(arg_copy, arg_original);
+        // Concatenate string to the output_buffer pointed to by self->write_buf
+        size_t insert_idx = strlen(self->write_buf);
+        size_t write_size_max = self->desc->output_buffer_size - insert_idx;
+        int written_size_ideal = vsnprintf(&self->write_buf[insert_idx], write_size_max, format, arg_list);
+        int written_size_real = strlen(&self->write_buf[insert_idx]);
+        self->write_size += written_size_real;
 
-        // Concatenate string to the output buffer pointed to by self->write_buf
-        size_t insert_pos = strlen(self->write_buf);
-        size_t max_cat_size = self->desc->output_buffer_size - insert_pos - 1;
-        int num_char = vsnprintf(&self->write_buf[insert_pos], 0, format, arg_original);
-        if (num_char >= 0 && (size_t)num_char <= max_cat_size)
-        {
-                // Format string can successfully be written
-                (void)vsnprintf(&self->write_buf[insert_pos], max_cat_size + 1, format, arg_copy);
-                self->write_size += strlen(&self->write_buf[insert_pos]);
-        }
-        else
+        // Handle possible vsnprintf() problems
+        if (written_size_ideal < 0 ||                   // Format error
+            written_size_ideal > written_size_real)     // Buffer size to small
         {
                 int error_msg_size;
                 const char *error_msg;
                 const char error_format[] = "...format error\r\n";
                 const char error_overflow[] = "...overflow error\r\n";
 
-                if (num_char < 0)
+                if (written_size_ideal < 0)
                 {
                         error_msg = error_format;
                         error_msg_size = sizeof(error_format);
@@ -162,16 +159,26 @@ void ush_printf(struct ush_object *self, const char *format, ...)
                 {
                         error_msg = error_overflow;
                         error_msg_size = sizeof(error_overflow);
-                }  
+                }
 
-                size_t end_pos = max_cat_size >= strlen(error_msg) ? insert_pos :
-                                 self->desc->output_buffer_size - error_msg_size;
-                (void)snprintf(&self->write_buf[end_pos], error_msg_size, "%s", error_msg);
-                self->write_size += strlen(&self->write_buf[end_pos]);
+                // Do the error message fit into output_buffer pointed to by self->write_buf?
+                if (self->desc->output_buffer_size - strlen(self->write_buf) >= strlen(error_msg))
+                {
+                        // Error message fits
+                        size_t end_idx = strlen(self->write_buf);
+                        (void)snprintf(&self->write_buf[end_idx], error_msg_size, "%s", error_msg);
+                        self->write_size += strlen(&self->write_buf[end_idx]);
+                }
+                else
+                {
+                        // Error message does NOT fit
+                        size_t end_idx = self->desc->output_buffer_size - error_msg_size;
+                        (void)snprintf(&self->write_buf[end_idx], error_msg_size, "%s", error_msg);
+                        self->write_size = self->desc->output_buffer_size;
+                }
         }
 
-        va_end(arg_copy);
-        va_end(arg_original);
+        va_end(arg_list);
 }
 
 void ush_print_no_newline(struct ush_object *self, char *buf)
