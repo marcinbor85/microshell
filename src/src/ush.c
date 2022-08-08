@@ -75,9 +75,9 @@ bool ush_service(struct ush_object *self)
         bool busy = false;
 
         if (ush_reset_service(self) != false)
-                return true;
+                return true;        
         if (ush_prompt_service(self) != false)
-                return true;
+                return true;        
         if (ush_read_service(self, &busy) != false)
                 return busy;
 #if USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE == 1
@@ -85,7 +85,7 @@ bool ush_service(struct ush_object *self)
                 return true;
 #endif /* USH_CONFIG_ENABLE_FEATURE_AUTOCOMPLETE */
         if (ush_parse_service(self) != false)
-                return true;
+                return true;        
         if (ush_write_service(self) != false)
                 return true;
         if (ush_process_service(self) != false)
