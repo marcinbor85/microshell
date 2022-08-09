@@ -116,10 +116,6 @@ void ush_printf(struct ush_object *self, const char *format, ...)
         USH_ASSERT(self != NULL);
         USH_ASSERT(format != NULL);
 
-        // An va_list can only be used by ONE vsnprintf() call with some toolchains
-        va_list arg_list;
-        va_start(arg_list, format);
-
         // Make sure that the default output_buffer always is used
         if (self->write_buf != self->desc->output_buffer)
         {
@@ -135,6 +131,8 @@ void ush_printf(struct ush_object *self, const char *format, ...)
         }
 
         // Concatenate string to the output_buffer pointed to by self->write_buf
+        va_list arg_list;
+        va_start(arg_list, format);
         size_t insert_idx = strlen(self->write_buf);
         size_t write_size_max = self->desc->output_buffer_size - insert_idx;
         int written_size_ideal = vsnprintf(&self->write_buf[insert_idx], write_size_max, format, arg_list);
@@ -143,7 +141,7 @@ void ush_printf(struct ush_object *self, const char *format, ...)
 
         // Handle possible vsnprintf() problems
         if (written_size_ideal < 0 ||                   // Format error
-            written_size_ideal > written_size_real)     // Buffer size to small
+            written_size_ideal > written_size_real)     // Available output_buffer to small
         {
                 int error_msg_size;
                 const char *error_msg;

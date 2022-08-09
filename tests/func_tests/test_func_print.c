@@ -56,15 +56,20 @@ void test_print(void)
 
 void test_printf(void)
 {
-        // Test with formatting options and concatenation
-        ush_printf(&g_ush, "line%s%d\r\n", "string", 0);
-        test_func_read(true, 4);
-        ush_printf(&g_ush, "line%s%d\r\n", "string", 1);
+        // Test with formatting options and concatenation when test_string has been
+        // partially been read by fist test_func_read()
+        char test_string[] = "line%s%d\r\n";
+        ush_printf(&g_ush, test_string, "string", 0);
+        test_func_read(true, strlen(test_string) / 2);
+        ush_printf(&g_ush, test_string, "string", 1);
         test_func_read(false, INT_MAX);
         TEST_ASSERT_EQUAL_STRING("linestring0\r\n" \
                                  "linestring1\r\n" \
                                  "[test /]$ ", g_write_buf);
+}
 
+void tetest_printf_long(void)
+{
         // Test with longest possible string
         char test_string[TEST_FUNC_WORK_BUFFER_SIZE];
         size_t test_string_len = fill_string(test_string, sizeof(test_string));
@@ -143,6 +148,7 @@ int main(int argc, char *argv[])
 
         RUN_TEST(test_print);
         RUN_TEST(test_printf);
+        RUN_TEST(tetest_printf_long);
         RUN_TEST(test_printf_format_error);
         RUN_TEST(test_printf_overflow_error);
         RUN_TEST(test_print_status);
