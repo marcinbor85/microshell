@@ -68,7 +68,7 @@ void test_printf(void)
                                  "[test /]$ ", g_write_buf);
 }
 
-void tetest_printf_long(void)
+void test_printf_long(void)
 {
         // Test with longest possible string
         char test_string[TEST_FUNC_WORK_BUFFER_SIZE];
@@ -148,7 +148,7 @@ int main(int argc, char *argv[])
 
         RUN_TEST(test_print);
         RUN_TEST(test_printf);
-        RUN_TEST(tetest_printf_long);
+        RUN_TEST(test_printf_long);
         RUN_TEST(test_printf_format_error);
         RUN_TEST(test_printf_overflow_error);
         RUN_TEST(test_print_status);
