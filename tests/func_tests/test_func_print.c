@@ -56,8 +56,8 @@ void test_print(void)
 
 void test_printf(void)
 {
-        // Test with formatting options and concatenation when test_string has been
-        // partially read by first test_func_read()
+        /* Test with formatting options and concatenation when test_string has been
+           partially read by first test_func_read() */
         char test_string[] = "line%s%d\r\n";
         ush_printf(&g_ush, test_string, "string", 0);
         test_func_read(true, strlen(test_string) / 2);
@@ -70,7 +70,7 @@ void test_printf(void)
 
 void test_printf_long(void)
 {
-        // Test with longest possible string
+        /* Test with longest possible string */
         char test_string[TEST_FUNC_WORK_BUFFER_SIZE];
         size_t test_string_len = fill_string(test_string, sizeof(test_string));
         ush_printf(&g_ush, "%s", test_string);
@@ -81,7 +81,7 @@ void test_printf_long(void)
 
 void test_printf_format_error(void)
 {
-        // Test simple string and and then concatentate invalid formatting options
+        /* Test simple string and and then concatentate invalid formatting options */
         ush_printf(&g_ush, "string0");
         ush_printf(&g_ush, "%lc", 0xffffffff);
         test_func_read_all();
@@ -91,7 +91,7 @@ void test_printf_format_error(void)
 
 void test_printf_overflow_error(void)
 {
-        // Test with two simple strings and then concatenate overflow_string
+        /* Test with two simple strings and then concatenate overflow_string */
         const char first_string[] = "string0";
         char test_string[TEST_FUNC_WORK_BUFFER_SIZE - strlen(first_string)];
         (void)fill_string(test_string, sizeof(test_string));
