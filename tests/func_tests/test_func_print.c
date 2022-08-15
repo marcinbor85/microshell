@@ -57,7 +57,7 @@ void test_print(void)
 void test_printf(void)
 {
         // Test with formatting options and concatenation when test_string has been
-        // partially been read by fist test_func_read()
+        // partially read by first test_func_read()
         char test_string[] = "line%s%d\r\n";
         ush_printf(&g_ush, test_string, "string", 0);
         test_func_read(true, strlen(test_string) / 2);
