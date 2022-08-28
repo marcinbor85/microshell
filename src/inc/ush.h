@@ -119,6 +119,16 @@ void ush_print_no_newline(struct ush_object *self, char *buf);
 void ush_print(struct ush_object *self, char *buf);
 
 /**
+ * @brief Print formatted custom message.
+ *
+ * Function to print formatted custom message to output shell interface.
+ *
+ * @param self - pointer to master ush object
+ * @param format - pointer to printf format string
+ */
+void ush_printf(struct ush_object *self, const char *format, ...);
+
+/**
  * @brief Flush output buffer.
  * 
  * Function to print output buffer content to shell output interface.

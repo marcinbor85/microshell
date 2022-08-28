@@ -27,6 +27,7 @@ SOFTWARE.
 #include "inc/ush_internal.h"
 #include "inc/ush_shell.h"
 
+#include <stdarg.h>
 #include <string.h>
 
 void ush_init(struct ush_object *self, const struct ush_descriptor *desc)
@@ -108,6 +109,65 @@ void ush_print(struct ush_object *self, char *buf)
         USH_ASSERT(buf != NULL);
 
         ush_write_pointer(self, buf, USH_STATE_RESET);
+}
+
+void ush_printf(struct ush_object *self, const char *format, ...)
+{
+        USH_ASSERT(self != NULL);
+        USH_ASSERT(format != NULL);
+
+        /* Make sure that the default output_buffer always is used */
+        if (self->write_buf != self->desc->output_buffer) {
+                /* Reset output_buffer to start position */
+                self->desc->output_buffer[0] = '\0';
+                ush_write_pointer(self, self->desc->output_buffer, USH_STATE_RESET_PROMPT);
+        } else {
+                /* Allow concatenation to output_buffer */
+                self->state = USH_STATE_WRITE_CHAR;
+                self->write_next_state = USH_STATE_RESET_PROMPT;
+        }
+
+        /* Concatenate string to the output_buffer pointed to by self->write_buf */
+        va_list arg_list;
+        va_start(arg_list, format);
+        size_t insert_idx = strlen(self->write_buf);
+        size_t write_size_max = self->desc->output_buffer_size - insert_idx;
+        int written_size_ideal = vsnprintf(&self->write_buf[insert_idx], write_size_max, format, arg_list);
+        int written_size_real = strlen(&self->write_buf[insert_idx]);
+        self->write_size += written_size_real;
+
+        /* Handle possible vsnprintf() problems */
+        if (written_size_ideal < 0 || /* Format error */
+            written_size_ideal > written_size_real) /* Available output_buffer to small */
+        {
+                int error_msg_size;
+                const char *error_msg;
+                const char error_format[] = "...format error\r\n";
+                const char error_overflow[] = "...overflow error\r\n";
+
+                if (written_size_ideal < 0) {
+                        error_msg = error_format;
+                        error_msg_size = sizeof(error_format);
+                } else {
+                        error_msg = error_overflow;
+                        error_msg_size = sizeof(error_overflow);
+                }
+
+                /* Do the error message fit into output_buffer pointed to by self->write_buf? */
+                if (self->desc->output_buffer_size - strlen(self->write_buf) >= strlen(error_msg)) {
+                        /* Error message fits */
+                        size_t end_idx = strlen(self->write_buf);
+                        (void)snprintf(&self->write_buf[end_idx], error_msg_size, "%s", error_msg);
+                        self->write_size += strlen(&self->write_buf[end_idx]);
+                } else {
+                        /* Error message does NOT fit */
+                        size_t end_idx = self->desc->output_buffer_size - error_msg_size;
+                        (void)snprintf(&self->write_buf[end_idx], error_msg_size, "%s", error_msg);
+                        self->write_size = self->desc->output_buffer_size;
+                }
+        }
+
+        va_end(arg_list);
 }
 
 void ush_print_no_newline(struct ush_object *self, char *buf)
