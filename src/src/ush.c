@@ -117,14 +117,11 @@ void ush_printf(struct ush_object *self, const char *format, ...)
         USH_ASSERT(format != NULL);
 
         /* Make sure that the default output_buffer always is used */
-        if (self->write_buf != self->desc->output_buffer)
-        {
+        if (self->write_buf != self->desc->output_buffer) {
                 /* Reset output_buffer to start position */
                 self->desc->output_buffer[0] = '\0';
                 ush_write_pointer(self, self->desc->output_buffer, USH_STATE_RESET_PROMPT);
-        }
-        else
-        {
+        } else {
                 /* Allow concatenation to output_buffer */
                 self->state = USH_STATE_WRITE_CHAR;
                 self->write_next_state = USH_STATE_RESET_PROMPT;
@@ -140,35 +137,29 @@ void ush_printf(struct ush_object *self, const char *format, ...)
         self->write_size += written_size_real;
 
         /* Handle possible vsnprintf() problems */
-        if (written_size_ideal < 0 ||                   /* Format error */
-            written_size_ideal > written_size_real)     /* Available output_buffer to small */
+        if (written_size_ideal < 0 || /* Format error */
+            written_size_ideal > written_size_real) /* Available output_buffer to small */
         {
                 int error_msg_size;
                 const char *error_msg;
                 const char error_format[] = "...format error\r\n";
                 const char error_overflow[] = "...overflow error\r\n";
 
-                if (written_size_ideal < 0)
-                {
+                if (written_size_ideal < 0) {
                         error_msg = error_format;
                         error_msg_size = sizeof(error_format);
-                }
-                else
-                {
+                } else {
                         error_msg = error_overflow;
                         error_msg_size = sizeof(error_overflow);
                 }
 
                 /* Do the error message fit into output_buffer pointed to by self->write_buf? */
-                if (self->desc->output_buffer_size - strlen(self->write_buf) >= strlen(error_msg))
-                {
+                if (self->desc->output_buffer_size - strlen(self->write_buf) >= strlen(error_msg)) {
                         /* Error message fits */
                         size_t end_idx = strlen(self->write_buf);
                         (void)snprintf(&self->write_buf[end_idx], error_msg_size, "%s", error_msg);
                         self->write_size += strlen(&self->write_buf[end_idx]);
-                }
-                else
-                {
+                } else {
                         /* Error message does NOT fit */
                         size_t end_idx = self->desc->output_buffer_size - error_msg_size;
                         (void)snprintf(&self->write_buf[end_idx], error_msg_size, "%s", error_msg);

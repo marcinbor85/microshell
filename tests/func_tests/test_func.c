@@ -249,15 +249,12 @@ void test_func_write(const char *text)
 
 void test_func_read(bool reset_g_write_buf_index, int ush_service_loops)
 {
-        if (reset_g_write_buf_index)
-        {
+        if (reset_g_write_buf_index) {
                 g_write_buf_index = 0;
         }
 
-        for (int i = 0; i < ush_service_loops; i++)
-        {
-                if (!ush_service(&g_ush))
-                {
+        for (int i = 0; i < ush_service_loops; i++) {
+                if (!ush_service(&g_ush)) {
                         break;
                 }
         }

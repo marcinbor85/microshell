@@ -63,9 +63,10 @@ void test_printf(void)
         test_func_read(true, strlen(test_string) / 2);
         ush_printf(&g_ush, test_string, "string", 1);
         test_func_read(false, INT_MAX);
-        TEST_ASSERT_EQUAL_STRING("linestring0\r\n" \
-                                 "linestring1\r\n" \
-                                 "[test /]$ ", g_write_buf);
+        TEST_ASSERT_EQUAL_STRING("linestring0\r\n"
+                                 "linestring1\r\n"
+                                 "[test /]$ ",
+                                 g_write_buf);
 }
 
 void test_printf_long(void)
@@ -85,8 +86,9 @@ void test_printf_format_error(void)
         ush_printf(&g_ush, "string0");
         ush_printf(&g_ush, "%lc", 0xffffffff);
         test_func_read_all();
-        TEST_ASSERT_EQUAL_STRING("string0...format error\r\n" \
-                                 "[test /]$ ", g_write_buf);
+        TEST_ASSERT_EQUAL_STRING("string0...format error\r\n"
+                                 "[test /]$ ",
+                                 g_write_buf);
 }
 
 void test_printf_overflow_error(void)
