@@ -77,7 +77,7 @@ bool ush_buildin_cmd_xxd_service(struct ush_object *self, struct ush_file_descri
         case USH_STATE_PROCESS_SERVICE: {
                 switch (self->process_index) {
                 case 0:
-                        sprintf(self->desc->output_buffer, "%08X: ", (uint32_t)self->process_index_item);
+                        sprintf(self->desc->output_buffer, "%08lX: ", self->process_index_item);
                         ush_write_pointer(self, self->desc->output_buffer, self->state);
                         self->process_index = 1;
                         break;
