@@ -80,7 +80,7 @@ void setUp(void)
         file_cmd_execute_callback_file = NULL;
         file_cmd_execute_callback_argc = 0;
         file_cmd_execute_callback_call_count = 0;
-        memset((uint8_t*)file_cmd_execute_callback_argv, 0, sizeof(cmd_execute_callback_argv));
+        memset((uint8_t*)file_cmd_execute_callback_argv, 0, sizeof(file_cmd_execute_callback_argv));
 
         ush_parse_get_args_return_val = 0;
         ush_file_find_by_name_return_val = NULL;
@@ -101,6 +101,7 @@ void cmd_execute_callback(struct ush_object *self, struct ush_file_descriptor co
         TEST_ASSERT_EQUAL(cmd_execute_callback_argc, argc);
         for (int i = 0; i < argc; i++)
                 TEST_ASSERT_EQUAL_STRING(cmd_execute_callback_argv[i], argv[i]);
+        TEST_ASSERT_NULL(argv[argc]);
 
         cmd_execute_callback_call_count++;
 }
@@ -113,6 +114,7 @@ void file_cmd_execute_callback(struct ush_object *self, struct ush_file_descript
         TEST_ASSERT_EQUAL(file_cmd_execute_callback_argc, argc);
         for (int i = 0; i < argc; i++)
                 TEST_ASSERT_EQUAL_STRING(file_cmd_execute_callback_argv[i], argv[i]);
+        TEST_ASSERT_NULL(argv[argc]);
 
         file_cmd_execute_callback_call_count++;
 }
