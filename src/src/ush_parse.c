@@ -33,13 +33,16 @@ void ush_parse_finish(struct ush_object *self)
 {
         USH_ASSERT(self != NULL);
 
-        char *argv[self->args_count];
+        char *argv[self->args_count + 1];
         int argc;
 
         argc = ush_parse_get_args(self, argv);
         if (argc == 0)
                 return;
-        
+
+        /* C standard says 'argv[argc] shall be a null pointer' */
+        argv[argc] = NULL;
+
         if (self->desc->exec != NULL)
                 self->desc->exec(self, NULL, argc, argv);
 
