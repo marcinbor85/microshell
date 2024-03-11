@@ -86,7 +86,7 @@ void ush_autocomp_check_for_finish(struct ush_object *self)
                                 self->process_node = self->current_node;
                 }
 
-                self->process_node = self->process_node->childs;
+                self->process_node = self->process_node->children;
                 self->process_index = 0;
                 self->process_index_item = 0;
                 self->process_stage = 2;

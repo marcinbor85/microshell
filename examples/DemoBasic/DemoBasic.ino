@@ -188,7 +188,7 @@ static const struct ush_file_descriptor root_files[] = {
 // bin directory files descriptor
 static const struct ush_file_descriptor bin_files[] = {
     {
-        .name = "toggle",                       // toogle file name
+        .name = "toggle",                       // toggle file name
         .description = "toggle led",            // optional file description
         .help = "usage: toggle\r\n",            // optional help manual
         .exec = toggle_exec_callback,           // optional execute callback
