@@ -66,7 +66,7 @@ void setUp(void)
         ush.desc = &ush_desc;
         root.path = "/";
 
-        root.childs = &node1;
+        root.children = &node1;
         node1.next = &node2;
         node1.parent = &root;
         node1.path = "/1";
@@ -76,26 +76,26 @@ void setUp(void)
         node3.parent = &root;
         node3.path = "/3";
 
-        node1.childs = &node11;
+        node1.children = &node11;
         node11.next = &node12;
         node11.parent = &node1;
         node11.path = "/1/1";
 
-        node12.childs = &node121;
+        node12.children = &node121;
         node12.path = "/1/2";
         node121.parent = &node12;
         node121.path = "/1/2/1";
 
-        node2.childs = &node21;
+        node2.children = &node21;
         node2.path = "/2";
         node21.parent = &node2;
         node21.path = "/2/1";
 
-        node3.childs = &node31;
+        node3.children = &node31;
         node3.path = "/3";
         node31.parent = &node3;
         node31.path = "/3/1";
-        node31.childs = &node311;
+        node31.children = &node311;
         node311.parent = &node31;
         node311.path = "/3/1/1";
 }
@@ -115,7 +115,7 @@ void test_ush_node_get_by_path_null(void)
 
         setUp();
         ush.root = &node;
-        node.childs = NULL;
+        node.children = NULL;
         TEST_ASSERT_NULL(ush_node_get_by_path(&ush, "/1"));
 }
 
@@ -221,13 +221,13 @@ void test_ush_node_deinit_recursive(void)
         struct ush_node_object node3 = {0};
 
         memset((uint8_t*)&node, 0xFF, sizeof(struct ush_node_object));
-        node.childs = NULL;
+        node.children = NULL;
         node.next = &node2;
         memset((uint8_t*)&node2, 0xFF, sizeof(struct ush_node_object));
-        node2.childs = &node3;
+        node2.children = &node3;
         node2.next = NULL;
         memset((uint8_t*)&node3, 0xFF, sizeof(struct ush_node_object));
-        node3.childs = NULL;
+        node3.children = NULL;
         node3.next = NULL;
 
         ush_node_deinit_recursive(&ush, &node);

@@ -82,7 +82,7 @@ void test_printf_long(void)
 
 void test_printf_format_error(void)
 {
-        /* Test simple string and and then concatentate invalid formatting options */
+        /* Test simple string and and then concatenate invalid formatting options */
         ush_printf(&g_ush, "string0");
         ush_printf(&g_ush, "%lc", 0xffffffff);
         test_func_read_all();

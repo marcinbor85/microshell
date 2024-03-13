@@ -85,8 +85,8 @@ char* ush_utils_path_last(const char *in_path);
  * 
  * Function used to get path with specified level.
  * It based on the input path.
- * It doesn't modify source path, because it is common to use this funciton in loops.
- * Output path will be always shorter than input, so user have to ensure that output buffer will be long enought.
+ * It doesn't modify source path, because it is common to use this function in loops.
+ * Output path will be always shorter than input, so user have to ensure that output buffer will be long enough.
  * Path must be be absolute.
  * 
  * @param level - level of path
@@ -99,7 +99,7 @@ void ush_utils_get_path_level(size_t level, const char *in_path, char *out_path)
  * @brief Join path and file name.
  * 
  * Function used to join path and file name.
- * User have to ensure that output buffer will be long enought to join them.
+ * User have to ensure that output buffer will be long enough to join them.
  * Path could be relative or absolute.
  * 
  * @param in_path - pointer to input path string
@@ -151,13 +151,13 @@ bool ush_utils_is_printable(uint8_t ch);
  * Function used to convert ASCII text string to binary.
  * It used "\" escape character followed by "x" to encode byte hex numbers.
  * It accept lower and upper hex chars.
- * When hex char is invalid, it is overrided by 0.
+ * When hex char is invalid, it is overridden by 0.
  * 
  * @param input - pointer to input string (null-terminated)
  * @param output - pointer to place where will be placed binary data
  * @param max_size - output buffer maximum size
  * 
- * @return number of bytes successfully writed to output buffer
+ * @return number of bytes successfully written to output buffer
  */
 size_t ush_utils_decode_ascii(char *input, uint8_t *output, size_t max_size);
 

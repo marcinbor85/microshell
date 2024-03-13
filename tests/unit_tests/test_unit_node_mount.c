@@ -147,14 +147,14 @@ void test_ush_node_mount_root(void)
         TEST_ASSERT_EQUAL(&node1, ush.current_node);
         TEST_ASSERT_NULL(node1.parent);
         TEST_ASSERT_NULL(node1.next);
-        TEST_ASSERT_NULL(node1.childs);
+        TEST_ASSERT_NULL(node1.children);
 }
 
 void test_ush_node_mount(void)
 {       
         struct ush_file_descriptor files[1] = {0};
 
-        node1.childs = &node2;
+        node1.children = &node2;
         node2.next = NULL;
         ush_node_get_by_path_path = "/";
         ush_node_get_by_path_return_val = NULL;
@@ -164,7 +164,7 @@ void test_ush_node_mount(void)
         TEST_ASSERT_EQUAL(1, ush_node_get_by_path_call_count);
         TEST_ASSERT_EQUAL(1, ush_node_get_parent_by_path_call_count);
         TEST_ASSERT_NULL(ush.root);
-        TEST_ASSERT_EQUAL(&node3, node1.childs);
+        TEST_ASSERT_EQUAL(&node3, node1.children);
         TEST_ASSERT_EQUAL(&node2, node3.next);
         TEST_ASSERT_NULL(node2.next);
 }
@@ -208,7 +208,7 @@ void test_ush_node_unmount_not_found(void)
         setUp();
 
         ush.root = &node1;
-        node1.childs = NULL;
+        node1.children = NULL;
         ush_node_get_by_path_path = "test2";
         ush_node_get_by_path_return_val = &node2;
         ush_node_get_parent_by_path_path = "test2";
@@ -217,13 +217,13 @@ void test_ush_node_unmount_not_found(void)
         TEST_ASSERT_EQUAL(1, ush_node_get_by_path_call_count);
         TEST_ASSERT_EQUAL(1, ush_node_get_parent_by_path_call_count);
         TEST_ASSERT_EQUAL(&node1, ush.root);
-        TEST_ASSERT_NULL(node1.childs);
+        TEST_ASSERT_NULL(node1.children);
 }
 
 void test_ush_node_unmount_parents(void)
 {
         ush.root = &node1;
-        node1.childs = (struct ush_node_object*)1234;
+        node1.children = (struct ush_node_object*)1234;
         ush_node_get_by_path_path = "test2";
         ush_node_get_by_path_return_val = &node1;
         ush_node_get_parent_by_path_path = "test2";
@@ -236,10 +236,10 @@ void test_ush_node_unmount_parents(void)
         setUp();
 
         ush.root = &node1;
-        node1.childs = &node2;
+        node1.children = &node2;
         node2.next = &node3;
         node3.next = NULL;
-        node2.childs = (struct ush_node_object*)1234;
+        node2.children = (struct ush_node_object*)1234;
         ush_node_get_by_path_path = "test2";
         ush_node_get_by_path_return_val = &node2;
         ush_node_get_parent_by_path_path = "test2";
@@ -248,7 +248,7 @@ void test_ush_node_unmount_parents(void)
         TEST_ASSERT_EQUAL(1, ush_node_get_by_path_call_count);
         TEST_ASSERT_EQUAL(1, ush_node_get_parent_by_path_call_count);
         TEST_ASSERT_EQUAL(&node1, ush.root);
-        TEST_ASSERT_EQUAL(&node2, node1.childs);
+        TEST_ASSERT_EQUAL(&node2, node1.children);
         TEST_ASSERT_EQUAL(&node3, node2.next);
         TEST_ASSERT_NULL(node3.next);
 }
@@ -269,7 +269,7 @@ void test_ush_node_unmount_root(void)
 void test_ush_node_unmount(void)
 {
         ush.root = &node1;
-        node1.childs = &node2;
+        node1.children = &node2;
         node2.next = &node3;
         node3.next = NULL;
         ush_node_get_by_path_path = "test2";
@@ -280,13 +280,13 @@ void test_ush_node_unmount(void)
         TEST_ASSERT_EQUAL(1, ush_node_get_by_path_call_count);
         TEST_ASSERT_EQUAL(1, ush_node_get_parent_by_path_call_count);
         TEST_ASSERT_EQUAL(&node1, ush.root);
-        TEST_ASSERT_EQUAL(&node3, node1.childs);
+        TEST_ASSERT_EQUAL(&node3, node1.children);
         TEST_ASSERT_NULL(node3.next);
 
         setUp();
 
         ush.root = &node1;
-        node1.childs = &node2;
+        node1.children = &node2;
         node2.next = &node3;
         node3.next = NULL;
         ush_node_get_by_path_path = "test2";
@@ -297,7 +297,7 @@ void test_ush_node_unmount(void)
         TEST_ASSERT_EQUAL(1, ush_node_get_by_path_call_count);
         TEST_ASSERT_EQUAL(1, ush_node_get_parent_by_path_call_count);
         TEST_ASSERT_EQUAL(&node1, ush.root);
-        TEST_ASSERT_EQUAL(&node2, node1.childs);
+        TEST_ASSERT_EQUAL(&node2, node1.children);
         TEST_ASSERT_NULL(node2.next);
 }
 

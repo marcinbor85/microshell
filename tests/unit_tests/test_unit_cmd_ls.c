@@ -215,7 +215,7 @@ void test_ush_buildin_cmd_ls_service_start(void)
         ush.process_node = &node;
         ush.process_index = 10;
         node.parent = NULL;
-        node.childs = (struct ush_node_object*)1234;
+        node.children = (struct ush_node_object*)1234;
         ush_write_pointer_text = "d---- " USH_SHELL_FONT_COLOR_GREEN "." USH_SHELL_FONT_STYLE_RESET "\r\n";
         ush_write_pointer_state = USH_STATE_PROCESS_SERVICE;
         TEST_ASSERT_TRUE(ush_buildin_cmd_ls_service(&ush, &file));
@@ -233,7 +233,7 @@ void test_ush_buildin_cmd_ls_service_start(void)
         ush.process_node = &node;
         ush.process_index = 10;
         node.parent = (struct ush_node_object*)5678;
-        node.childs = (struct ush_node_object*)1234;
+        node.children = (struct ush_node_object*)1234;
         ush_write_pointer_text =
                 "d---- " USH_SHELL_FONT_COLOR_GREEN "." USH_SHELL_FONT_STYLE_RESET "\r\n"
                 "d---- " USH_SHELL_FONT_COLOR_GREEN ".." USH_SHELL_FONT_STYLE_RESET "\r\n";

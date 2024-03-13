@@ -81,7 +81,7 @@ bool ush_buildin_cmd_ls_service(struct ush_object *self, struct ush_file_descrip
                                 USH_STATE_PROCESS_SERVICE
                         );
                 }
-                self->process_child_node = self->process_node->childs;
+                self->process_child_node = self->process_node->children;
                 self->process_index = 0;
                 break;
         case USH_STATE_PROCESS_SERVICE:
