@@ -187,7 +187,7 @@ struct ush_node_object {
         char const *path;                               /**< Node path, set after node mount */
 
         struct ush_node_object *parent;                 /**< Pointer to parent node if not root */
-        struct ush_node_object *children;                 /**< Pointer to children node (1-level down) */
+        struct ush_node_object *children;               /**< Pointer to children node (1-level down) */
         struct ush_node_object *next;                   /**< Pointer to next node (on the same parent) */
 };
 
