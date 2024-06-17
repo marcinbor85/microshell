@@ -631,7 +631,6 @@ void test_ush_autocomp_process_file_index(void)
         for (int i = 0; i < 10; i++) {
                 setUp();
                 ush.process_index = i;
-                ush.process_node = &node;
 
                 switch (i) {
                 case 0:

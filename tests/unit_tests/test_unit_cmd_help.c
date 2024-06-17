@@ -258,7 +258,7 @@ void test_ush_buildin_cmd_help_service_states(void)
 
 void test_ush_buildin_cmd_help_service_end(void)
 {
-        struct ush_file_descriptor cmd_file;
+        struct ush_file_descriptor cmd_file = {0};
         bool ret;
 
         ush.state = USH_STATE_PROCESS_START;
@@ -279,7 +279,7 @@ void test_ush_buildin_cmd_help_service_end(void)
 
 void test_ush_buildin_cmd_help_service_next(void)
 {
-        struct ush_file_descriptor cmd_file;
+        struct ush_file_descriptor cmd_file = {0};
         struct ush_node_object node = {0};
         bool ret;
 

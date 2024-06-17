@@ -63,7 +63,7 @@ void test_ush_commands_add(void)
 
 void test_ush_commands_add_multi(void)
 {
-        struct ush_file_descriptor files;
+        struct ush_file_descriptor files = {0};
 
         struct ush_node_object cmd1 = {0};
         struct ush_node_object cmd2 = {0};
