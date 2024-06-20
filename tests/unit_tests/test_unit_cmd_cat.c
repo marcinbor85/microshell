@@ -262,7 +262,7 @@ void test_ush_buildin_cmd_cat_callback_pos(void)
         char *argv[4] = {0};
         struct ush_file_descriptor file0;
         struct ush_file_descriptor file1;
-        struct ush_file_descriptor cat_cmd;
+        struct ush_file_descriptor cat_cmd = {0};
 
         argv[1] = "test";
         argv[2] = "test2";
@@ -325,7 +325,7 @@ void test_ush_buildin_cmd_cat_service_states(void)
 
 void test_ush_buildin_cmd_cat_service_process(void)
 {
-        struct ush_file_descriptor cat_cmd;
+        struct ush_file_descriptor cat_cmd = {0};
         struct ush_file_descriptor file0;
         struct ush_file_descriptor file1;
 
