@@ -41,7 +41,7 @@ struct ush_node_object* ush_node_get_by_path(struct ush_object *self, const char
         if (self->root == NULL)
                 return NULL;
 
-        struct ush_node_object *curr = self->root->childs;
+        struct ush_node_object *curr = self->root->children;
         for (size_t i = 1; i <= levels; i++) {
                 ush_utils_get_path_level(i, path, level_path);
                 
@@ -60,7 +60,7 @@ struct ush_node_object* ush_node_get_by_path(struct ush_object *self, const char
                 if (i == levels)
                         return curr;
 
-                curr = curr->childs;
+                curr = curr->children;
         }
         
 
@@ -98,8 +98,8 @@ void ush_node_deinit_recursive(struct ush_object *self, struct ush_node_object *
         struct ush_node_object *curr = node;
 
         while (curr != NULL) {
-                if (curr->childs != NULL)
-                        ush_node_deinit_recursive(self, curr->childs);
+                if (curr->children != NULL)
+                        ush_node_deinit_recursive(self, curr->children);
 
                 struct ush_node_object *tmp = curr->next;
                 memset((uint8_t*)curr, 0, sizeof(struct ush_node_object));

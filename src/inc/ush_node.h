@@ -45,7 +45,7 @@ extern "C" {
  * @param file_list - pointer to mounted path files array
  * @param file_list_size - mounted path files array size
  * 
- * @return ush_status_t - USH_STATUS_OK when successfull, otherwise error
+ * @return ush_status_t - USH_STATUS_OK when successful, otherwise error
  */
 ush_status_t ush_node_mount(struct ush_object *self, const char *path, struct ush_node_object *node, const struct ush_file_descriptor *file_list, size_t file_list_size);
 
@@ -58,7 +58,7 @@ ush_status_t ush_node_mount(struct ush_object *self, const char *path, struct us
  * @param self - pointer to master ush object
  * @param node - pointer to unmounted ush node object supervisor of path
  * 
- * @return ush_status_t - USH_STATUS_OK when successfull, otherwise error
+ * @return ush_status_t - USH_STATUS_OK when successful, otherwise error
  */
 ush_status_t ush_node_unmount(struct ush_object *self, const char *path);
 
@@ -70,7 +70,7 @@ ush_status_t ush_node_unmount(struct ush_object *self, const char *path);
  * @param self - pointer to master ush object
  * @param path - pointer to absolute path name to set
  * 
- * @return ush_status_t - USH_STATUS_OK when successfull, otherwise error
+ * @return ush_status_t - USH_STATUS_OK when successful, otherwise error
  */
 ush_status_t ush_node_set_current_dir(struct ush_object *self, const char *path);
 
@@ -102,7 +102,7 @@ void ush_node_deinit_recursive(struct ush_object *self, struct ush_node_object *
  * @brief Get parent node by path.
  * 
  * Function is used to search parent node by path.
- * Searching is performed by modifing path to 1-level upper.
+ * Searching is performed by modifying path to 1-level upper.
  * It checks whetever the path name have parent node or not.
  * It doesn't operate on the mounted paths, so paths may not be exist at all.
  * Path must be absolute.
@@ -110,7 +110,7 @@ void ush_node_deinit_recursive(struct ush_object *self, struct ush_node_object *
  * @param self - pointer to master ush object
  * @param path - pointer to path name
  * 
- * @return pointer to ush node object when successfull, otherwise NULL
+ * @return pointer to ush node object when successful, otherwise NULL
  */
 struct ush_node_object* ush_node_get_parent_by_path(struct ush_object *self, const char *path);
 
@@ -124,7 +124,7 @@ struct ush_node_object* ush_node_get_parent_by_path(struct ush_object *self, con
  * @param self - pointer to master ush object
  * @param path - pointer to path name
  * 
- * @return pointer to ush node object when successfull, otherwise NULL
+ * @return pointer to ush node object when successful, otherwise NULL
  */
 struct ush_node_object* ush_node_get_by_path(struct ush_object *self, const char *path);
 

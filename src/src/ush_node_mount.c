@@ -47,8 +47,8 @@ ush_status_t ush_node_mount(struct ush_object *self, const char *path, struct us
 
         struct ush_node_object *node_parent = ush_node_get_parent_by_path(self, path);
         if (node_parent != NULL) {
-                node->next = node_parent->childs;
-                node_parent->childs = node;
+                node->next = node_parent->children;
+                node_parent->children = node;
                 node->parent = node_parent;
                 return USH_STATUS_OK;
         }
@@ -75,7 +75,7 @@ ush_status_t ush_node_unmount(struct ush_object *self, const char *path)
         if ((node == NULL) || ((node != self->root) && (parent_node == NULL)))
                 return USH_STATUS_ERROR_NODE_NOT_FOUND;
         
-        if (node->childs != NULL)
+        if (node->children != NULL)
                 return USH_STATUS_ERROR_NODE_WITH_CHILDS;
 
         if (parent_node == NULL) {
@@ -84,7 +84,7 @@ ush_status_t ush_node_unmount(struct ush_object *self, const char *path)
         }
 
         struct ush_node_object *prev = NULL;
-        struct ush_node_object *curr = parent_node->childs;
+        struct ush_node_object *curr = parent_node->children;
 
         while (curr != NULL) {
                 if (curr != node) {
@@ -93,7 +93,7 @@ ush_status_t ush_node_unmount(struct ush_object *self, const char *path)
                         continue;
                 }
                 if (prev == NULL) {
-                        parent_node->childs = node->next;
+                        parent_node->children = node->next;
                 } else {
                         prev->next = node->next;
                 }

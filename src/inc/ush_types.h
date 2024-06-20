@@ -43,9 +43,9 @@ extern "C" {
 
 /** State values enumerators for return values. */
 typedef enum {
-        USH_STATUS_OK,                                  /**< Successfull operation */
+        USH_STATUS_OK,                                  /**< Successful operation */
         USH_STATUS_ERROR_NODE_NOT_FOUND,                /**< Node not found nor exists */
-        USH_STATUS_ERROR_NODE_WITH_CHILDS,              /**< Cannot unmount node with childs */
+        USH_STATUS_ERROR_NODE_WITH_CHILDS,              /**< Cannot unmount node with children */
         USH_STATUS_ERROR_NODE_WITHOUT_PARENT,           /**< Cannot mount node because there is no parent */
         USH_STATUS_ERROR_NODE_ALREADY_MOUNTED,          /**< Mount point already exists */
         USH_STATUS_ERROR_COMMAND_SYNTAX_ERROR,          /**< Syntax error or unknown command */
@@ -187,7 +187,7 @@ struct ush_node_object {
         char const *path;                               /**< Node path, set after node mount */
 
         struct ush_node_object *parent;                 /**< Pointer to parent node if not root */
-        struct ush_node_object *childs;                 /**< Pointer to childs node (1-level down) */
+        struct ush_node_object *children;               /**< Pointer to children node (1-level down) */
         struct ush_node_object *next;                   /**< Pointer to next node (on the same parent) */
 };
 
@@ -202,7 +202,7 @@ struct ush_node_object {
  * @param self - pointer to master ush object
  * @param ch - pointer to char variable where read byte should be placed
  * 
- * @return should return 1 on read successful, otherwise 0 when no data avaialble
+ * @return should return 1 on read successful, otherwise 0 when no data available
  */
 typedef int (*ush_io_interface_read_char)(struct ush_object *self, char *ch);
 
